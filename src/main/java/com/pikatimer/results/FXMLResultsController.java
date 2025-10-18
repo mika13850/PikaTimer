@@ -845,11 +845,13 @@ public class FXMLResultsController  {
     }
     
     private void initializeAutoUpdate(){
-        autoUpdateToggleSwitch.selectedProperty().set(false);
-        updateTimeDelayChoiceBox.setItems(FXCollections.observableArrayList("30s", "1m", "2m", "5m"));
-        updateTimeDelayChoiceBox.disableProperty().bind(autoUpdateToggleSwitch.selectedProperty().not());
-        autoUpdateProgressBar.disableProperty().bind(autoUpdateToggleSwitch.selectedProperty().not());
-        updateTimeDelayChoiceBox.getSelectionModel().selectLast();
+        Platform.runLater(() -> {
+            autoUpdateToggleSwitch.selectedProperty().set(false);
+            updateTimeDelayChoiceBox.setItems(FXCollections.observableArrayList("30s", "1m", "2m", "5m"));
+            updateTimeDelayChoiceBox.disableProperty().bind(autoUpdateToggleSwitch.selectedProperty().not());
+            autoUpdateProgressBar.disableProperty().bind(autoUpdateToggleSwitch.selectedProperty().not());
+            updateTimeDelayChoiceBox.getSelectionModel().selectLast();
+        });
         
         Task autoUpdateTask = new Task<Void>() {
 
@@ -904,7 +906,9 @@ public class FXMLResultsController  {
         processNewResultThread.setName("Thread-AutoUpdateReportsThread");
         processNewResultThread.setDaemon(true);
         processNewResultThread.start();
-        autoUpdateProgressBar.progressProperty().bind(autoUpdateTask.progressProperty());
+        Platform.runLater(() -> {
+            autoUpdateProgressBar.progressProperty().bind(autoUpdateTask.progressProperty());
+        });
     }
     
     private void initializeOutputDestinations(){
