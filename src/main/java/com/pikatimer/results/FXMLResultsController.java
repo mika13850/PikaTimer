@@ -860,11 +860,28 @@ public class FXMLResultsController  {
                 int counter = 0;
                 while(true) {
                     try {
-                        if (autoUpdateToggleSwitch.selectedProperty().not().get()) counter = 0;
+                        // Access UI properties on the JavaFX Application Thread
+                        final boolean[] isAutoUpdateEnabled = new boolean[1];
+                        final String[] selectedDelay = new String[1];
                         
-                        delayString=updateTimeDelayChoiceBox.getSelectionModel().getSelectedItem();
-                        delay = Integer.parseUnsignedInt(delayString.replaceAll("\\D+", ""));
-                        if (delayString.contains("m")) delay = delay * 60;
+                        Platform.runLater(() -> {
+                            isAutoUpdateEnabled[0] = autoUpdateToggleSwitch.selectedProperty().get();
+                            selectedDelay[0] = updateTimeDelayChoiceBox.getSelectionModel().getSelectedItem();
+                        });
+                        
+                        // Give the Platform.runLater time to execute
+                        Thread.sleep(10);
+                        
+                        if (!isAutoUpdateEnabled[0]) {
+                            counter = 0;
+                        }
+                        
+                        if (selectedDelay[0] != null) {
+                            delayString = selectedDelay[0];
+                            delay = Integer.parseUnsignedInt(delayString.replaceAll("\\D+", ""));
+                            if (delayString.contains("m")) delay = delay * 60;
+                        }
+                        
                         logger.trace("Auto-Update timer " + (delay-counter) + "s (" + counter + "/" + delay + ")");
                         
                         if (counter >= delay) {
