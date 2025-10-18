@@ -374,7 +374,7 @@ public class FXMLTimingController {
         assignToRaceToggleSwitch.visibleProperty().bind(Bindings.size(RaceDAO.getInstance().listWaves()).greaterThan(1));
         assignToRaceToggleSwitch.managedProperty().bind(Bindings.size(RaceDAO.getInstance().listWaves()).greaterThan(1));
         
-        timingLocListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Cha‌​nge<? extends TimingLocation> c) -> { 
+        timingLocListView.getSelectionModel().getSelectedItems().addListener((Change<? extends TimingLocation> c) -> { 
             logger.debug("timingLocListView changed...");
             //timingLocListView.getSelectionModel().getSelectedItems().forEach(System.out::println); 
             ObservableList<TimingLocation> selectedTimingLocations = timingLocListView.getSelectionModel().getSelectedItems();

@@ -49,7 +49,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -259,7 +259,7 @@ public class FXMLEventController {
 
         //if there are no races selected in the race table then disable the entire right hand side
         raceDetailsVBox.disableProperty().bind(raceTableView.getSelectionModel().selectedItemProperty().isNull());
-        raceTableView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Cha‌​nge<? extends Race> c) -> {            
+        raceTableView.getSelectionModel().getSelectedItems().addListener((Change<? extends Race> c) -> {            
             raceTableView.getSelectionModel().getSelectedItems().forEach( sr -> logger.trace(sr.toString()));            
             ObservableList<Race> selectedRaces = raceTableView.getSelectionModel().getSelectedItems();
             if (selectedRaces.isEmpty()) {
