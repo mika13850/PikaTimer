@@ -29,8 +29,8 @@
          <children>
             <TableView fx:id="bibMappingTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="230.0" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn fx:id="chipTableColumn" editable="false" prefWidth="75.0" text="Chip" />
-                <TableColumn fx:id="bibTableColumn" editable="false" prefWidth="75.0" text="Bib" />
+                <TableColumn fx:id="chipTableColumn" editable="false" prefWidth="75.0" text="%timing.chip" />
+                <TableColumn fx:id="bibTableColumn" editable="false" prefWidth="75.0" text="%timing.bib" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -38,16 +38,16 @@
             </TableView>
             <HBox maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Button fx:id="clearAllButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearAllAction" prefWidth="60.0" text="Clear All" />
+                  <Button fx:id="clearAllButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearAllAction" prefWidth="60.0" text="%timing.clearAll" />
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteAction" prefWidth="60.0" text="Delete" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteAction" prefWidth="60.0" text="%button.delete" />
                </children>
             </HBox>
          </children>
       </VBox>
       <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Label text="Search">
+            <Label text="%button.search">
                <font>
                   <Font size="18.0" />
                </font>
@@ -57,14 +57,14 @@
             <Label fx:id="mapCountLabel" text="0/0" />
          </children>
       </HBox>
-      <Label text="Setup Chip to Bib Mapping" GridPane.columnSpan="2">
+      <Label text="%timing.setupChipBibMapping" GridPane.columnSpan="2">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <VBox spacing="2.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <children>
-            <Label text="Add Single Maping">
+            <Label text="%timing.addSingleMapping">
                <font>
                   <Font size="18.0" />
                </font>
@@ -77,19 +77,19 @@
             </Label>
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <Label text="Chip">
+                  <Label text="%timing.chip">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <TextField fx:id="chipTextField" prefHeight="25.0" prefWidth="75.0" promptText="XXXXX" />
-                  <Label text="Bib">
+                  <Label text="%timing.bib">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <TextField fx:id="bibTextField" onAction="#addMappingButtonAction" prefHeight="25.0" prefWidth="61.0" promptText="XXXXX" />
-                  <Button fx:id="addButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#addMappingButtonAction" prefWidth="60.0" text="Add" />
+                  <Button fx:id="addButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#addMappingButtonAction" prefWidth="60.0" text="%button.add" />
                </children>
             </HBox>
             <HBox>
@@ -97,20 +97,20 @@
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <Label text="Add Repeating Maping">
+            <Label text="%timing.addRepeatingMapping">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
             <HBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
-                  <Label text="Start bib">
+                  <Label text="%timing.startBib">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <TextField fx:id="startBibTextField" prefHeight="25.0" prefWidth="59.0" promptText="XXXXX" HBox.hgrow="SOMETIMES" />
-                  <Label text="End bib">
+                  <Label text="%timing.endBib">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -120,23 +120,23 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
-                  <Label text="Chip Offset">
+                  <Label text="%timing.chipOffset">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <TextField fx:id="chipOffsetTextField" onAction="#addMappingButtonAction" prefHeight="25.0" prefWidth="76.0" HBox.hgrow="SOMETIMES" />
-                  <Button fx:id="addRepeatButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRepeatingMappingButtonAction" prefWidth="60.0" text="Add" />
+                  <Button fx:id="addRepeatButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRepeatingMappingButtonAction" prefWidth="60.0" text="%button.add" />
                </children>
             </HBox>
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <children>
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#importAction" prefWidth="60.0" text="Import..." />
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#importAction" prefWidth="60.0" text="%button.import" />
             <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="saveButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveButtonAction" prefWidth="60.0" text="Save" />
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelButtonAction" prefWidth="60.0" text="Cancel" />
+            <Button fx:id="saveButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveButtonAction" prefWidth="60.0" text="%button.save" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelButtonAction" prefWidth="60.0" text="%button.cancel" />
          </children>
          <padding>
             <Insets top="5.0" />

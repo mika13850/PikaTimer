@@ -17,9 +17,11 @@
 package com.pikatimer;
 
 import com.pikatimer.util.HTTPServices;
+import com.pikatimer.util.I18nManager;
 import java.awt.Taskbar;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -111,7 +113,10 @@ public class Pikatimer extends Application {
         
         
               
-        Pane myPane = (Pane)FXMLLoader.load(getClass().getResource("FXMLopenEvent.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLopenEvent.fxml"));
+        ResourceBundle bundle = ResourceBundle.getBundle("com.pikatimer.i18n.messages", I18nManager.getInstance().getLocale());
+        loader.setResources(bundle);
+        Pane myPane = (Pane)loader.load();
         Scene myScene = new Scene(myPane);
         
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();  

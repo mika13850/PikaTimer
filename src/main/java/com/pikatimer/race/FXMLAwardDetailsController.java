@@ -525,6 +525,7 @@ public class FXMLAwardDetailsController {
             } else {
                 logger.debug("Award not found, building UI for " + ac.getName() + "(" + ac.getUUID() + ")" );
                 FXMLLoader tlLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/race/FXMLAwardCategory.fxml"));
+                tlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
                 try {
                     raceAwardNodeUIMap.put(ac.getUUID(),tlLoader.load());
                     raceAwardVBox.getChildren().add(raceAwardNodeUIMap.get(ac.getUUID()));

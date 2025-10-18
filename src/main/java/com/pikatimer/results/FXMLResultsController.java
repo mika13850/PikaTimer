@@ -824,6 +824,7 @@ public class FXMLResultsController  {
             
             r.raceReportsProperty().forEach(rr -> {
                 FXMLLoader tlLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/results/FXMLResultOutput.fxml"));
+                tlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
                 try {
                     reportDetails.getChildren().add(tlLoader.load());
                     logger.debug("Showing RaceReport of type " + rr.getReportType().toString());
@@ -1210,6 +1211,7 @@ public class FXMLResultsController  {
             resultsDAO.saveRaceReport(newRR);
 
             FXMLLoader tlLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/results/FXMLResultOutput.fxml"));
+            tlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
             try {
                 raceReportsUIMap.get(r).getChildren().add(tlLoader.load());
                 logger.debug("Added new RaceReport of type " + newRR.getReportType().toString());
@@ -1227,6 +1229,7 @@ public class FXMLResultsController  {
                 
         useCustomHeaderCheckBox.selectedProperty().set(true);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLSetupHeaders.fxml"));
+        fxmlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
         Parent setupHeadersRoot;
         try {
             setupHeadersRoot = (Parent) fxmlLoader.load();

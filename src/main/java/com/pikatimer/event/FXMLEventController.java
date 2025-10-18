@@ -35,11 +35,11 @@ import com.pikatimer.timing.Split;
 import com.pikatimer.timing.TimingLocation;
 import com.pikatimer.timing.TimingDAO;
 import com.pikatimer.util.Unit;
+import com.pikatimer.util.I18nManager;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javafx.application.Platform;
@@ -59,6 +59,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -84,6 +85,8 @@ public class FXMLEventController {
     @FXML    private DatePicker eventDate;
     @FXML    private VBox racesVBox;    
     @FXML    private TableView<Race> raceTableView;
+    @FXML    private TableColumn<Race, String> raceNameColumn;
+    @FXML    private TableColumn<Race, String> raceDistanceColumn;
     @FXML    private Button addRaceButton;
     @FXML    private Button copyRaceButton;
     @FXML    private Button removeRaceButton;    
@@ -92,7 +95,7 @@ public class FXMLEventController {
     @FXML    private VBox timingVBox;
     @FXML    private ListView<TimingLocation> timingLocListView;
     @FXML    private Button timingLocAddButton;
-    @FXML    private Button timingLocRemoveButton;    
+    @FXML    private Button timingLocRemoveButton;
 
     private ObservableList<TimingLocation> timingLocationList;
     private TimingDAO timingLocationDAO;    
@@ -200,7 +203,7 @@ public class FXMLEventController {
         });
         
         timingLocRemoveButton.disableProperty().bind(timingLocListView.getSelectionModel().selectedItemProperty().isNull());
-
+        
         addRaceButton.setOnAction((e) -> addRace());
         removeRaceButton.setOnAction((e) -> removeRace());
         copyRaceButton.setOnAction((e) -> copyRace());
@@ -246,13 +249,15 @@ public class FXMLEventController {
         raceDetailsVBox.getChildren().clear();
         try {
             raceDetailsLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/race/FXMLRaceDetails.fxml"));
+            ResourceBundle bundle = ResourceBundle.getBundle("com.pikatimer.i18n.messages", I18nManager.getInstance().getLocale());
+            raceDetailsLoader.setResources(bundle);
             raceDetailsVBox.getChildren().add(raceDetailsLoader.load());
+            
+            raceDetailsController = (FXMLRaceDetailsController) raceDetailsLoader.getController();        
+            raceDetailsController.selectRace(selectedRace);
         } catch (IOException ex) {
             logger.error("Exception in raceDetails VBox initialization", ex);
         }
-        
-        raceDetailsController = (FXMLRaceDetailsController) raceDetailsLoader.getController();        
-        raceDetailsController.selectRace(selectedRace);
         // bind the selected race to the
         //FXMLRaceDetailsController raceDetailsController = raceDetailsLoader.<FXMLRaceDetailsController>getController(); 
         //raceDetailsController.selectRace(r);
@@ -262,12 +267,16 @@ public class FXMLEventController {
         raceTableView.getSelectionModel().getSelectedItems().addListener((Change<? extends Race> c) -> {            
             raceTableView.getSelectionModel().getSelectedItems().forEach( sr -> logger.trace(sr.toString()));            
             ObservableList<Race> selectedRaces = raceTableView.getSelectionModel().getSelectedItems();
-            if (selectedRaces.isEmpty()) {
-                logger.trace("Nothing Selected");
-                raceDetailsController.selectRace(null);
+            if (raceDetailsController != null) {
+                if (selectedRaces.isEmpty()) {
+                    logger.trace("Nothing Selected");
+                    raceDetailsController.selectRace(null);
+                } else {
+                    logger.trace(selectedRaces.get(0).getRaceName());
+                    raceDetailsController.selectRace(selectedRaces.get(0));
+                }
             } else {
-                logger.trace(selectedRaces.get(0).getRaceName());
-                raceDetailsController.selectRace(selectedRaces.get(0));
+                logger.debug("raceDetailsController is null, skipping race selection");
             }
         });
         

@@ -32,7 +32,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.columnSpan="2">
          <children>
-            <Label fx:id="selectedRaceLabel" text="Selected Event: " HBox.hgrow="NEVER">
+            <Label fx:id="selectedRaceLabel" text="%event.title" HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0" />
                </font>
@@ -53,7 +53,7 @@
          <children>
             <HBox maxWidth="1.7976931348623157E308">
                <children>
-                  <Label text="Award Category Setup">
+                  <Label text="%award.categories">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -62,23 +62,23 @@
                      </padding>
                   </Label>
                   <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#addAwardCategory" text="Add Award" />
+                  <Button mnemonicParsing="false" onAction="#addAwardCategory" text="%award.add" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
-                  <Label text="Tie Handling:">
+                  <Label text="%award.filter">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <CheckBox fx:id="permitTiesCheckBox" mnemonicParsing="false" text="Permit Ties">
+                  <CheckBox fx:id="permitTiesCheckBox" mnemonicParsing="false" text="%award.filter">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </CheckBox>
                   <Pane HBox.hgrow="ALWAYS" />
-                  <Label text="Divisions:">
+                  <Label text="%award.category">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -90,14 +90,14 @@
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <children>
-            <Label text="Sex and Age Group Setup">
+            <Label text="%race.agegroups">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
             <VBox fx:id="agCustomVBox1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="2.0" VBox.vgrow="NEVER">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" text="Sex / Gender Labels" wrapText="true">
+                  <Label maxWidth="1.7976931348623157E308" text="%participant.sex" wrapText="true">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -110,8 +110,8 @@
                   </Label>
                   <TableView fx:id="sexCodeMapTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="125.0">
                      <columns>
-                        <TableColumn fx:id="sexCodeTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="Code" />
-                        <TableColumn fx:id="sexLabelTableColumn" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="sexCodeTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="%participant.bib" />
+                        <TableColumn fx:id="sexLabelTableColumn" prefWidth="75.0" text="%label.name" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -119,10 +119,10 @@
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="sexCodeEdit" mnemonicParsing="false" text="Edit" />
+                        <Button fx:id="sexCodeEdit" mnemonicParsing="false" text="%button.edit" />
                         <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="sexCodeDelete" mnemonicParsing="false" text="Delete" />
-                        <Button fx:id="sexCodeAdd" mnemonicParsing="false" text="Add" />
+                        <Button fx:id="sexCodeDelete" mnemonicParsing="false" text="%button.delete" />
+                        <Button fx:id="sexCodeAdd" mnemonicParsing="false" text="%button.add" />
                      </children>
                   </HBox>
                </children>
@@ -130,7 +130,7 @@
                   <Insets top="5.0" />
                </padding>
             </VBox>
-            <Label text="Age Group Setup">
+            <Label text="%race.agegroups">
                <font>
                   <Font size="16.0" />
                </font>
@@ -141,7 +141,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <ToggleSwitch fx:id="agCustomToggleSwitch" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="160.0" text="Custom Increments " />
+            <ToggleSwitch fx:id="agCustomToggleSwitch" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="160.0" text="%award.custom" />
             <GridPane fx:id="agGridPane" hgap="2.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="140.0" vgap="2.0">
                <columnConstraints>
                   <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
@@ -152,19 +152,19 @@
                   <RowConstraints minHeight="10.0" vgrow="NEVER" />
                </rowConstraints>
                <children>
-                  <Label prefHeight="17.0" prefWidth="56.0" text="Increment" />
-                  <Label text="1st AG End" GridPane.rowIndex="1" />
+                  <Label prefHeight="17.0" prefWidth="56.0" text="%award.depth" />
+                  <Label text="%race.end" GridPane.rowIndex="1" />
                   <ChoiceBox fx:id="agIncrementChoiceBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="50.0" GridPane.columnIndex="1" />
                   <TextField fx:id="agStartTextField" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <VBox fx:id="agCustomVBox" maxHeight="1.7976931348623157E308" spacing="2.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ToggleSwitch fx:id="customAGNamesToggleSwitch" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="160.0" text="Custom AG Names">
+                  <ToggleSwitch fx:id="customAGNamesToggleSwitch" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="160.0" text="%award.custom">
                      <padding>
                         <Insets top="2.0" />
                      </padding></ToggleSwitch>
-                  <Label maxWidth="1.7976931348623157E308" text="Age Group Ranges:" wrapText="true">
+                  <Label maxWidth="1.7976931348623157E308" text="%race.agegroups" wrapText="true">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -174,9 +174,9 @@
                   </Label>
                   <TableView fx:id="customAGTableView" editable="true" maxHeight="1.7976931348623157E308" prefHeight="150.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="startAGTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="Start" />
-                        <TableColumn fx:id="endAGTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="End" />
-                      <TableColumn fx:id="nameAGTableColumn" prefWidth="75.0" text="Name" />
+                      <TableColumn fx:id="startAGTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="%race.start" />
+                        <TableColumn fx:id="endAGTableColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" text="%race.end" />
+                      <TableColumn fx:id="nameAGTableColumn" prefWidth="75.0" text="%label.name" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -184,10 +184,10 @@
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="agCustomEditButton" mnemonicParsing="false" text="Edit" />
+                        <Button fx:id="agCustomEditButton" mnemonicParsing="false" text="%button.edit" />
                         <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="agCustomDeleteButton" mnemonicParsing="false" text="Delete" />
-                        <Button fx:id="agCustomAddButton" mnemonicParsing="false" text="Add" />
+                        <Button fx:id="agCustomDeleteButton" mnemonicParsing="false" text="%button.delete" />
+                        <Button fx:id="agCustomAddButton" mnemonicParsing="false" text="%button.add" />
                      </children>
                   </HBox>
                </children>

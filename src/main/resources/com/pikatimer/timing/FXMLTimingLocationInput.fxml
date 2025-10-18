@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    <children>
       <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
          <children>
-            <Label alignment="TOP_LEFT" text="Reads" GridPane.columnIndex="2">
+            <Label alignment="TOP_LEFT" text="%timing.reads" GridPane.columnIndex="2">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </Label>
          </children>
       </HBox>
-      <Button fx:id="removeInput" mnemonicParsing="false" onAction="#removeTimingInput" text="Remove Input" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+      <Button fx:id="removeInput" mnemonicParsing="false" onAction="#removeTimingInput" text="%timing.removeInput" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
@@ -62,13 +62,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          <children>
             <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
                <children>
-                  <TextField fx:id="locationNameTextField" promptText="Input Name" GridPane.columnIndex="1">
+                  <TextField fx:id="locationNameTextField" promptText="%timing.inputName" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </TextField>
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Label text="Type">
+                  <Label text="%timing.type">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -85,12 +85,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <CheckBox fx:id="backupCheckBox" mnemonicParsing="false" text="Backup Input">
+                  <CheckBox fx:id="backupCheckBox" mnemonicParsing="false" text="%timing.backupInput">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </CheckBox>
-                  <CheckBox fx:id="announcerCheckBox" mnemonicParsing="false" prefHeight="27.0" prefWidth="100.0" text="Announcer">
+                  <CheckBox fx:id="announcerCheckBox" mnemonicParsing="false" prefHeight="27.0" prefWidth="100.0" text="%timing.announcer">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -99,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </HBox>
             <HBox alignment="BOTTOM_LEFT">
                <children>
-                  <CheckBox fx:id="timeSkewCheckBox" mnemonicParsing="false" prefHeight="27.0" prefWidth="95.0" text="Skew Time">
+                  <CheckBox fx:id="timeSkewCheckBox" mnemonicParsing="false" prefHeight="27.0" prefWidth="95.0" text="%timing.skewTime">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -112,18 +112,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          </children>
       </VBox>
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="NEVER" />
-      <Label text="Input Name" textAlignment="RIGHT">
+      <Label text="%timing.inputName" textAlignment="RIGHT">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <Label text="Options" GridPane.rowIndex="3">
+      <Label text="%timing.options" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="5.0" />
          </GridPane.margin>
          <font>
             <Font size="18.0" />
          </font></Label>
-      <Button fx:id="clearReads" mnemonicParsing="false" onAction="#clearReads" prefWidth="90.0" text="Clear Reads" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Button fx:id="clearReads" mnemonicParsing="false" onAction="#clearReads" prefWidth="90.0" text="%timing.clearReads" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
@@ -137,14 +137,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                <children>
                 
                                           <TextField fx:id="timingLocationInputDataTextField" layoutX="182.0" layoutY="42.0" maxWidth="1.7976931348623157E308" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="inputChooserButton" mnemonicParsing="false" prefWidth="50.0" text="File...">
+                  <Button fx:id="inputChooserButton" mnemonicParsing="false" prefWidth="50.0" text="%timing.file">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Button>
                </children>
             </HBox>
-            <Label text="status" />
+            <Label text="%timing.status" />
          </children>
          <GridPane.margin>
             <Insets bottom="5.0" top="5.0" />

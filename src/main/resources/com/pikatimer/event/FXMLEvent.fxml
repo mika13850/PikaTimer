@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                <children>
                   <HBox alignment="CENTER_LEFT" prefWidth="579.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="23.0" prefWidth="110.0" text="Race Name">
+                        <Label minWidth="-Infinity" prefHeight="23.0" prefWidth="110.0" text="%label.raceName">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
@@ -57,12 +57,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="eventTitle" maxWidth="1.7976931348623157E308" promptText="Event Name" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="eventTitle" maxWidth="1.7976931348623157E308" promptText="%event.promptName" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="110.0" text="Date">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="110.0" text="%label.date">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="eventDate" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="152.0" promptText="MM/DD/YYYY" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="eventDate" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="152.0" promptText="%event.promptDate" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
@@ -82,19 +82,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </VBox>
             <VBox fx:id="racesVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="2.0" VBox.vgrow="SOMETIMES">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" text="Events" VBox.vgrow="NEVER">
+                  <Label maxWidth="1.7976931348623157E308" text="%label.events" VBox.vgrow="NEVER">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
                   <TableView fx:id="raceTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="100.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="raceNameColumn" minWidth="75.0" prefWidth="150.0" resizable="true" text="Name">
+                        <TableColumn fx:id="raceNameColumn" minWidth="75.0" prefWidth="150.0" resizable="true" text="%label.name">
                             <cellValueFactory>
                                 <PropertyValueFactory property="raceName" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="raceDistanceColumn" prefWidth="50.0" resizable="true" text="Distance">
+                        <TableColumn fx:id="raceDistanceColumn" prefWidth="50.0" resizable="true" text="%label.distance">
                             <cellValueFactory>
                                 <PropertyValueFactory property="raceDistance" />
                             </cellValueFactory>
@@ -106,17 +106,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="addRaceButton" mnemonicParsing="false" text="Add">
+                        <Button fx:id="addRaceButton" mnemonicParsing="false" text="%label.add">
                            <font>
                               <Font size="14.0" />
                            </font></Button>
-                        <Button fx:id="copyRaceButton" mnemonicParsing="false" text="Copy">
+                        <Button fx:id="copyRaceButton" mnemonicParsing="false" text="%label.copy">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="removeRaceButton" mnemonicParsing="false" text="Remove">
+                        <Button fx:id="removeRaceButton" mnemonicParsing="false" text="%label.remove">
                            <font>
                               <Font size="14.0" />
                            </font></Button>
@@ -129,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </VBox>
             <VBox fx:id="timingVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                <children>
-                  <Label contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Timing Locations" textAlignment="CENTER" VBox.vgrow="NEVER">
+                  <Label contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%label.timingLocations" textAlignment="CENTER" VBox.vgrow="NEVER">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -138,11 +138,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="timingLocAddButton" mnemonicParsing="false" text="Add">
+                        <Button fx:id="timingLocAddButton" mnemonicParsing="false" text="%label.add">
                            <font>
                               <Font size="14.0" />
                            </font></Button>
-                        <Button fx:id="timingLocRemoveButton" mnemonicParsing="false" text="Remove">
+                        <Button fx:id="timingLocRemoveButton" mnemonicParsing="false" text="%label.remove">
                            <font>
                               <Font size="14.0" />
                            </font></Button>

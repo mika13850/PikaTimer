@@ -38,13 +38,13 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label text=" Header/Footer Setup">
+            <Label text="%results.headerFooterSetup">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
             <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Label fx:id="copyFromLabel" text="Copy from ">
+            <Label fx:id="copyFromLabel" text="%results.copyFrom">
                <font>
                   <Font size="16.0" />
                </font>
@@ -54,17 +54,17 @@
       </HBox>
       <VBox GridPane.rowIndex="1" GridPane.valignment="TOP">
          <children>
-            <Label text="Text">
+            <Label text="%results.text">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <CheckBox fx:id="textForBothCheckBox" mnemonicParsing="false" text="Use Text Header/Footer for both Text and HTML results" />
+            <CheckBox fx:id="textForBothCheckBox" mnemonicParsing="false" text="%results.useTextForBoth" />
          </children>
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2">
          <children>
-            <Label text="Header">
+            <Label text="%results.header">
                <font>
                   <Font size="14.0" />
                </font>
@@ -72,40 +72,40 @@
                   <Insets />
                </VBox.margin>
             </Label>
-            <TextArea fx:id="textHeaderTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Header text goes at the top of the page" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="textHeaderTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%results.headerTextPrompt" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
          <children>
-            <Label text="Message">
+            <Label text="%results.message">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextArea fx:id="textMessageTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Any message text will go below the title/date but above the results" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="textMessageTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%results.messageTextPrompt" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
          <children>
-            <Label text="Footer">
+            <Label text="%results.footer">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextArea fx:id="textFooterTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Footer text goes below the results" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="textFooterTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%results.footerTextPrompt" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label text="HTML">
+                  <Label text="%results.html">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
                   <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Label text="HTML Editor: ">
+                  <Label text="%results.htmlEditor">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -117,14 +117,14 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Google Analytics Code" />
+                        <Label text="%results.googleAnalyticsCode" />
                         <TextField fx:id="gaTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="108.0" promptText="UA-XXXXXXXX-X" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="CSS Stylesheet" />
-                        <TextField fx:id="cssTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="356.0" promptText="An optional link to a custom style sheet" />
+                        <Label text="%results.cssStylesheet" />
+                        <TextField fx:id="cssTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="356.0" promptText="%results.cssPrompt" />
                      </children>
                   </VBox>
                </children>
@@ -133,7 +133,7 @@
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <Label text="Header">
+            <Label text="%results.header">
                <font>
                   <Font size="14.0" />
                </font>
@@ -148,7 +148,7 @@
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
          <children>
-            <Label text="Message">
+            <Label text="%results.message">
                <font>
                   <Font size="14.0" />
                </font>
@@ -163,7 +163,7 @@
       </VBox>
       <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
-            <Label text="Footer">
+            <Label text="%results.footer">
                <font>
                   <Font size="14.0" />
                </font>
@@ -178,8 +178,8 @@
       </VBox>
       <HBox alignment="CENTER_RIGHT" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
-            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" text="%button.cancel" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonAction" text="%button.save" />
          </children>
          <padding>
             <Insets top="10.0" />

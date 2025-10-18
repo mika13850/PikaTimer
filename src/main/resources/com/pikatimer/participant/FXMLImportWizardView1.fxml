@@ -31,40 +31,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    <children>
       <HBox alignment="CENTER_LEFT" spacing="2.0">
          <children>
-            <Label text="File:">
+            <Label text="%import.file">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="fileTextField" promptText="Participants File" />
-            <Button fx:id="fileChooserButton" alignment="CENTER" mnemonicParsing="false" text="Select..." textAlignment="CENTER" />
+            <TextField fx:id="fileTextField" promptText="%import.filePrompt" />
+            <Button fx:id="fileChooserButton" alignment="CENTER" mnemonicParsing="false" text="%import.selectFile" textAlignment="CENTER" />
          </children>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </HBox>
       <Label fx:id="fileStatusLabel" />
-      <CheckBox fx:id="clearExistingCheckBox" mnemonicParsing="false" text="Clear existing participants" />
+      <CheckBox fx:id="clearExistingCheckBox" mnemonicParsing="false" text="%import.clearExisting" />
       <HBox fx:id="duplicateHandlingHBox" alignment="CENTER_LEFT" spacing="4.0">
          <children>
-            <Label text="Duplicate Handling" />
+            <Label text="%import.duplicateHandling" />
             <ComboBox fx:id="duplicateHandlingComboBox" minWidth="-Infinity" prefWidth="85.0" />
          </children>
       </HBox>
-      <CheckBox fx:id="cleanupNamesCheckBox" mnemonicParsing="false" text="Cleanup Names" />
-      <CheckBox fx:id="cleanupCityCheckBox" mnemonicParsing="false" text="Cleanup City / State data" />
+      <CheckBox fx:id="cleanupNamesCheckBox" mnemonicParsing="false" text="%import.cleanupNames" />
+      <CheckBox fx:id="cleanupCityCheckBox" mnemonicParsing="false" text="%import.cleanupCity" />
       <VBox fx:id="bibAssignmentVBox" spacing="5.0">
          <children>
-            <Label text="Race/Wave Assigment Method:">
+            <Label text="%import.raceWaveAssignment">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <CheckBox fx:id="waveByBibCheckBox" mnemonicParsing="false" text="Assign Race/Wave by Bib Number" />
-            <CheckBox fx:id="waveByAttributeCheckBox" mnemonicParsing="false" text="Assign by Import Attribute" />
+            <CheckBox fx:id="waveByBibCheckBox" mnemonicParsing="false" text="%import.assignByBib" />
+            <CheckBox fx:id="waveByAttributeCheckBox" mnemonicParsing="false" text="%import.assignByAttribute" />
             <HBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <CheckBox fx:id="waveHardCodeCheckBox" mnemonicParsing="false" text="Assign All to Race/Wave" />
+                  <CheckBox fx:id="waveHardCodeCheckBox" mnemonicParsing="false" text="%import.assignAllToWave" />
                   <ComboBox fx:id="waveComboBox" />
                </children>
             </HBox>

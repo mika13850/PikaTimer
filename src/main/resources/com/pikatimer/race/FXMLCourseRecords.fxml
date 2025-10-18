@@ -23,33 +23,33 @@
    <children>
       <VBox spacing="4.0">
          <children>
-            <Label text="Course Records">
+            <Label text="%courseRecords.title">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
             <TableView fx:id="recordTableView" prefHeight="500.0" prefWidth="950.0" VBox.vgrow="ALWAYS">
               <columns>
-                  <TableColumn fx:id="segmentTableColumn" prefWidth="75.0" text="Segment" />
-                <TableColumn fx:id="categoryTableColumn" prefWidth="75.0" text="Category" />
-                  <TableColumn fx:id="sexTableColumn" prefWidth="75.0" text="Sex" />
-                  <TableColumn fx:id="timeTableColumn" prefWidth="75.0" text="Time" />
-                  <TableColumn fx:id="nameTableColumn" prefWidth="75.0" text="Name" />
-                  <TableColumn fx:id="ageTableColumn" prefWidth="75.0" text="Age" />
-                  <TableColumn fx:id="yearTableColumn" prefWidth="75.0" text="Year" />
-                  <TableColumn fx:id="cityTableColumn" prefWidth="75.0" text="City" />
-                  <TableColumn fx:id="stateTableColumn" prefWidth="75.0" text="State" />
-                  <TableColumn fx:id="countryTableColumn" prefWidth="75.0" text="Country" />
-                  <TableColumn fx:id="newRecordHolderTableColumn" prefWidth="75.0" text="New Record" />
-                  <TableColumn fx:id="newRecordTimeTableColumn" prefWidth="75.0" text="New Time" />
+                  <TableColumn fx:id="segmentTableColumn" prefWidth="75.0" text="%race.segments" />
+                <TableColumn fx:id="categoryTableColumn" prefWidth="75.0" text="%award.category" />
+                  <TableColumn fx:id="sexTableColumn" prefWidth="75.0" text="%participant.sex" />
+                  <TableColumn fx:id="timeTableColumn" prefWidth="75.0" text="%label.time" />
+                  <TableColumn fx:id="nameTableColumn" prefWidth="75.0" text="%label.name" />
+                  <TableColumn fx:id="ageTableColumn" prefWidth="75.0" text="%participant.age" />
+                  <TableColumn fx:id="yearTableColumn" prefWidth="75.0" text="%courseRecords.date" />
+                  <TableColumn fx:id="cityTableColumn" prefWidth="75.0" text="%participant.city" />
+                  <TableColumn fx:id="stateTableColumn" prefWidth="75.0" text="%participant.state" />
+                  <TableColumn fx:id="countryTableColumn" prefWidth="75.0" text="%participant.country" />
+                  <TableColumn fx:id="newRecordHolderTableColumn" prefWidth="75.0" text="%courseRecords.recordHolder" />
+                  <TableColumn fx:id="newRecordTimeTableColumn" prefWidth="75.0" text="%courseRecords.recordTime" />
               </columns>
             </TableView>
             <HBox spacing="4.0" VBox.vgrow="SOMETIMES">
                <children>
-                  <Button fx:id="importButton" mnemonicParsing="false" text="Import" />
-                  <Button fx:id="exportButton" mnemonicParsing="false" text="Export" />
+                  <Button fx:id="importButton" mnemonicParsing="false" text="%button.import" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" text="%button.export" />
                   <Pane HBox.hgrow="ALWAYS" />
-                  <Button fx:id="mergeButton" mnemonicParsing="false" text="Merge" />
+                  <Button fx:id="mergeButton" mnemonicParsing="false" text="%button.save" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

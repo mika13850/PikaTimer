@@ -35,12 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <RowConstraints minHeight="35.0" vgrow="NEVER" />
          </rowConstraints>
          <children>
-            <Label focusTraversable="false" prefHeight="35.0" prefWidth="138.0" text="CSV Column" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+            <Label focusTraversable="false" prefHeight="35.0" prefWidth="138.0" text="%import.csvColumn" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
                 <font>
                     <Font size="24.0" />
                 </font>
             </Label>
-            <Label minWidth="-Infinity" prefHeight="35.0" prefWidth="220.0" text="Participant Attribute" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+            <Label minWidth="-Infinity" prefHeight="35.0" prefWidth="220.0" text="%import.participantAttribute" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
                <font>
                   <Font size="24.0" />
                </font>

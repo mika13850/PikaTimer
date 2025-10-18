@@ -32,7 +32,7 @@
       <RowConstraints fillHeight="false" valignment="CENTER" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <Label text="Award Title">
+      <Label text="%award.title">
          <font>
             <Font size="16.0" />
          </font>
@@ -43,7 +43,7 @@
             <PrefixSelectionComboBox fx:id="awardTypeComboBox" prefHeight="25.0" prefWidth="120.0" />
             <HBox fx:id="mastersHBox" prefWidth="120.0" spacing="2.0">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="78.0" text="Start Age">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="78.0" text="%race.start">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -53,7 +53,7 @@
             </HBox>
          </children>
       </VBox>
-      <ToggleSwitch fx:id="pullToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="152.0" text="Pull From Later" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <ToggleSwitch fx:id="pullToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="152.0" text="%award.pull" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
@@ -62,7 +62,7 @@
          <children>
             <HBox maxWidth="1.7976931348623157E308" spacing="2.0">
                <children>
-                  <Label text="Depth" HBox.hgrow="NEVER">
+                  <Label text="%award.depth" HBox.hgrow="NEVER">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -76,9 +76,9 @@
                <children>
                   <TableView fx:id="depthTableView" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="130.0" prefWidth="177.0">
                     <columns>
-                      <TableColumn fx:id="depthStartTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Start" />
-                      <TableColumn fx:id="depthEndTableColumn" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="End" />
-                        <TableColumn fx:id="depthTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Depth" />
+                      <TableColumn fx:id="depthStartTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="%race.start" />
+                      <TableColumn fx:id="depthEndTableColumn" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="%race.end" />
+                        <TableColumn fx:id="depthTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="%award.depth" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -86,15 +86,15 @@
                   </TableView>
                   <HBox alignment="TOP_RIGHT" spacing="5.0">
                      <children>
-                        <Button fx:id="depthAddButton" mnemonicParsing="false" text="Add" />
-                        <Button fx:id="depthDeleteButton" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="depthAddButton" mnemonicParsing="false" text="%button.add" />
+                        <Button fx:id="depthDeleteButton" mnemonicParsing="false" text="%button.delete" />
                      </children>
                   </HBox>
                </children>
             </VBox>
          </children>
       </VBox>
-      <ToggleSwitch fx:id="chipToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="152.0" text="Use Chip Time" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+      <ToggleSwitch fx:id="chipToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="152.0" text="%award.chip" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
          <font>
             <Font size="16.0" />
          </font>
@@ -112,18 +112,18 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Split/Segment">
+            <Label text="%race.segments">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
             <PrefixSelectionComboBox fx:id="timingPointComboBox" prefHeight="25.0" prefWidth="120.0" GridPane.columnIndex="1" />
-            <ToggleSwitch fx:id="filterToggleSwitch" contentDisplay="CENTER" prefWidth="120.0" text="Fiter" GridPane.rowIndex="1">
+            <ToggleSwitch fx:id="filterToggleSwitch" contentDisplay="CENTER" prefWidth="120.0" text="%award.filter" GridPane.rowIndex="1">
                <font>
                   <Font size="16.0" />
                </font>
             </ToggleSwitch>
-            <ToggleSwitch fx:id="subdivideToggleSwitch" prefHeight="25.0" prefWidth="120.0" text="Grouping" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <ToggleSwitch fx:id="subdivideToggleSwitch" prefHeight="25.0" prefWidth="120.0" text="%award.ageGroup" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <font>
                   <Font size="16.0" />
                </font>
@@ -133,13 +133,13 @@
                   <ListView fx:id="subdivideListView" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="75.0" prefWidth="200.0" />
                   <HBox alignment="TOP_RIGHT" spacing="5.0">
                      <children>
-                        <Button fx:id="subdivideAddButton" mnemonicParsing="false" text="Add" />
-                        <Button fx:id="subdivideDeleteButton" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="subdivideAddButton" mnemonicParsing="false" text="%button.add" />
+                        <Button fx:id="subdivideDeleteButton" mnemonicParsing="false" text="%button.delete" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <ToggleSwitch fx:id="skewToggleSwitch" prefWidth="120.0" text="Skew" GridPane.rowIndex="3">
+            <ToggleSwitch fx:id="skewToggleSwitch" prefWidth="120.0" text="%award.filter" GridPane.rowIndex="3">
                <font>
                   <Font size="16.0" />
                </font>
@@ -154,9 +154,9 @@
                <children>
                   <TableView fx:id="filterTableView" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="75.0" prefWidth="200.0">
                      <columns>
-                        <TableColumn fx:id="filterAttributeTableColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Attribute" />
-                        <TableColumn fx:id="filterTypeTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" sortable="false" text="Type" />
-                        <TableColumn fx:id="filterReferenceValueTableColumn" maxWidth="1.7976931348623157E308" minWidth="30.0" prefWidth="75.0" text="Value" />
+                        <TableColumn fx:id="filterAttributeTableColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="%participant.customization" />
+                        <TableColumn fx:id="filterTypeTableColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" sortable="false" text="%award.type" />
+                        <TableColumn fx:id="filterReferenceValueTableColumn" maxWidth="1.7976931348623157E308" minWidth="30.0" prefWidth="75.0" text="%award.filterValue" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -164,10 +164,10 @@
                   </TableView>
                   <HBox alignment="TOP_RIGHT" spacing="5.0">
                      <children>
-                        <Button fx:id="filterEditButton" mnemonicParsing="false" text="Edit" />
+                        <Button fx:id="filterEditButton" mnemonicParsing="false" text="%button.edit" />
                         <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="filterAddButton" mnemonicParsing="false" text="Add" />
-                        <Button fx:id="filterDeleteButton" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="filterAddButton" mnemonicParsing="false" text="%button.add" />
+                        <Button fx:id="filterDeleteButton" mnemonicParsing="false" text="%button.delete" />
                      </children>
                   </HBox>
                </children>
@@ -177,7 +177,7 @@
             <Insets top="2.0" />
          </GridPane.margin>
       </GridPane>
-      <Label alignment="TOP_LEFT" contentDisplay="TOP" prefWidth="120.0" text="Type" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Label alignment="TOP_LEFT" contentDisplay="TOP" prefWidth="120.0" text="%award.type" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <font>
             <Font size="16.0" />
          </font>
@@ -189,26 +189,26 @@
          <children>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Priority">
+                  <Label text="%label.status">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#upPriority" prefWidth="50.0" text="Up" />
-                  <Button mnemonicParsing="false" onAction="#lowerPriority" prefHeight="25.0" prefWidth="50.0" text="Down" />
+                  <Button mnemonicParsing="false" onAction="#upPriority" prefWidth="50.0" text="%button.add" />
+                  <Button mnemonicParsing="false" onAction="#lowerPriority" prefHeight="25.0" prefWidth="50.0" text="%button.delete" />
                   <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#removeAward" text="Remove Award" />
+                  <Button mnemonicParsing="false" onAction="#removeAward" text="%award.delete" />
                </children>
             </HBox>
             <Separator maxWidth="1.7976931348623157E308" minHeight="-Infinity" />
          </children>
       </VBox>
-      <ToggleSwitch fx:id="visibleAwardsToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="Visible on Awards" GridPane.columnIndex="3">
+      <ToggleSwitch fx:id="visibleAwardsToggleSwitch" contentDisplay="CENTER" prefHeight="25.0" prefWidth="170.0" text="%award.visible" GridPane.columnIndex="3">
          <font>
             <Font size="16.0" />
          </font>
       </ToggleSwitch>
-      <ToggleSwitch fx:id="visibleOverallToggleSwitch" prefHeight="25.0" prefWidth="170.0" text="Visible on Overall" GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <ToggleSwitch fx:id="visibleOverallToggleSwitch" prefHeight="25.0" prefWidth="170.0" text="%award.overall" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <font>
             <Font size="16.0" />
          </font>

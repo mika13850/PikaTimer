@@ -22,11 +22,13 @@ import com.pikatimer.participant.ParticipantDAO;
 import com.pikatimer.race.RaceDAO;
 import com.pikatimer.timing.TimingDAO;
 import com.pikatimer.util.PikaFilePathWrapper;
+import com.pikatimer.util.I18nManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -197,6 +199,8 @@ public class FXMLopenEventController {
                         PikaPreferences.getInstance().setDBLoaded();
 
                         try {
+                            ResourceBundle bundle = ResourceBundle.getBundle("com.pikatimer.i18n.messages", I18nManager.getInstance().getLocale());
+                            loader.setResources(bundle);
                             final Pane myPane = (Pane)loader.load();
                             Scene myScene = new Scene(myPane);
                             

@@ -62,19 +62,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </ScrollPane>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Timing Data" textAlignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.timingData" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
                   <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
-                        <Label text="Search">
+                        <Label text="%button.search">
                            <font>
                               <Font size="18.0" />
                            </font></Label>
                         <TextField fx:id="searchTextBox" />
-                        <Label text="Filter">
+                        <Label text="%timing.filter">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -91,14 +91,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   </HBox>
                   <TableView fx:id="timeTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="bibColumn" prefWidth="50.0" text="Bib" />
-                        <TableColumn fx:id="chipColumn" prefWidth="50.0" text="Chip" />
-                      <TableColumn fx:id="timeColumn" prefWidth="79.0" text="Time" />
-                        <TableColumn fx:id="nameColumn" prefWidth="119.5" text="Name" />
-                        <TableColumn fx:id="locationColumn" prefWidth="94.5" text="Location" />
-                        <TableColumn fx:id="inputColumn" prefWidth="75.0" text="Input" />
-                        <TableColumn fx:id="backupColumn" prefWidth="48.0" text="Backup" />
-                        <TableColumn fx:id="ignoreColumn" editable="true" prefWidth="60.0" text="Ignore" />
+                      <TableColumn fx:id="bibColumn" prefWidth="50.0" text="%timing.bib" />
+                        <TableColumn fx:id="chipColumn" prefWidth="50.0" text="%timing.chip" />
+                      <TableColumn fx:id="timeColumn" prefWidth="79.0" text="%timing.time" />
+                        <TableColumn fx:id="nameColumn" prefWidth="119.5" text="%timing.name" />
+                        <TableColumn fx:id="locationColumn" prefWidth="94.5" text="%timing.location" />
+                        <TableColumn fx:id="inputColumn" prefWidth="75.0" text="%timing.input" />
+                        <TableColumn fx:id="backupColumn" prefWidth="48.0" text="%timing.backup" />
+                        <TableColumn fx:id="ignoreColumn" editable="true" prefWidth="60.0" text="%timing.ignore" />
                     </columns>
                     <sortOrder> 
                         <fx:reference source="timeColumn" />
@@ -115,7 +115,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          <children>
             <VBox fx:id="timingVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Timing Locations" textAlignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.timingLocations" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -123,10 +123,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <ListView fx:id="timingLocListView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#clearAllTimes" text="Clear Times" />
+                        <Button mnemonicParsing="false" onAction="#clearAllTimes" text="%timing.clearTimes" />
                         <Pane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="timingLocAddButton" mnemonicParsing="false" onAction="#addTimingLocation" text="Add" />
-                        <Button fx:id="timingLocRemoveButton" mnemonicParsing="false" onAction="#removeTimingLocation" text="Remove" />
+                        <Button fx:id="timingLocAddButton" mnemonicParsing="false" onAction="#addTimingLocation" text="%button.add" />
+                        <Button fx:id="timingLocRemoveButton" mnemonicParsing="false" onAction="#removeTimingLocation" text="%label.remove" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -136,20 +136,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </VBox>
             <VBox>
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Chip -&gt; Bib Mapping" textAlignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.chipBibMapping" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
                      <children>
-                        <CheckBox fx:id="customChipBibCheckBox" mnemonicParsing="false" text="Use Custom Chip -&gt; Bib">
+                        <CheckBox fx:id="customChipBibCheckBox" mnemonicParsing="false" text="%timing.useCustomChipBib">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
                         </CheckBox>
                         <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="customChipMapButton" mnemonicParsing="false" onAction="#setupCustomChipMap" text="Setup" />
+                        <Button fx:id="customChipMapButton" mnemonicParsing="false" onAction="#setupCustomChipMap" text="%timing.setup" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" left="-2.0" right="2.0" top="2.0" />
@@ -159,7 +159,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </VBox>
             <VBox>
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Start Time Trigger Lookup" textAlignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.startTimeTriggerLookup" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -167,7 +167,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
                      <children>
                         <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="startTriggerLookupButton" mnemonicParsing="false" onAction="#startTriggerLookup" text="Lookup" />
+                        <Button fx:id="startTriggerLookupButton" mnemonicParsing="false" onAction="#startTriggerLookup" text="%timing.lookup" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" left="-2.0" right="2.0" top="2.0" />
@@ -177,7 +177,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </VBox>
             <VBox>
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Overrides / Penalties / Bonuses" textAlignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.overridesPenaltiesBonuses" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -185,11 +185,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <ListView fx:id="overrideListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                   <HBox alignment="CENTER_RIGHT" spacing="5.0">
                      <children>
-                        <Button fx:id="overrideClearAllButton" mnemonicParsing="false" onAction="#clearAllOverrides" text="Clear All" />
+                        <Button fx:id="overrideClearAllButton" mnemonicParsing="false" onAction="#clearAllOverrides" text="%timing.clearAll" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="overrideRemoveButton" mnemonicParsing="false" onAction="#removeOverride" text="Remove" />
-                        <Button fx:id="overrideEditButton" mnemonicParsing="false" onAction="#editOverride" text="Edit" />
-                        <Button fx:id="overrideAddButton" mnemonicParsing="false" onAction="#addOverride" text="Add" />
+                        <Button fx:id="overrideRemoveButton" mnemonicParsing="false" onAction="#removeOverride" text="%label.remove" />
+                        <Button fx:id="overrideEditButton" mnemonicParsing="false" onAction="#editOverride" text="%button.edit" />
+                        <Button fx:id="overrideAddButton" mnemonicParsing="false" onAction="#addOverride" text="%button.add" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -204,7 +204,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </VBox>
       <VBox fx:id="timingLocVBox" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.columnIndex="1">
          <children>
-            <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Timing Location Setup" textAlignment="CENTER" VBox.vgrow="NEVER">
+            <Label alignment="TOP_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="%timing.timingLocationSetup" textAlignment="CENTER" VBox.vgrow="NEVER">
                <font>
                   <Font size="18.0" />
                </font>
@@ -213,7 +213,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                <children>
                   <TextField fx:id="timingLocationNameTextField" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="207.0" GridPane.columnIndex="1" />
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <ToggleSwitch fx:id="assignToRaceToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="Auto-Assign to Race" textAlignment="RIGHT" />
+                  <ToggleSwitch fx:id="assignToRaceToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="%timing.autoAssignToRace" textAlignment="RIGHT" />
                   <ComboBox fx:id="assignToRaceComboBox" prefHeight="25.0" prefWidth="102.0" />
                </children>
                <GridPane.margin>
@@ -222,21 +222,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </HBox>
             <HBox fillHeight="false" spacing="5.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="110.0" text="Ignore times before:" HBox.hgrow="NEVER">
+                  <Label prefHeight="17.0" prefWidth="110.0" text="%timing.ignoreTimesBefore" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Label>
                   <TextField fx:id="filterStartTextField" prefHeight="25.0" prefWidth="90.0" promptText="HH:MM:SS.sss" />
                   <Pane maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="125.0" HBox.hgrow="ALWAYS" />
-                  <ToggleSwitch fx:id="announcerToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="Send to Announcer" textAlignment="RIGHT" />
+                  <ToggleSwitch fx:id="announcerToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="%timing.sendToAnnouncer" textAlignment="RIGHT" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Label prefHeight="17.0" prefWidth="110.0" text="Ignore times After:" />
+                  <Label prefHeight="17.0" prefWidth="110.0" text="%timing.ignoreTimesAfter" />
                   <TextField fx:id="filterEndTextField" prefHeight="25.0" prefWidth="90.0" promptText="HH:MM:SS.sss" />
                   <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="addInputButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#addTimingInput" text="Add Input" />
+                  <Button fx:id="addInputButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#addTimingInput" text="%timing.addInput" />
                </children>
             </HBox>
          </children>

@@ -497,6 +497,7 @@ public class FXMLRaceDetailsController {
         courseRecordSetupButton.setOnAction(r -> {
         
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLCourseRecords.fxml"));
+            fxmlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
             Parent crRoot;
             try {
                 crRoot = (Parent) fxmlLoader.load();

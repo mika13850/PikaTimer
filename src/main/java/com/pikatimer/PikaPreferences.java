@@ -95,4 +95,20 @@ public class PikaPreferences {
         prefs.put(key, value);
     }
     
+    /**
+     * Saves the locale language code to preferences
+     * @param languageCode the language code (e.g., "en", "fr")
+     */
+    public void setLocale(String languageCode) {
+        prefs.put("locale", languageCode);
+    }
+    
+    /**
+     * Gets the saved locale language code from preferences
+     * @return the language code, or "en" as default
+     */
+    public String getLocale() {
+        return prefs.get("locale", "en");
+    }
+    
 }

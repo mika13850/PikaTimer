@@ -826,6 +826,7 @@ public class FXMLTimingController {
     private void showTimingInput(TimingLocationInput i) {
         logger.debug("showTimingInput called... ");
         FXMLLoader tlLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/timing/FXMLTimingLocationInput.fxml"));
+        tlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
         try {
             timingDetailsVBox.getChildren().add(tlLoader.load());
             
@@ -870,6 +871,7 @@ public class FXMLTimingController {
         
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLSetupBibMap.fxml"));
+        fxmlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
         Parent chipMapRoot;
         try {
             

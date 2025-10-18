@@ -12,7 +12,7 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="226.0" layoutY="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="25.0">
          <children>
-            <Label text="PikaTimer">
+            <Label text="%label.pikaVersion">
                <font>
                   <Font size="48.0" />
                </font>
@@ -30,7 +30,7 @@
                   <Font size="18.0" />
                </font>
             </Hyperlink>
-            <Label text="Released under the GLP v3 Open Source License " textAlignment="CENTER" wrapText="true">
+            <Label text="%label.released" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -43,7 +43,7 @@
                   <Font size="18.0" />
                </font>
             </Hyperlink>
-            <Label text="Built on top of the following OpenSource Projects:" textAlignment="CENTER" wrapText="true">
+            <Label text="%label.builtOn" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
@@ -67,7 +67,7 @@
                   <Insets />
                </VBox.margin>
             </FlowPane>
-            <Label alignment="CENTER" contentDisplay="BOTTOM" text="Copyright (C) 2014 -&gt; 2024 John Garner">
+            <Label alignment="CENTER" contentDisplay="BOTTOM" text="%label.copyright">
                <font>
                   <Font size="18.0" />
                </font>
