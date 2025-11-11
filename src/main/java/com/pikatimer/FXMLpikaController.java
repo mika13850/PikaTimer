@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
 import java.util.Locale;
 import com.pikatimer.util.I18nManager;
 
@@ -91,6 +92,17 @@ public class FXMLpikaController {
     @FXML
     private void switchToFrench() {
         I18nManager.getInstance().setLocale(Locale.FRENCH);
+    }
+    
+    /**
+     * Toggles fullscreen mode on the primary stage
+     */
+    @FXML
+    private void toggleFullscreen() {
+        Stage stage = Pikatimer.getPrimaryStage();
+        if (stage != null) {
+            stage.setFullScreen(!stage.isFullScreen());
+        }
     }
     
 }

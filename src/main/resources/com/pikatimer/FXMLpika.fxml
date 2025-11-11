@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          <children>
             <Label fx:id="eventName" text="Event name" HBox.hgrow="SOMETIMES">
                <font>
-                  <Font size="24.0" />
+                  <Font size="14.0" />
                </font></Label>
             <Pane prefWidth="50.0" HBox.hgrow="SOMETIMES" />
             <Label fx:id="eventDate" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefWidth="161.0" text="MM/DD/YYYY" textAlignment="RIGHT" HBox.hgrow="SOMETIMES">
@@ -57,11 +57,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <Insets left="5.0" />
                </padding>
                <font>
-                  <Font size="24.0" />
+                  <Font size="14.0" />
                </font>
             </Label>  
             <MenuBar>
                <menus>
+                  <Menu text="%app.menu.view">
+                     <items>
+                        <MenuItem fx:id="fullscreenMenuItem" text="%menu.view.fullscreen" accelerator="F11" onAction="#toggleFullscreen" />
+                     </items>
+                  </Menu>
                   <Menu text="%app.menu.language">
                      <items>
                         <MenuItem fx:id="englishMenuItem" text="%label.english" onAction="#switchToEnglish" />

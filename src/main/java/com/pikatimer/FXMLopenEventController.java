@@ -204,9 +204,13 @@ public class FXMLopenEventController {
                             final Pane myPane = (Pane)loader.load();
                             Scene myScene = new Scene(myPane);
                             
+                            // Configure fullscreen settings for a better fullscreen experience
+                            primaryStage.setFullScreenExitHint("Press F11 to exit fullscreen");
+                            // primaryStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F11));
+                            
                             // F11 to toggle fullscreen mode
                             myScene.getAccelerators().put(new KeyCodeCombination(KeyCode.F11), () -> {
-                                primaryStage.setFullScreen(primaryStage.fullScreenProperty().not().get());
+                                primaryStage.setFullScreen(!primaryStage.isFullScreen());
                             });
         
                             Platform.runLater(() -> {

@@ -125,9 +125,13 @@ public class Pikatimer extends Application {
         primaryStage.setX((primaryScreenBounds.getWidth() - primaryStage.getWidth())/2);  
         primaryStage.setY((primaryScreenBounds.getHeight() - primaryStage.getHeight())/2);  
  
+        // Configure fullscreen settings for a better fullscreen experience
+        primaryStage.setFullScreenExitHint("Press F11 to exit fullscreen");
+        // primaryStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F11));
+ 
         // F11 to toggle fullscreen mode
         myScene.getAccelerators().put(new KeyCodeCombination(KeyCode.F11), () -> {
-            mainStage.setFullScreen(mainStage.fullScreenProperty().not().get());
+            primaryStage.setFullScreen(!primaryStage.isFullScreen());
         });
         
         // Icons
