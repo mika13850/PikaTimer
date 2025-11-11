@@ -156,69 +156,69 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                <content>
                   <VBox fx:id="formVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <HBox>
+                        <HBox spacing="5.0">
                            <children>
-                              <Label minWidth="-Infinity" prefWidth="50.0" text="%participant.bib" HBox.hgrow="NEVER">
+                              <Label minWidth="-Infinity" text="%participant.bib" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="bibTextField" prefHeight="25.0" prefWidth="48.0" promptText="12345" HBox.hgrow="NEVER" />
+                              <TextField fx:id="bibTextField" prefHeight="25.0" prefWidth="80.0" promptText="12345" HBox.hgrow="SOMETIMES" />
                            </children>
                         </HBox>
-                        <HBox fx:id="raceHBox" alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox fx:id="raceHBox" alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label fx:id="raceLabel" minWidth="-Infinity" prefWidth="50.0" text="%participant.race" textAlignment="RIGHT">
+                              <Label fx:id="raceLabel" minWidth="-Infinity" text="%participant.race" textAlignment="RIGHT" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <CheckComboBox fx:id="waveComboBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="62.0" HBox.hgrow="ALWAYS" />
+                              <CheckComboBox fx:id="waveComboBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.first">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.first" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="firstNameField" maxWidth="1.7976931348623157E308" prefWidth="90" promptText="%participant.firstName" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="firstNameField" maxWidth="1.7976931348623157E308" promptText="%participant.firstName" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.middle">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.middle" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="middleNameTextField" prefWidth="90" promptText="%participant.middleName" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="middleNameTextField" maxWidth="1.7976931348623157E308" promptText="%participant.middleName" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.last">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.last" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="lastNameField" prefWidth="90" promptText="%participant.lastName" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="lastNameField" maxWidth="1.7976931348623157E308" promptText="%participant.lastName" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.dob">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.dob" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <DatePicker fx:id="birthdayDatePicker" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="25.0" prefWidth="135.0" promptText="%participant.dateOfBirth" HBox.hgrow="ALWAYS" />
+                              <DatePicker fx:id="birthdayDatePicker" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="25.0" promptText="%participant.dateOfBirth" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" text="%participant.age" HBox.hgrow="NEVER">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.age" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -229,7 +229,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="27.0" text="%participant.sex">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.sex" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -237,39 +237,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <TextField fx:id="sexTextField" minWidth="-Infinity" prefHeight="25.0" prefWidth="40.0" promptText="%participant.sex" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" text="%participant.city">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.city" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="cityTextField" prefHeight="25.0" prefWidth="228.0" promptText="%participant.city" />
+                              <TextField fx:id="cityTextField" maxWidth="1.7976931348623157E308" prefHeight="25.0" promptText="%participant.city" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" text="%participant.state">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.state" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="stateTextField" minWidth="-Infinity" prefWidth="40.0" promptText="%participant.state" />
+                              <TextField fx:id="stateTextField" minWidth="-Infinity" prefWidth="80.0" promptText="%participant.state" />
                            </children>
                         </HBox>
-                        <HBox fx:id="countryHBox" alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox fx:id="countryHBox" alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.country">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.country" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="countryTextField" prefWidth="90" promptText="%participant.country" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="countryTextField" maxWidth="1.7976931348623157E308" promptText="%participant.country" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.status">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.status" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -277,7 +277,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <PrefixSelectionChoiceBox fx:id="statusPrefixSelectionChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <HBox>
+                        <HBox spacing="5.0">
                            <children>
                               <ToggleSwitch maxWidth="1.7976931348623157E308" text="%participant.awardEligible" HBox.hgrow="ALWAYS">
                                  <font>
@@ -286,24 +286,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               </ToggleSwitch>
                            </children>
                         </HBox>
-                        <HBox fx:id="zipHBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="2.0">
+                        <HBox fx:id="zipHBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                            <children>
-                              <Label maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="20.0" prefWidth="145.0" text="%participant.awardGenderOverride" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="20.0" text="%participant.awardGenderOverride" wrapText="true" HBox.hgrow="SOMETIMES">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="awardGenderOverrideTextField" prefHeight="26.0" prefWidth="40.0" />
+                              <TextField fx:id="awardGenderOverrideTextField" prefHeight="26.0" prefWidth="50.0" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="2.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label prefHeight="20.0" prefWidth="50.0" text="%participant.note">
+                              <Label minWidth="-Infinity" prefHeight="20.0" text="%participant.note" HBox.hgrow="NEVER">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="noteTextField" prefWidth="90" promptText="%participant.note" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="noteTextField" maxWidth="1.7976931348623157E308" promptText="%participant.note" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <VBox fx:id="customAttributesVBox" spacing="5.0" VBox.vgrow="ALWAYS" />

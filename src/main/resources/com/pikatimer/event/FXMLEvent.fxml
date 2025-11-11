@@ -45,14 +45,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="2.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER_LEFT" spacing="2.0">
+            <VBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefWidth="579.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="23.0" prefWidth="110.0" text="%label.raceName">
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
+                        <Label minWidth="-Infinity" prefHeight="23.0" text="%label.raceName" HBox.hgrow="NEVER">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -60,17 +57,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <TextField fx:id="eventTitle" maxWidth="1.7976931348623157E308" promptText="%event.promptName" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="110.0" text="%label.date">
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%label.date" HBox.hgrow="NEVER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="eventDate" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="152.0" promptText="%event.promptDate" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="eventDate" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="160.0" promptText="%event.promptDate" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

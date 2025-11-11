@@ -72,48 +72,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                      <children>
                         <VBox spacing="2.0" GridPane.columnIndex="2">
                            <children>
-                              <HBox alignment="CENTER_LEFT">
+                              <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                                  <children>
-                                    <Label text="%results.resultsAndReports" GridPane.columnIndex="2">
+                                    <Label minWidth="-Infinity" text="%results.resultsAndReports" GridPane.columnIndex="2" HBox.hgrow="NEVER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="selectedRaceLabel" text="%results.for" HBox.hgrow="NEVER">
+                                    <Label fx:id="selectedRaceLabel" minWidth="-Infinity" text="%results.for" HBox.hgrow="NEVER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="raceComboBox" prefWidth="200.0" />
+                                    <ComboBox fx:id="raceComboBox" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
                                     <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                     <Button mnemonicParsing="false" onAction="#addNewReport" text="%results.addNewReport" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" spacing="2.0">
+                              <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                                  <children>
-                                    <Label text="%results.timeDisplayFormat" />
+                                    <Label minWidth="-Infinity" text="%results.timeDisplayFormat" HBox.hgrow="NEVER" />
                                     <ChoiceBox fx:id="timeFormatChoiceBox" prefWidth="120.0" />
-                                    <Label text="%results.rounding">
-                                       <padding>
-                                          <Insets left="5.0" />
-                                       </padding>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </Label>
+                                    <Label minWidth="-Infinity" text="%results.rounding" HBox.hgrow="NEVER" />
                                     <ChoiceBox fx:id="timeRoundingChoiceBox" prefWidth="80.0" />
-                                    <Label text="%results.paceDisplayFormat">
-                                       <padding>
-                                          <Insets left="5.0" />
-                                       </padding>
-                                    </Label>
+                                    <Label minWidth="-Infinity" text="%results.paceDisplayFormat" HBox.hgrow="NEVER" />
                                     <ChoiceBox fx:id="paceFormatChoiceBox" prefWidth="100.0" />
-                                    <Region maxWidth="1.7976931348623157E308" prefWidth="2.0" HBox.hgrow="ALWAYS" />
+                                    <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" spacing="4.0">
+                              <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                                  <children>
-                                    <CheckBox fx:id="useCustomHeaderCheckBox" mnemonicParsing="false" text="%results.useCustomHeaderFooters" />
+                                    <CheckBox fx:id="useCustomHeaderCheckBox" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%results.useCustomHeaderFooters" HBox.hgrow="ALWAYS" />
                                     <Button fx:id="setupHeaderButton" mnemonicParsing="false" onAction="#setupHeaders" text="%results.setup" />
                                  </children>
                               </HBox>
@@ -128,16 +117,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                            </content></ScrollPane>
                         <VBox GridPane.columnIndex="1" GridPane.rowSpan="4">
                            <children>
-                              <VBox spacing="2.0">
+                              <VBox maxWidth="1.7976931348623157E308" spacing="5.0">
                                  <children>
-                                    <Button fx:id="updateNowButton" mnemonicParsing="false" text="%results.processAllEnabledReports" />
-                                    <HBox alignment="CENTER_LEFT" spacing="4.0">
+                                    <Button fx:id="updateNowButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%results.processAllEnabledReports" wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                                        <children>
-                                          <ToggleSwitch fx:id="autoUpdateToggleSwitch" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="172.0" text="%results.autoProcessAllEnabled" />
+                                          <ToggleSwitch fx:id="autoUpdateToggleSwitch" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" text="%results.autoProcessAllEnabled" HBox.hgrow="ALWAYS" />
                                           <ChoiceBox fx:id="updateTimeDelayChoiceBox" prefHeight="25.0" prefWidth="50.0" />
                                        </children>
                                     </HBox>
-                                    <ProgressBar fx:id="autoUpdateProgressBar" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="160.0" progress="0.0" />
+                                    <ProgressBar fx:id="autoUpdateProgressBar" maxWidth="1.7976931348623157E308" prefHeight="18.0" progress="0.0" />
                                  </children>
                               </VBox>
                               <Label text="%results.reportDestinations">
@@ -172,34 +161,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" vgrow="ALWAYS" />
                </rowConstraints>
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label text="%results.search">
+                        <Label minWidth="-Infinity" text="%results.search" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="resultsSearchTextField" promptText="%results.search" />
+                        <TextField fx:id="resultsSearchTextField" prefWidth="150.0" promptText="%results.search" HBox.hgrow="SOMETIMES" />
                         <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Label text="%results.started">
+                        <Label minWidth="-Infinity" text="%results.started" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="startedCountLabel" text="0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <padding>
-                              <Insets right="5.0" />
-                           </padding>
-                        </Label>
-                        <Label text="%results.finished">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="finishedCountLabel" text="0">
+                        <Label fx:id="startedCountLabel" minWidth="-Infinity" text="0" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -207,12 +183,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <Insets right="5.0" />
                            </padding>
                         </Label>
-                        <Label text="%results.stillOnCourse">
+                        <Label minWidth="-Infinity" text="%results.finished" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="pendingCountLabel" text="0">
+                        <Label fx:id="finishedCountLabel" minWidth="-Infinity" text="0" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -220,12 +196,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                               <Insets right="5.0" />
                            </padding>
                         </Label>
-                        <Label fx:id="withdrawnLabel" text="%results.withdrawn">
+                        <Label minWidth="-Infinity" text="%results.stillOnCourse" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="withdrawnCountLabel" text="0">
+                        <Label fx:id="pendingCountLabel" minWidth="-Infinity" text="0" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets right="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="withdrawnLabel" minWidth="-Infinity" text="%results.withdrawn" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="withdrawnCountLabel" minWidth="-Infinity" text="0" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>

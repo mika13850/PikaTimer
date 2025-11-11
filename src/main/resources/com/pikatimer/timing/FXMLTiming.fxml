@@ -141,14 +141,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <CheckBox fx:id="customChipBibCheckBox" mnemonicParsing="false" text="%timing.useCustomChipBib">
+                        <CheckBox fx:id="customChipBibCheckBox" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%timing.useCustomChipBib" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
                         </CheckBox>
-                        <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="customChipMapButton" mnemonicParsing="false" onAction="#setupCustomChipMap" text="%timing.setup" />
                      </children>
                      <padding>
@@ -164,9 +163,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
+                  <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="startTriggerLookupButton" mnemonicParsing="false" onAction="#startTriggerLookup" text="%timing.lookup" />
                      </children>
                      <padding>
@@ -211,31 +209,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </Label>
             <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS">
                <children>
-                  <TextField fx:id="timingLocationNameTextField" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="207.0" GridPane.columnIndex="1" />
-                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <ToggleSwitch fx:id="assignToRaceToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="%timing.autoAssignToRace" textAlignment="RIGHT" />
-                  <ComboBox fx:id="assignToRaceComboBox" prefHeight="25.0" prefWidth="102.0" />
+                  <TextField fx:id="timingLocationNameTextField" maxWidth="1.7976931348623157E308" prefHeight="25.0" GridPane.columnIndex="1" HBox.hgrow="ALWAYS" />
+                  <ToggleSwitch fx:id="assignToRaceToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" text="%timing.autoAssignToRace" textAlignment="RIGHT" HBox.hgrow="SOMETIMES" />
+                  <ComboBox fx:id="assignToRaceComboBox" prefHeight="25.0" prefWidth="120.0" HBox.hgrow="SOMETIMES" />
                </children>
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </HBox>
-            <HBox fillHeight="false" spacing="5.0">
+            <HBox fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="110.0" text="%timing.ignoreTimesBefore" HBox.hgrow="NEVER">
+                  <Label minWidth="-Infinity" prefHeight="17.0" text="%timing.ignoreTimesBefore" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Label>
-                  <TextField fx:id="filterStartTextField" prefHeight="25.0" prefWidth="90.0" promptText="HH:MM:SS.sss" />
-                  <Pane maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="125.0" HBox.hgrow="ALWAYS" />
-                  <ToggleSwitch fx:id="announcerToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="144.0" text="%timing.sendToAnnouncer" textAlignment="RIGHT" />
+                  <TextField fx:id="filterStartTextField" prefHeight="25.0" prefWidth="110.0" promptText="HH:MM:SS.sss" />
+                  <Pane maxWidth="1.7976931348623157E308" prefHeight="20.0" HBox.hgrow="ALWAYS" />
+                  <ToggleSwitch fx:id="announcerToggleSwitch" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" text="%timing.sendToAnnouncer" textAlignment="RIGHT" HBox.hgrow="SOMETIMES" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Label prefHeight="17.0" prefWidth="110.0" text="%timing.ignoreTimesAfter" />
-                  <TextField fx:id="filterEndTextField" prefHeight="25.0" prefWidth="90.0" promptText="HH:MM:SS.sss" />
-                  <Label maxWidth="1.7976931348623157E308" prefWidth="30.0" HBox.hgrow="ALWAYS" />
+                  <Label minWidth="-Infinity" prefHeight="17.0" text="%timing.ignoreTimesAfter" HBox.hgrow="NEVER" />
+                  <TextField fx:id="filterEndTextField" prefHeight="25.0" prefWidth="110.0" promptText="HH:MM:SS.sss" />
+                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <Button fx:id="addInputButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#addTimingInput" text="%timing.addInput" />
                </children>
             </HBox>

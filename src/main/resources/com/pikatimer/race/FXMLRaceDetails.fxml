@@ -105,34 +105,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </VBox>
       <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="lapOptionsVBox" alignment="CENTER_LEFT" spacing="2.0" VBox.vgrow="NEVER">
+            <VBox fx:id="lapOptionsVBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
                   <Label prefHeight="20.0" text="%race.lapRaceSettings">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_RIGHT" fillHeight="false" prefWidth="180.0" spacing="2.0">
+                  <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label prefHeight="20.0" prefWidth="102.0" text="%race.minLapTime">
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%race.minLapTime" wrapText="true" HBox.hgrow="NEVER">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="minLapTimeTextField" prefHeight="26.0" prefWidth="125.0" promptText="HH:MM:SS" />
+                        <TextField fx:id="minLapTimeTextField" prefHeight="26.0" prefWidth="120.0" promptText="HH:MM:SS" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="5.0">
+                  <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0">
                      <children>
-                        <Label prefHeight="20.0" prefWidth="123.0" text="%race.lapExitLocation">
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%race.lapExitLocation" wrapText="true" HBox.hgrow="NEVER">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="lapExitLocationComboBox" prefHeight="26.0" prefWidth="125.0" />
+                        <ComboBox fx:id="lapExitLocationComboBox" prefHeight="26.0" prefWidth="150.0" HBox.hgrow="SOMETIMES" />
                      </children>
                   </HBox>
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
             </VBox>
             <VBox fx:id="waveStartsVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="2.0" VBox.vgrow="ALWAYS">
                <children>
@@ -213,67 +216,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </VBox>
       <VBox maxHeight="-Infinity" minHeight="-Infinity" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
          <children>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" prefWidth="180.0" spacing="2.0">
+            <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0">
                <children>
-                  <Label prefHeight="20.0" prefWidth="100.0" text="%race.cutoffTime">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="20.0" text="%race.cutoffTime" wrapText="true" HBox.hgrow="SOMETIMES">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="raceCutoffTimeTextField" prefHeight="26.0" prefWidth="75.0" promptText="HH:MM:SS" />
-                  <Label fx:id="raceCutoffTimePaceLabel" prefHeight="20.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="raceCutoffTimeTextField" prefHeight="26.0" prefWidth="90.0" promptText="HH:MM:SS" HBox.hgrow="NEVER" />
+                  <Label fx:id="raceCutoffTimePaceLabel" maxWidth="1.7976931348623157E308" prefHeight="20.0" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <HBox fx:id="bibRangeHBox" alignment="CENTER_LEFT" fillHeight="false" spacing="2.0" VBox.vgrow="NEVER">
+            <HBox fx:id="bibRangeHBox" alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Label prefHeight="20.0" prefWidth="99.0" text="%race.bibRange">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="20.0" text="%race.bibRange" wrapText="true" HBox.hgrow="SOMETIMES">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="startBibTextField" prefWidth="75.0" />
-                  <Label prefHeight="20.0" text="-&gt;">
+                  <TextField fx:id="startBibTextField" prefWidth="75.0" HBox.hgrow="NEVER" />
+                  <Label prefHeight="20.0" text="-&gt;" HBox.hgrow="NEVER">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="endBibTextField" prefWidth="75.0" />
+                  <TextField fx:id="endBibTextField" prefWidth="75.0" HBox.hgrow="NEVER" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="26.0" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" fillHeight="false" maxWidth="1.7976931348623157E308" prefHeight="32.0" spacing="5.0">
                <children>
-                  <ToggleSwitch fx:id="splitsToggleSwitch" prefHeight="24.0" prefWidth="175.0" text="%race.onCourseSplits">
+                  <ToggleSwitch fx:id="splitsToggleSwitch" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="24.0" text="%race.onCourseSplits" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </ToggleSwitch>
                </children>
             </HBox>
-            <HBox>
+            <HBox maxWidth="1.7976931348623157E308">
                <children>
-                  <ToggleSwitch fx:id="waveStartsToggleSwitch" prefHeight="26.0" prefWidth="175.0" text="%race.waveStarts">
+                  <ToggleSwitch fx:id="waveStartsToggleSwitch" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="26.0" text="%race.waveStarts" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </ToggleSwitch>
                </children>
             </HBox>
-            <HBox>
+            <HBox maxWidth="1.7976931348623157E308">
                <children>
-                  <ToggleSwitch fx:id="lapRaceToggleSwitch" prefHeight="26.0" prefWidth="175.0" text="%race.lapRace">
+                  <ToggleSwitch fx:id="lapRaceToggleSwitch" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="26.0" text="%race.lapRace" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </ToggleSwitch>
                </children>
             </HBox>
-            <HBox alignment="CENTER" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0">
+            <HBox alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="40.0">
                <children>
-                  <Button fx:id="courseRecordSetupButton" mnemonicParsing="false" text="%race.setupCourseRecords">
+                  <Button fx:id="courseRecordSetupButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%race.setupCourseRecords" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -289,13 +292,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          <children>
             <HBox fx:id="raceNameHBox" alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                <children>
-                  <Label prefHeight="20.0" prefWidth="110.0" text="%race.eventName">
+                  <Label minWidth="-Infinity" prefHeight="20.0" text="%race.eventName" HBox.hgrow="NEVER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="raceNameTextField" onAction="#updateRaceName" prefHeight="26.0" prefWidth="192.0" HBox.hgrow="ALWAYS" />
-                  <Pane maxWidth="1.7976931348623157E308" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="raceNameTextField" maxWidth="1.7976931348623157E308" onAction="#updateRaceName" prefHeight="26.0" HBox.hgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets right="5.0" />
@@ -303,69 +305,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </HBox>
             <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                <children>
-                  <Label prefHeight="20.0" prefWidth="110.0" text="%label.distance">
+                  <Label minWidth="-Infinity" prefHeight="20.0" text="%label.distance" HBox.hgrow="NEVER">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="raceDistanceTextField" onAction="#updateRaceDistance" prefWidth="75.0" />
+                  <TextField fx:id="raceDistanceTextField" onAction="#updateRaceDistance" prefWidth="90.0" />
                   <ChoiceBox fx:id="distanceUnitChoiceBox" onInputMethodTextChanged="#updateRaceDistance" />
                </children>
             </HBox>
             <HBox fx:id="startTimeHBox" alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                <children>
-                  <Label prefHeight="20.0" prefWidth="110.0" text="%race.startTime">
+                  <Label minWidth="-Infinity" prefHeight="20.0" text="%race.startTime" HBox.hgrow="NEVER">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="raceStartTimeTextField" onAction="#updateRaceStartTime" prefHeight="25.0" prefWidth="96.0" promptText="HH:MM:SS.sss" />
+                  <TextField fx:id="raceStartTimeTextField" onAction="#updateRaceStartTime" prefHeight="25.0" prefWidth="120.0" promptText="HH:MM:SS.sss" />
                </children>
             </HBox>
             <VBox fx:id="startFinishLocationVBox" spacing="5.0">
                <children>
                   <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                      <children>
-                        <Label prefHeight="20.0" prefWidth="110.0" text="%race.startLocation">
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%race.startLocation" HBox.hgrow="NEVER">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="startLocationComboBox" minWidth="-Infinity" prefWidth="150.0" />
-                        <HBox fx:id="maxStartHBox" alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
-                           <children>
-                              <Label text="%race.maxStart">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="maxStartTextField" minWidth="-Infinity" prefHeight="26.0" prefWidth="75.0" promptText="HH:MM:SS" />
-                           </children>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </HBox>
+                        <ComboBox fx:id="startLocationComboBox" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="maxStartHBox" alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
+                     <children>
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%race.maxStart" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="maxStartTextField" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0" promptText="HH:MM:SS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                      <children>
-                        <Label prefHeight="20.0" prefWidth="110.0" text="%race.finishLocation">
+                        <Label minWidth="-Infinity" prefHeight="20.0" text="%race.finishLocation" HBox.hgrow="NEVER">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="finishLocationComboBox" minWidth="-Infinity" prefWidth="150.0" />
-                        <Button fx:id="updateResultsButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" prefHeight="26.0" text="%race.recalculateResults">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
+                        <ComboBox fx:id="finishLocationComboBox" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" fillHeight="false" spacing="5.0">
+                     <children>
+                        <Button fx:id="updateResultsButton" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="%race.recalculateResults" wrapText="true" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="14.0" />
-                           </font></Button>
+                           </font>
+                        </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </HBox>
                </children>
             </VBox>

@@ -1,15 +1,204 @@
 /*
- * Empty Stylesheet file.
+ * PikaTimer Enhanced Stylesheet
+ * Improved readability and label visibility
  */
 
 .mainFxmlClass {
 
 }
 
-.tab-label {
-     /*-fx-skin: "com.sun.javafx.scene.control.skin.LabelSkin";*/
-    -fx-background-color: transparent;    
+/* Tab labels - ensure proper sizing and readability */
+.tab-pane .tab {
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 8px 16px;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #3498db;
+}
+
+.tab-pane .tab .tab-label {
     -fx-alignment: CENTER;
-    -fx-text-fill: -fx-text-base-color;
-    -fx-font-size: 16px; /* all the same except this newly added one */
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0px;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+/* Tab header area */
+.tab-pane .tab-header-area {
+    -fx-padding: 0px;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: #f8f9fa;
+}
+
+/* General label improvements */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-smoothing-type: lcd;
+}
+
+/* Ensure labels don't truncate */
+.label {
+    -fx-min-width: -1;
+    -fx-pref-width: -1;
+}
+
+/* Header labels */
+.label[style*="font-size: 22"] {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 5px 0px;
+}
+
+.label[style*="font-size: 20"] {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+    -fx-padding: 3px 0px;
+}
+
+.label[style*="font-size: 18"] {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Form labels */
+.label[style*="font-size: 16"] {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: normal;
+}
+
+/* Buttons - improve appearance */
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.button:pressed {
+    -fx-background-color: #21618c;
+}
+
+/* Text fields - better visibility */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 4px 8px;
+}
+
+.text-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2px;
+}
+
+/* ComboBox and ChoiceBox */
+.combo-box, .choice-box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.combo-box:focused, .choice-box:focused {
+    -fx-border-color: #3498db;
+}
+
+/* Table improvements */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #ecf0f1;
+    -fx-border-color: #bdc3c7;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #ecf0f1;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+/* Toggle Switch improvements */
+.toggle-switch {
+    -fx-text-fill: #2c3e50;
+}
+
+/* List view */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1px;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #ecf0f1;
+}
+
+/* DatePicker */
+.date-picker {
+    -fx-background-color: white;
+}
+
+.date-picker .text-field {
+    -fx-background-color: white;
+}
+
+/* ScrollBar */
+.scroll-bar {
+    -fx-background-color: #f8f9fa;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #95a5a6;
+}
+
+/* GridPane spacing improvements */
+.grid-pane {
+    -fx-padding: 10px;
+}
+
+/* VBox and HBox spacing */
+.vbox, .hbox {
+    -fx-spacing: 5px;
 }
