@@ -22,6 +22,7 @@ import com.pikatimer.timing.reader.PikaRFIDDirectReader;
 import com.pikatimer.timing.reader.PikaRaceTimerFileReader;
 import com.pikatimer.timing.reader.PikaRFIDFileReader;
 import com.pikatimer.timing.reader.PikaReaderDirectReader;
+import com.pikatimer.timing.reader.PikaZebraFX9600Reader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ public enum TimingInputTypes {
     PikaReader,
     RFIDFile,
     RFIDDirect,
+    ZebraFX9600,
     PCTimer, 
     RaceTimer,
     GeneriChipTimeFile,
@@ -50,6 +52,7 @@ public enum TimingInputTypes {
         //result.put(PikaReader, "PikaReader");
         result.put(RFIDFile, "RFIDServer / Outreach File");
         result.put(RFIDDirect, "RFID Ultra/Joey (TCP)");
+        result.put(ZebraFX9600, "Zebra FX 9600 (LLRP)");
         result.put(PCTimer, "PC Timer (Race Director)");
         result.put(RaceTimer, "Race Timer");
         //result.put(GeneriChipTimeFile, "Generic Chip -> Time File");
@@ -77,6 +80,8 @@ public enum TimingInputTypes {
                 return new PikaRFIDFileReader();
             case RFIDDirect:
                 return new PikaRFIDDirectReader();
+            case ZebraFX9600:
+                return new PikaZebraFX9600Reader();
             case GeneriChipTimeFile:
                 return new PikaGenericChipTimeFileReader();
             case GeneriBibTimeFile:
@@ -85,7 +90,3 @@ public enum TimingInputTypes {
         return null;
     }
 }
-    
-
-
-

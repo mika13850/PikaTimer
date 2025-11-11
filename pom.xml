@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.pikatimer</groupId>
     <artifactId>PikaTimer</artifactId>
@@ -91,7 +92,7 @@
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
             <type>jar</type>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
@@ -137,9 +138,46 @@
             <artifactId>javafx-swing</artifactId>
             <version>21.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.14.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!---Zebra Host SDK -->
+        <dependency>
+            <groupId>com.zebra</groupId>
+            <artifactId>rfid-sdk</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
+            <!-- The execution of the install-file goal is bound to the validate phase.
+                As such, before attempting to compile, there's to run validation phase explicitly:
+                mvn validate -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.1.4</version>
+                <executions>
+                    <execution>
+                        <id>install-sdk-jar</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>com.zebra</groupId>
+                            <artifactId>rfid-sdk</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/Symbol.RFID.API3.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -150,7 +188,7 @@
                     <release>21</release>
                     <debug>false</debug>
                 </configuration>
-            </plugin> 
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -177,7 +215,7 @@
                         </goals>
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>uber</shadedClassifierName> 
+                            <shadedClassifierName>uber</shadedClassifierName>
                         </configuration>
                     </execution>
                 </executions>
@@ -189,10 +227,11 @@
                 <configuration>
                     <mainClass>com.pikatimer.Pikatimer</mainClass>
                     <options>
-                        <option>--add-opens</option><option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
-                    </options> 
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
+                    </options>
                 </configuration>
-                
+
                 <executions>
                     <execution>
                         <!-- Default configuration for running -->
@@ -205,7 +244,8 @@
                         <id>debug</id>
                         <configuration>
                             <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:8000</option>
+                                <option>
+                                    -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:8000</option>
                             </options>
                         </configuration>
                     </execution>
@@ -214,7 +254,8 @@
                         <id>ide-debug</id>
                         <configuration>
                             <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
+                                <option>
+                                    -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
                             </options>
                         </configuration>
                     </execution>
@@ -232,6 +273,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <!-- <configuration>
+                    <environmentVariables>
+                        <LD_LIBRARY_PATH>${basedir}/lib</LD_LIBRARY_PATH>
+                    </environmentVariables>
+                </configuration> -->
             </plugin>
         </plugins>
     </build>
