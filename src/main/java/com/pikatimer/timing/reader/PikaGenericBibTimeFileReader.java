@@ -338,7 +338,7 @@ public class PikaGenericBibTimeFileReader implements TimingReader {
                     }
 
                 } catch (Exception ex) {
-                    logger.error("Unexpected exception", e);
+                    logger.error("Unexpected exception", ex);
                 }
                 reading.release();
                 return null;

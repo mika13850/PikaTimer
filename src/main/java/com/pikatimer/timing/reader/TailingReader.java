@@ -288,11 +288,11 @@ public abstract class TailingReader implements TimingReader {
                         });
                         s.close();
                     } catch (Exception ex) {
-                        logger.error("Unexpected exception", e);
+                        logger.error("Unexpected exception", ex);
                     }
 
                 } catch (Exception ex) {
-                    logger.error("Unexpected exception", e);
+                    logger.error("Unexpected exception", ex);
                 }
                 reading.release();
                 return null;

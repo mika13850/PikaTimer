@@ -1576,7 +1576,7 @@ public class FXMLParticipantController {
                 try {
                     lastBib = Integer.parseInt(endTextField.getText());
                 } catch (Exception ex) {
-                    logger.error("Unexpected exception", e);
+                    logger.error("Unexpected exception", ex);
                     lastBib = Integer.MAX_VALUE;
                 }
             }

@@ -648,7 +648,7 @@ public class PikaReaderDirectReader implements TimingReader {
                         Platform.runLater(() -> readingStatus.setValue(Boolean.TRUE));
 
                     } catch (Exception ex) {
-                        logger.error("Unexpected exception", e);
+                        logger.error("Unexpected exception", ex);
                         logger.debug("Exception in PikaReaderDirect::StartReading() ");
                     }
                 }

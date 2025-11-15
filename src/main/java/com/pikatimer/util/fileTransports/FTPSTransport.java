@@ -386,7 +386,7 @@ public class FTPSTransport implements FileTransport {
                     logger.debug("FTPSTransport::refreshConfig: calling ftpClient.disconnect()");
                     ftpClient.disconnect();
                 } catch (IOException f) {
-                    logger.error("Unexpected exception", e);
+                    logger.error("Unexpected exception", f);
                 }
             }
 

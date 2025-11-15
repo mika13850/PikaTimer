@@ -365,7 +365,7 @@ public class FXMLSetupBibMapController {
             }
 
         } catch (Exception ex) {
-            logger.error("Unexpected exception", e);
+            logger.error("Unexpected exception", ex);
         }
         startBibTextField.setText("");
         endBibTextField.setText("");

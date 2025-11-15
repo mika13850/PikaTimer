@@ -276,7 +276,7 @@ public abstract class NonTailingReader implements TimingReader {
                     });
                     s.close();
                 } catch (Exception ex) {
-                    logger.error("Unexpected exception", e);
+                    logger.error("Unexpected exception", ex);
                 }
                 return null;
             }

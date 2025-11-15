@@ -154,7 +154,7 @@ public class SFTPTransport implements FileTransport {
                                                 false, RoundingMode.HALF_EVEN));
                                 filename = null;
                             } catch (SftpException ex) {
-                                logger.error("Unexpected exception", e);
+                                logger.error("Unexpected exception", ex);
                                 throw new IOException(ex.getLocalizedMessage());
                             }
 
