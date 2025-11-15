@@ -16,16 +16,17 @@
  */
 package com.pikatimer.race;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

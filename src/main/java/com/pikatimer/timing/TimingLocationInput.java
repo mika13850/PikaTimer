@@ -16,19 +16,39 @@
  */
 package com.pikatimer.timing;
 
-import com.pikatimer.event.Event;
-import com.pikatimer.util.DurationFormatter;
-import com.pikatimer.util.HTTPServices;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collections;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pikatimer.event.Event;
+import com.pikatimer.util.DurationFormatter;
+import com.pikatimer.util.HTTPServices;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -42,26 +62,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
-import javafx.util.converter.BigDecimalStringConverter;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -69,32 +69,31 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @DynamicUpdate
-@Table(name="timing_location_input")
-public class TimingLocationInput implements TimingListener{
+@Table(name = "timing_location_input")
+public class TimingLocationInput implements TimingListener {
     private static final Logger logger = LoggerFactory.getLogger(TimingLocationInput.class);
-    
+
     private final IntegerProperty IDProperty;
     private final StringProperty timingLocationInputName;
     private TimingLocation timingLocation; // timing_loc_id
-    private final StringProperty timingInputString; 
-    private TimingInputTypes timingInputType; 
+    private final StringProperty timingInputString;
+    private TimingInputTypes timingInputType;
     private Map<String, String> attributes = new ConcurrentHashMap<>(8, 0.9f, 1);
     private TimingReader timingReader;
     private final BooleanProperty tailFileBooleanProperty;
-    private final BooleanProperty timingReaderInitialized; 
+    private final BooleanProperty timingReaderInitialized;
     private static final TimingDAO timingDAO = TimingDAO.getInstance();
     private Button inputButton;
-    private TextField inputTextField; 
+    private TextField inputTextField;
     private final BooleanProperty isBackup = new SimpleBooleanProperty(false);
     private final BooleanProperty skewInput;
-    private Duration skewDuration; 
+    private Duration skewDuration;
     private final BooleanProperty isAnnouncer = new SimpleBooleanProperty(false);
     private final Semaphore processRead = new Semaphore(1);
 
     private final IntegerProperty readCountProperty = new SimpleIntegerProperty();
     private Set<RawTimeData> rawTimeSet;
-    
-    
+
     public TimingLocationInput() {
         this.IDProperty = new SimpleIntegerProperty();
         this.timingLocationInputName = new SimpleStringProperty("Not Yet Set");
@@ -102,165 +101,166 @@ public class TimingLocationInput implements TimingListener{
         tailFileBooleanProperty = new SimpleBooleanProperty();
         timingReaderInitialized = new SimpleBooleanProperty();
         skewInput = new SimpleBooleanProperty();
-        //attributes = new ConcurrentHashMap <>();
+        // attributes = new ConcurrentHashMap <>();
         skewDuration = Duration.ZERO;
         skewInput.setValue(Boolean.FALSE);
 
-        
-   }
-    
-    @Id
-    @GenericGenerator(name="timing_location_input_id" , strategy="increment")
-    @GeneratedValue(generator="timing_location_input_id")
-    @Column(name="ID")
-    public Integer getID() {
-        return IDProperty.getValue(); 
     }
+
+    @Id
+    @GenericGenerator(name = "timing_location_input_id", strategy = "increment")
+    @GeneratedValue(generator = "timing_location_input_id")
+    @Column(name = "ID")
+    public Integer getID() {
+        return IDProperty.getValue();
+    }
+
     public void setID(Integer id) {
         IDProperty.setValue(id);
     }
+
     public IntegerProperty idProperty() {
-        return IDProperty; 
+        return IDProperty;
     }
-    
-    @Column(name="input_name")
+
+    @Column(name = "input_name")
     public String getLocationName() {
         return timingLocationInputName.getValueSafe();
     }
+
     public void setLocationName(String n) {
         timingLocationInputName.setValue(n);
     }
+
     public StringProperty LocationNameProperty() {
         return timingLocationInputName;
     }
-    
-    //@Transient
+
+    // @Transient
     public BooleanProperty continueReadingProperty() {
         return tailFileBooleanProperty;
     }
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TIMING_LOCATION_ID",nullable=false)
+    @JoinColumn(name = "TIMING_LOCATION_ID", nullable = false)
     public TimingLocation getTimingLocation() {
         return timingLocation;
     }
+
     public void setTimingLocation(TimingLocation l) {
         if (l != null && (timingLocation == null || !timingLocation.equals(l))) {
             logger.debug("TimingLocationInput.setTimingLocation: id=" + l.getID());
-            timingLocation=l;
+            timingLocation = l;
             timingInputString.unbind();
-            timingInputString.bind(l.LocationNameProperty()); 
-            logger.trace("TimingLocationInput.setTimingLocation: name=" + timingInputString.getValueSafe()); 
+            timingInputString.bind(l.LocationNameProperty());
+            logger.trace("TimingLocationInput.setTimingLocation: name=" + timingInputString.getValueSafe());
         } else {
-            logger.debug("TimingLocationInput.setTimingLocation: null or unchanged"); 
+            logger.debug("TimingLocationInput.setTimingLocation: null or unchanged");
         }
     }
+
     public StringProperty timingLocationProperty() {
-        return timingInputString; 
+        return timingInputString;
     }
-    
+
     @Enumerated(EnumType.STRING)
-    @Column(name="timing_location_type")
+    @Column(name = "timing_location_type")
     public TimingInputTypes getTimingInputType() {
         return timingInputType;
     }
+
     public void setTimingInputType(TimingInputTypes t) {
         logger.debug("TimingLocationInput::setTimingInputType now " + t);
-        if (t != null && (timingInputType == null || ! timingInputType.equals(t)) ){
-            
+        if (t != null && (timingInputType == null || !timingInputType.equals(t))) {
+
             // If we already have a reader
             if (timingReader != null) {
                 // , tell it to stop reading
                 timingReader.stopReading();
+
                 // clear out all existing reads
-                //clearReads();
+                // clearReads();
             }
-                               
+
             timingReader = t.getNewReader();
-            //timingReader.setTimingInput(this);
-            
+            // timingReader.setTimingInput(this);
+
             timingInputType = t;
             timingReaderInitialized.setValue(Boolean.FALSE);
         }
     }
-    
-    
+
     public IntegerProperty readCountProperty() {
-        return readCountProperty;         
+        return readCountProperty;
     }
-    
+
     public void initializeReader(Pane readerDisplayPane) {
-        
+
         // only do this once to prevent issues
         if (!timingReaderInitialized.getValue()) {
             timingReader.setTimingListener(this);
-            
-            
+
             timingReaderInitialized.setValue(Boolean.TRUE);
-        
+
             if (rawTimeSet == null) {
-                
-                rawTimeSet = Collections.newSetFromMap(new ConcurrentHashMap<>()); 
-                
+
+                rawTimeSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
                 rawTimeSet.addAll(timingDAO.getRawTimes(this));
-                logger.debug("TimingLocationInput.initializeReader: Read in " + rawTimeSet.size() + " existing times"); 
+                logger.debug("TimingLocationInput.initializeReader: Read in " + rawTimeSet.size() + " existing times");
                 readCountProperty.set(rawTimeSet.size());
-            } 
+            }
         }
-        
+
         timingReader.showControls(readerDisplayPane);
     }
 
-    
     // Where we stash the attributes for the input
     @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name="attribute", insertable=false,updatable=false)
-    @Column(name="attribute_value")
-    @CollectionTable(name="timing_location_input_attributes", joinColumns=@JoinColumn(name="tli_id"))
-    @OrderColumn(name = "index_id")
+    @MapKeyColumn(name = "attribute", insertable = false, updatable = false)
+    @Column(name = "attribute_value")
+    @CollectionTable(name = "timing_location_input_attributes", joinColumns = @JoinColumn(name = "tli_id"))
     public Map<String, String> getAttributes() {
         logger.trace("TLI.getAttributes called, returning " + attributes.size() + " attributes");
         return attributes;
     }
-    public void setAttributes(Map<String,String> tli_attributes) {
+
+    public void setAttributes(Map<String, String> tli_attributes) {
         logger.trace("TLI.setAttributes called, adding " + tli_attributes.size() + " attributes");
         logger.trace("TLI.setAttributes called, we already have " + attributes.size() + " attributes");
-        // This really screws things up for some reason, I don't know why. 
-        //attributes.clear();  
+        // This really screws things up for some reason, I don't know why.
+        // attributes.clear();
         attributes = tli_attributes;
-        //attributes.putAll(tli_attributes);
+        // attributes.putAll(tli_attributes);
         logger.trace("TLI.setAttributes called, adding " + tli_attributes.size() + " attributes");
         logger.trace("TLI.setAttributes called, we now have " + attributes.size() + " attributes");
-    } 
-    
-    
+    }
+
     @Override
     public String getAttribute(String key) {
         logger.trace("TLI.getAttribute called for " + key);
-        return attributes.get(key); 
+        return attributes.get(key);
     }
+
     @Override
     public void setAttribute(String key, String value) {
         logger.trace("Setting Attribute " + key + " to " + value);
-        attributes.put(key, value); 
-        
+        attributes.put(key, value);
+
         logger.trace("TLI.setAttribute called, we now have " + attributes.size() + " attributes");
         timingDAO.updateTimingLocationInput(this);
     }
-    
-    
-    public void addRawTime(RawTimeData t){
+
+    public void addRawTime(RawTimeData t) {
         timingDAO.getRawTimeQueue().add(t);
     }
-    
+
     @Transient
     @Override
     public LocalDate getEventDate() {
         return Event.getInstance().getLocalEventDate();
     }
 
-    
-    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -270,18 +270,16 @@ public class TimingLocationInput implements TimingListener{
         return hash;
     }
 
-    /*   @Override
-    public boolean equals(Object obj) {
-    if (obj == null || getClass() != obj.getClass()) {
-    return false;
-    }
-    return this.IDProperty.getValue().equals(((TimingLocationInput)obj).IDProperty.getValue());
-    }
+    /*
+     * @Override public boolean equals(Object obj) { if (obj == null || getClass()
+     * != obj.getClass()) { return false; } return
+     * this.IDProperty.getValue().equals(((TimingLocationInput)obj).IDProperty.
+     * getValue()); }
+     * 
+     * @Override public int hashCode() { return 7 + 5*IDProperty.intValue(); // 5
+     * and 7 are random prime numbers }
+     */
     @Override
-    public int hashCode() {
-    return 7 + 5*IDProperty.intValue(); // 5 and 7 are random prime numbers
-    }*/
-    @Override    
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -303,21 +301,23 @@ public class TimingLocationInput implements TimingListener{
     }
 
     public static Callback<TimingLocationInput, Observable[]> extractor() {
-        return (TimingLocationInput tl) -> new Observable[]{tl.LocationNameProperty()};
+        return (TimingLocationInput tl) -> new Observable[] { tl.LocationNameProperty() };
     }
 
     @Transient
     public Button getInputButton() {
-        return inputButton; 
+        return inputButton;
     }
+
     public void setInputButton(Button b) {
         inputButton = b;
     }
-    
+
     @Transient
     public TextField getInputTextField() {
         return inputTextField;
     }
+
     public void setInputTextField(TextField t) {
         inputTextField = t;
     }
@@ -325,7 +325,7 @@ public class TimingLocationInput implements TimingListener{
     @Override
     public void processRead(RawTimeData r) {
         try {
-            logger.trace("TimingLocationInput.processRead called" );
+            logger.trace("TimingLocationInput.processRead called");
             logger.trace("processRead() ProcessRead.aquire()");
             processRead.acquire();
             logger.trace("Got it... ");
@@ -333,17 +333,19 @@ public class TimingLocationInput implements TimingListener{
             // Mark it as our own
             r.setTimingLocationInputId(IDProperty.getValue());
 
-            if (rawTimeSet == null) getRawTimeSet();
+            if (rawTimeSet == null)
+                getRawTimeSet();
             // is it a duplicate?
 
             // if so, just return
             if (rawTimeSet.contains(r)) {
-                logger.trace("TimingLocationInput.processRead: Duplicate " + r.getChip() + " " + r.getTimestamp().toString()); 
+                logger.trace("TimingLocationInput.processRead: Duplicate " + r.getChip() + " "
+                        + r.getTimestamp().toString());
                 processRead.release();
                 return;
             }
-            //if not, save it to our local stash of times. 
-            timingDAO.saveRawTimes(r); 
+            // if not, save it to our local stash of times.
+            timingDAO.saveRawTimes(r);
             rawTimeSet.add(r);
 
             Platform.runLater(() -> {
@@ -354,51 +356,49 @@ public class TimingLocationInput implements TimingListener{
 
             processReadStage2(r);
         } catch (InterruptedException ex) {
-            logger.warn("Interrupted: ",ex);
+            logger.error("Interrupted: ", ex);
         }
-        
-        
-        
+
     }
-    
-    public void processReadStage2(RawTimeData r){
+
+    public void processReadStage2(RawTimeData r) {
         // Create a cooked time
-        logger.trace("Stage 2 processing of raw id " + r.getID()); 
+        logger.trace("Stage 2 processing of raw id " + r.getID());
         CookedTimeData c = new CookedTimeData();
-                
+
         // mark it as our own
         c.setTimingLocationInputId(this.IDProperty.intValue());
-        
+
         // set link the cooked time to the parent raw time
         c.setRawChipID(r.getChip());
-        
+
         // set the backup flag
         c.setBackupTime(getIsBackup());
-        
+
         // skew it
-        if(skewInput.getValue()) {
-            c.setTimestamp(r.getTimestamp().plus(skewDuration)); 
+        if (skewInput.getValue()) {
+            c.setTimestamp(r.getTimestamp().plus(skewDuration));
             logger.trace("Skewing input from " + r.getTimestamp() + " to " + c.getTimestamp());
         } else {
             c.setTimestamp(r.getTimestamp());
         }
-       
-        
+
         // Swap the chip for a bib
-        if (!timingReader.chipIsBib()){
+        if (!timingReader.chipIsBib()) {
             c.setBib(timingDAO.getBibFromChip(r.getChip()));
         } else {
-            c.setBib(r.getChip()); 
+            c.setBib(r.getChip());
         }
-        
+
         // if we are an announcer location, announce the arrival of the bib
-        if (isAnnouncer.get()) HTTPServices.getInstance().publishEvent("ANNOUNCER", c.getBib());
-        
+        if (isAnnouncer.get())
+            HTTPServices.getInstance().publishEvent("ANNOUNCER", c.getBib());
+
         // Send it up to the TimingLocation for further processing...
-        logger.trace("Cooking time " + c.getBib() + " " + c.getTimestamp()); 
+        logger.trace("Cooking time " + c.getBib() + " " + c.getTimestamp());
         timingLocation.cookTime(c);
     }
-    
+
     public void clearLocalReads() {
         stopReader();
         // blow away the rawTimeSet
@@ -409,169 +409,182 @@ public class TimingLocationInput implements TimingListener{
             });
         }
     }
-    
+
     @Override
     public void clearReads() {
-        if(rawTimeSet != null && !rawTimeSet.isEmpty()) {
+        if (rawTimeSet != null && !rawTimeSet.isEmpty()) {
             // This will orchistrate the clearing of the reads via the timingDAO
             // The timingDAO will first delete all from the DB
-            // It will then call this.clearLocalReads() 
-            // Finally it will trigger a removal of all cooked times associated with 
-            // this instance. 
-            timingDAO.clearRawTimes(this); 
+            // It will then call this.clearLocalReads()
+            // Finally it will trigger a removal of all cooked times associated with
+            // this instance.
+            timingDAO.clearRawTimes(this);
         }
     }
-    
+
     @Override
     @Transient
-    public Set<RawTimeData> getReads(){
+    public Set<RawTimeData> getReads() {
         return rawTimeSet;
     }
-    
+
     public void reprocessReads() {
         logger.debug("TimingLocationInput::reprocessReads() for " + this.getLocationName());
-        TimingLocationInput tli = this; 
-        
+        TimingLocationInput tli = this;
 
-        // start a background thread for this 
+        // start a background thread for this
 
         Task task;
         task = new Task<Void>() {
-            @Override public Void call() {
+            @Override
+            public Void call() {
                 try {
                     // set the processReadSemaphore to pause the processRead()
                     logger.debug("TimingLocationInput::reprocessReads() Task started for " + tli.getLocationName());
                     processRead.acquire();
 
                     // clear out all cooked times for our location
-                    
-                    logger.debug("TimingLocationInput::reprocessReads() Task deleting times for " + tli.getLocationName());
+
+                    logger.debug(
+                            "TimingLocationInput::reprocessReads() Task deleting times for " + tli.getLocationName());
 
                     timingDAO.blockingClearCookedTimes(tli);
-                    
-                    logger.debug("TimingLocationInput::reprocessReads() Task reprocessing " + getRawTimeSet().size() + " reads at " + tli.getLocationName() + ".");
 
-                    getRawTimeSet().stream().forEach( r -> {
-                        // for everything in our rawTimeSet, reprocess the read 
+                    logger.debug("TimingLocationInput::reprocessReads() Task reprocessing " + getRawTimeSet().size()
+                            + " reads at " + tli.getLocationName() + ".");
+
+                    getRawTimeSet().stream().forEach(r -> {
+                        // for everything in our rawTimeSet, reprocess the read
 
                         tli.processReadStage2(r);
                         // setting the skew or ignore flag as needed
 
                     });
 
-                    //resume processing of new times. 
+                    // resume processing of new times.
                     logger.debug("TimingLocationInput::reprocessReads() Task done for " + tli.getLocationName() + ".");
 
                     processRead.release();
                 } catch (Exception ex) {
-                    logger.debug("TimingLocationInput::reprocessReads() exception for {}",tli.getLocationName(),ex);
+                    logger.error("Unexpected exception", ex);
+                    logger.debug("TimingLocationInput::reprocessReads() exception for {}", tli.getLocationName(), ex);
 
                 }
-                //when done, resume processRead()
+                // when done, resume processRead()
                 return null;
             }
         };
-         // Run this in a thread.... 
+        // Run this in a thread....
         Thread reporcessTimes = new Thread(task);
-            reporcessTimes.setDaemon(true);
-            reporcessTimes.start();
+        reporcessTimes.setDaemon(true);
+        reporcessTimes.start();
     }
 
     public void stopReader() {
         timingReader.stopReading();
     }
 
-    @Column(name="announcer")
+    @Column(name = "announcer")
     public Boolean getIsAnnouncer() {
         logger.trace("returning isBackup()");
         return isAnnouncer.getValue();
     }
+
     public void setIsAnnouncer(Boolean i) {
-        if (i != null) { 
+        if (i != null) {
             isAnnouncer.setValue(i);
         }
     }
-     
-    public BooleanProperty announcerProperty(){
+
+    public BooleanProperty announcerProperty() {
         return isAnnouncer;
     }
-    
-    @Column(name="backup")
+
+    @Column(name = "backup")
     public Boolean getIsBackup() {
         logger.trace("returning isBackup()");
         return isBackup.getValue();
     }
+
     public void setIsBackup(Boolean i) {
-        if (i != null) { 
+        if (i != null) {
             isBackup.setValue(i);
         }
     }
-     
-    public BooleanProperty backupProperty(){
+
+    public BooleanProperty backupProperty() {
         return isBackup;
     }
-    
-    @Column(name="skew")
+
+    @Column(name = "skew")
     public Boolean getSkewLocationTime() {
         logger.trace("returning SkewLocation()");
         return skewInput.getValue();
     }
+
     public void setSkewLocationTime(Boolean i) {
-        if (i != null) { 
+        if (i != null) {
             skewInput.setValue(i);
         }
     }
-    public BooleanProperty skewLocation(){
+
+    public BooleanProperty skewLocation() {
         return skewInput;
     }
-    
-    
-    @Column(name="time_skew")
-    public Long getSkewNanos(){
+
+    @Column(name = "time_skew")
+    public Long getSkewNanos() {
         return skewDuration.toNanos();
     }
+
     public void setSkewNanos(Long s) {
         if (s != null) {
-            skewDuration = Duration.ofNanos(s);     
+            skewDuration = Duration.ofNanos(s);
             logger.debug("Skew duration is now " + skewDuration);
-        } 
+        }
     }
+
     @Transient
     public String getSkewString() {
-        //String durationString = new BigDecimalStringConverter().toString(BigDecimal.valueOf(skewDuration.toNanos()).divide(BigDecimal.valueOf(1000000000L)));
+        // String durationString = new
+        // BigDecimalStringConverter().toString(BigDecimal.valueOf(skewDuration.toNanos()).divide(BigDecimal.valueOf(1000000000L)));
         String skewDurationString = DurationFormatter.durationToString(skewDuration, 3, false);
         logger.debug("Returning skew duration string of " + skewDurationString + " for " + skewDuration);
-        return skewDurationString; 
+        return skewDurationString;
     }
-//    public void setSkewString(String text) {
-//        
-//        // check for null/blank/zero
-//        if (text == null || text.isEmpty() || text.equals("0")) {
-//            skewDuration = Duration.ZERO;
-//        } else {
-//            skewDuration = Duration.ofNanos(new BigDecimalStringConverter().fromString(text).multiply(new BigDecimal(1000000000L)).longValue());
-//            logger.debug("Skew duration is now " + skewDuration);
-//        }
-//    }
+
+    // public void setSkewString(String text) {
+    //
+    // // check for null/blank/zero
+    // if (text == null || text.isEmpty() || text.equals("0")) {
+    // skewDuration = Duration.ZERO;
+    // } else {
+    // skewDuration = Duration.ofNanos(new
+    // BigDecimalStringConverter().fromString(text).multiply(new
+    // BigDecimal(1000000000L)).longValue());
+    // logger.debug("Skew duration is now " + skewDuration);
+    // }
+    // }
     @Transient
     public Duration getSkew() {
-        return skewDuration; 
+        return skewDuration;
     }
-    public void setSkew(Duration s){
+
+    public void setSkew(Duration s) {
         skewDuration = s;
     }
-    
+
     @Transient
-    private Set<RawTimeData> getRawTimeSet(){
+    private Set<RawTimeData> getRawTimeSet() {
         if (rawTimeSet == null) {
-                
-            rawTimeSet = Collections.newSetFromMap(new ConcurrentHashMap<>()); 
+
+            rawTimeSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
             rawTimeSet.addAll(timingDAO.getRawTimes(this));
-            logger.debug("TimingLocationInput.initializeReader: Read in " + rawTimeSet.size() + " existing times"); 
+            logger.debug("TimingLocationInput.initializeReader: Read in " + rawTimeSet.size() + " existing times");
             readCountProperty.set(rawTimeSet.size());
-        } 
-        
+        }
+
         return rawTimeSet;
     }
 }

@@ -214,7 +214,8 @@ public class TimingDAO {
                                 if (c.getID() == null)
                                     newTimes.add(c);
 
-                                s.merge(c);
+                                CookedTimeData merged = s.merge(c);
+                                c.setID(merged.getID());
 
                                 if (++count % 20 == 0) {
                                     // flush a batch of updates and release memory:
@@ -559,8 +560,9 @@ public class TimingDAO {
     public void updateTimingLocation(TimingLocation tl) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(tl);
+        TimingLocation merged = s.merge(tl);
         s.getTransaction().commit();
+        tl.setID(merged.getID());
     }
 
     public void addTimingLocationInput(TimingLocationInput t) {
@@ -577,9 +579,9 @@ public class TimingDAO {
 
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(t);
+        TimingLocationInput merged = s.merge(t);
         s.getTransaction().commit();
-
+        t.setID(merged.getID());
     }
 
     public void removeTimingLocationInput(TimingLocationInput t) {
@@ -639,15 +641,17 @@ public class TimingDAO {
     public void saveBib2ChipMap(Bib2ChipMap b) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(b);
+        Bib2ChipMap merged = s.merge(b);
         s.getTransaction().commit();
+        b.setID(merged.getID());
     }
 
     public void updateBib2ChipMap(Bib2ChipMap b) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(b);
+        Bib2ChipMap merged = s.merge(b);
         s.getTransaction().commit();
+        b.setID(merged.getID());
     }
 
     public ObservableList<TimeOverride> getOverrides() {
@@ -707,8 +711,9 @@ public class TimingDAO {
     public void saveOverride(TimeOverride o) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(o);
+        TimeOverride merged = s.merge(o);
         s.getTransaction().commit();
+        o.setID(merged.getID());
 
         // Just in case.... This will make sure we initialized the overrideList
         getOverrides();

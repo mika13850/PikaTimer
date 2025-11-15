@@ -16,18 +16,21 @@
  */
 package com.pikatimer.race;
 
+import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.pikatimer.participant.Participant;
 import com.pikatimer.results.ProcessedResult;
 import com.pikatimer.util.AlphanumericComparator;
-import java.util.Objects;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

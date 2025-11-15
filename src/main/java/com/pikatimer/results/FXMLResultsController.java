@@ -803,26 +803,21 @@ public class FXMLResultsController  {
             VBox reportDetails = new VBox();
             raceReportsUIMap.put(r, reportDetails);
             
-            if (r.raceReportsProperty().isEmpty()) {
+            if (r.getRaceReports() == null || r.getRaceReports().isEmpty()) {
                 // create the default overall and award reports
-                
                 logger.debug("Adding default Ooverall and Award race reports");
                 RaceReport overall = new RaceReport();
                 overall.setReportType(ReportTypes.OVERALL);
                 r.addRaceReport(overall);
                 resultsDAO.saveRaceReport(overall);
-
                 
                 RaceReport award = new RaceReport();
                 award.setReportType(ReportTypes.AWARD);
                 r.addRaceReport(award);
-                resultsDAO.saveRaceReport(award);
-                
-                raceDAO.updateRace(r);
-                
+                resultsDAO.saveRaceReport(award);                
             }
             
-            r.raceReportsProperty().forEach(rr -> {
+            r.getRaceReports().forEach(rr -> {
                 FXMLLoader tlLoader = new FXMLLoader(getClass().getResource("/com/pikatimer/results/FXMLResultOutput.fxml"));
                 tlLoader.setResources(com.pikatimer.util.I18nManager.getInstance().getResourceBundle());
                 try {

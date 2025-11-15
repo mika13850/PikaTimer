@@ -22,7 +22,7 @@ import com.pikatimer.race.WaveAssignment;
 import com.pikatimer.results.ResultsDAO;
 import com.pikatimer.util.AlphanumericComparator;
 import com.pikatimer.util.HTTPServices;
-import java.util.List; 
+import java.util.List;
 import com.pikatimer.util.HibernateUtil;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,165 +50,168 @@ import org.slf4j.LoggerFactory;
  */
 public class ParticipantDAO {
     private static final Logger logger = LoggerFactory.getLogger(ParticipantDAO.class);
-    
-    private static final ObservableList<Participant> participantsList = FXCollections.observableArrayList(Participant.extractor());
-    private static final Map<String,Participant> Bib2ParticipantMap = new HashMap<>();
-    private static final Map<Integer,Participant> ID2ParticipantMap = new HashMap<>(); 
-    private static final Map<Participant,String> Participant2BibMap = new HashMap<>();
+
+    private static final ObservableList<Participant> participantsList = FXCollections
+            .observableArrayList(Participant.extractor());
+    private static final Map<String, Participant> Bib2ParticipantMap = new HashMap<>();
+    private static final Map<Integer, Participant> ID2ParticipantMap = new HashMap<>();
+    private static final Map<Participant, String> Participant2BibMap = new HashMap<>();
     private static final ResultsDAO resultsDAO = ResultsDAO.getInstance();
     private static final BooleanProperty participantsListInitialized = new SimpleBooleanProperty(false);
-    //Semaphore semaphore = new Semaphore(1);
-    
+    // Semaphore semaphore = new Semaphore(1);
+
     private static final CountDownLatch participantsLoadedLatch = new CountDownLatch(1);
-    
-    private static final ObservableList<CustomAttribute> customAttributeList = FXCollections.observableArrayList(CustomAttribute.extractor());
-    
+
+    private static final ObservableList<CustomAttribute> customAttributeList = FXCollections
+            .observableArrayList(CustomAttribute.extractor());
+
     /**
-    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
-    * or the first access to SingletonHolder.INSTANCE, not before.
-    */
-    private static class SingletonHolder { 
-            private static final ParticipantDAO INSTANCE = new ParticipantDAO();
+     * SingletonHolder is loaded on the first execution of Singleton.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+        private static final ParticipantDAO INSTANCE = new ParticipantDAO();
     }
 
-    public static ParticipantDAO getInstance() { 
-        synchronized(participantsListInitialized){
-              if (!participantsListInitialized.getValue()) {
-                  participantsListInitialized.set(true);
-                  refreshParticipantsList();
-              }
+    public static ParticipantDAO getInstance() {
+        synchronized (participantsListInitialized) {
+            if (!participantsListInitialized.getValue()) {
+                participantsListInitialized.set(true);
+                refreshParticipantsList();
+            }
         }
-        return SingletonHolder.INSTANCE; 
+        return SingletonHolder.INSTANCE;
     }
-    
+
     public void addParticipant(Participant p) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.save(p);
+        s.persist(p);
         s.getTransaction().commit();
         Platform.runLater(() -> {
             participantsList.add(p);
         });
-        Participant2BibMap.put(p, p.getBib()); 
-        Bib2ParticipantMap.put(p.getBib(),p); 
-        ID2ParticipantMap.put(p.getID(),p);
-        resultsDAO.getResultsQueue().add(p.getBib()); 
-        
-        if (p.bibProperty().isEmpty().not().get()) HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
-        
+        Participant2BibMap.put(p, p.getBib());
+        Bib2ParticipantMap.put(p.getBib(), p);
+        ID2ParticipantMap.put(p.getID(), p);
+        resultsDAO.getResultsQueue().add(p.getBib());
+
+        if (p.bibProperty().isEmpty().not().get())
+            HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
+
     }
-    
+
     public void addParticipant(ObservableList newParticipantList) {
         int max = newParticipantList.size();
-        int i=1;
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        int i = 1;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         int count = 0;
         Iterator<Participant> addIterator = newParticipantList.iterator();
         while (addIterator.hasNext()) {
             Participant p = addIterator.next();
-            s.save(p); 
-            if ( ++count % 20 == 0 ) {
-                //flush a batch of updates and release memory:
+            s.persist(p);
+            if (++count % 20 == 0) {
+                // flush a batch of updates and release memory:
                 s.flush();
                 s.clear();
             }
-            //updateProgress(i++, max);
-            Participant2BibMap.put(p, p.getBib()); 
-            Bib2ParticipantMap.put(p.getBib(),p); 
-            ID2ParticipantMap.put(p.getID(),p);
-            resultsDAO.getResultsQueue().add(p.getBib()); 
-            
-            if (p.bibProperty().isEmpty().not().get()) HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
+            // updateProgress(i++, max);
+            Participant2BibMap.put(p, p.getBib());
+            Bib2ParticipantMap.put(p.getBib(), p);
+            ID2ParticipantMap.put(p.getID(), p);
+            resultsDAO.getResultsQueue().add(p.getBib());
+
+            if (p.bibProperty().isEmpty().not().get())
+                HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
 
         }
-        s.getTransaction().commit(); 
+        s.getTransaction().commit();
 
         Platform.runLater(() -> {
-            //refreshParticipantsList();
-            participantsList.addAll(newParticipantList); 
+            // refreshParticipantsList();
+            participantsList.addAll(newParticipantList);
         });
-        
-        
-        
+
     }
-    private static void refreshParticipantsList() { 
+
+    private static void refreshParticipantsList() {
 
         Task fetchParticipants = new Task<Void>() {
-                
-            @Override 
+
+            @Override
             public Void call() {
                 final List<Participant> list;// = new ArrayList<>();
                 final List<CustomAttribute> attributeList;
 
-
-                Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
                 logger.debug("ParticipantDAO:: refreshParticipantsList Runing the Query");
 
-                try {  
-                    list=s.createQuery("from Participant").list();
-                    attributeList=s.createQuery("from CustomAttribute").list();
+                try {
+                    list = s.createQuery("from Participant").list();
+                    attributeList = s.createQuery("from CustomAttribute").list();
 
                     logger.debug("ParticipantDAO::refreshParticipantsList found " + list.size() + " Participants");
-                    //if(!participantsList.isEmpty()) participantsList.clear();
+                    // if(!participantsList.isEmpty()) participantsList.clear();
 
                     Platform.runLater(() -> {
-                            participantsList.setAll(list);
-                            customAttributeList.setAll(attributeList);
+                        participantsList.setAll(list);
+                        customAttributeList.setAll(attributeList);
                     });
-                    
-                    
+
                     list.forEach(p -> {
-                        Participant2BibMap.put(p, p.getBib()); 
-                        Bib2ParticipantMap.put(p.getBib(),p); 
-                        ID2ParticipantMap.put(p.getID(),p);
+                        Participant2BibMap.put(p, p.getBib());
+                        Bib2ParticipantMap.put(p.getBib(), p);
+                        ID2ParticipantMap.put(p.getID(), p);
                     });
                 } catch (Exception e) {
-                    logger.debug(e.getMessage());
-                } 
+                    logger.error("Unexpected exception", e);
+                }
                 s.getTransaction().commit();
                 participantsLoadedLatch.countDown();
                 return null;
             }
-        }; 
+        };
 
         new Thread(fetchParticipants).start();
-            
-    }     
-    
-    public ObservableList<Participant> listParticipants() { 
 
-        //if (participantsList.isEmpty() ) refreshParticipantsList();
-        
+    }
+
+    public ObservableList<Participant> listParticipants() {
+
+        // if (participantsList.isEmpty() ) refreshParticipantsList();
+
         return participantsList;
-        //return list;
-    }      
+        // return list;
+    }
 
     public void removeParticipant(Participant p) {
         participantsList.remove(p);
         Participant2BibMap.remove(p);
-        Bib2ParticipantMap.remove(p.getBib()); 
+        Bib2ParticipantMap.remove(p.getBib());
         ID2ParticipantMap.remove(p.getID());
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.delete(p);
-        s.getTransaction().commit(); 
-        resultsDAO.getResultsQueue().add(p.getBib()); 
-    }      
-    
+        s.remove(p);
+        s.getTransaction().commit();
+        resultsDAO.getResultsQueue().add(p.getBib());
+    }
+
     public void clearAll() {
         removeParticipants(participantsList);
     }
+
     public void removeParticipants(ObservableList<Participant> rl) {
         List<Participant> removeList = FXCollections.observableArrayList(rl);
 
         Task task;
         task = new Task<Void>() {
-            @Override public Void call() {
+            @Override
+            public Void call() {
                 int max = removeList.size();
-                int i=1;
-                Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+                int i = 1;
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
                 int count = 0;
                 Iterator<Participant> deleteMeIterator = removeList.iterator();
@@ -217,36 +220,38 @@ public class ParticipantDAO {
                     Participant2BibMap.remove(p);
                     Bib2ParticipantMap.remove(p.getBib());
                     ID2ParticipantMap.remove(p.getID());
-                    resultsDAO.getResultsQueue().add(p.getBib()); 
-                    s.delete(p); 
-                    
-                    if ( ++count % 20 == 0 ) {
-                        //flush a batch of updates and release memory:
+                    resultsDAO.getResultsQueue().add(p.getBib());
+                    s.remove(p);
+
+                    if (++count % 20 == 0) {
+                        // flush a batch of updates and release memory:
                         s.flush();
                         s.clear();
                     }
                     updateProgress(i++, max);
                 }
-                s.getTransaction().commit(); 
-                
+                s.getTransaction().commit();
+
                 Platform.runLater(() -> {
-                        //refreshParticipantsList();
-                        participantsList.removeAll(removeList);
-                    });
-                
+                    // refreshParticipantsList();
+                    participantsList.removeAll(removeList);
+                });
+
                 return null;
             }
         };
         new Thread(task).start();
-    }   
+    }
+
     public void blockingClearAll() {
         blockingRemoveParticipants(participantsList);
     }
+
     public void blockingRemoveParticipants(ObservableList<Participant> rl) {
         List<Participant> removeList = FXCollections.observableArrayList(rl);
         int max = removeList.size();
-        int i=1;
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        int i = 1;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         int count = 0;
         Iterator<Participant> deleteMeIterator = removeList.iterator();
@@ -254,54 +259,57 @@ public class ParticipantDAO {
             Participant p = deleteMeIterator.next();
             Participant2BibMap.remove(p);
             Bib2ParticipantMap.remove(p.getBib());
-            ID2ParticipantMap.remove(p.getID()); 
-            resultsDAO.getResultsQueue().add(p.getBib()); 
-            s.delete(p); 
+            ID2ParticipantMap.remove(p.getID());
+            resultsDAO.getResultsQueue().add(p.getBib());
+            s.remove(p);
 
-            if ( ++count % 20 == 0 ) {
-                //flush a batch of updates and release memory:
+            if (++count % 20 == 0) {
+                // flush a batch of updates and release memory:
                 s.flush();
                 s.clear();
             }
 
         }
-        s.getTransaction().commit(); 
+        s.getTransaction().commit();
 
         Platform.runLater(() -> {
-                //refreshParticipantsList();
-                participantsList.removeAll(removeList);
-            });
-    }  
-    
+            // refreshParticipantsList();
+            participantsList.removeAll(removeList);
+        });
+    }
+
     public void updateParticipant(Participant p) {
-        if (p == null){
+        if (p == null) {
             logger.debug("Cant save NULL!!!");
             return;
         }
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.update(p);
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Participant merged = s.merge(p);
         s.getTransaction().commit();
-        if ( ! p.getBib().equals(Participant2BibMap.get(p))) {
+        p.setID(merged.getID());
+        if (!p.getBib().equals(Participant2BibMap.get(p))) {
             // bib number changed
-            logger.debug("bib Number Change... "); 
+            logger.debug("bib Number Change... ");
             String oldBib = Participant2BibMap.get(p);
             Bib2ParticipantMap.remove(Participant2BibMap.get(p));
             Bib2ParticipantMap.put(p.getBib(), p);
-            
-            Participant2BibMap.replace(p,p.getBib()); 
-            
+
+            Participant2BibMap.replace(p, p.getBib());
+
             // Flush out any old results
             resultsDAO.getResultsQueue().add(oldBib);
         }
-        resultsDAO.getResultsQueue().add(p.getBib()); 
-        
-        if (p.bibProperty().isEmpty().not().get()) HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
-        
-     } 
-    
+        resultsDAO.getResultsQueue().add(p.getBib());
+
+        if (p.bibProperty().isEmpty().not().get())
+            HTTPServices.getInstance().publishEvent("PARTICIPANT", p.getJSONObject());
+
+    }
+
     public Participant getParticipantByBib(String b) {
-        if (b == null || b.isEmpty()) return null;
+        if (b == null || b.isEmpty())
+            return null;
         try {
             participantsLoadedLatch.await();
         } catch (InterruptedException ex) {
@@ -309,44 +317,48 @@ public class ParticipantDAO {
         }
         return Bib2ParticipantMap.get(b);
     }
+
     public Participant getParticipantByID(Integer id) {
         try {
             participantsLoadedLatch.await();
         } catch (InterruptedException ex) {
             logger.debug("Interrupted!", ex);
         }
-        return ID2ParticipantMap.get(id); 
+        return ID2ParticipantMap.get(id);
     }
-    
+
     public ObservableList<CustomAttribute> getCustomAttributes() {
         return customAttributeList;
     }
-    
-    public void saveCustomAttribute(CustomAttribute cr){
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+
+    public void saveCustomAttribute(CustomAttribute cr) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.saveOrUpdate(cr);
+        CustomAttribute merged = s.merge(cr);
         s.getTransaction().commit();
-        if (!customAttributeList.contains(cr)) customAttributeList.add(cr);
+        cr.setID(merged.getID());
+        if (!customAttributeList.contains(cr))
+            customAttributeList.add(cr);
     }
-    public void deleteCustomAttribute(CustomAttribute cr){
+
+    public void deleteCustomAttribute(CustomAttribute cr) {
         if (customAttributeList.contains(cr)) {
             customAttributeList.remove(cr);
-        
-            Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
             s.beginTransaction();
-            s.delete(cr);
+            s.remove(cr);
             s.getTransaction().commit();
         }
-        
+
     }
-    
+
     public Set<Wave> getWaveByBib(String bib) {
-        AlphanumericComparator comp = new AlphanumericComparator(); 
-        
+        AlphanumericComparator comp = new AlphanumericComparator();
+
         Set<Wave> waves = new HashSet<>();
-        Map raceMap = new HashMap(); 
-        
+        Map raceMap = new HashMap();
+
         logger.debug("Only one wave to assign them to...");
 
         // If there is only one...
@@ -355,22 +367,24 @@ public class ParticipantDAO {
             waves.add(RaceDAO.getInstance().listWaves().get(0));
             return waves;
         }
-        
+
         RaceDAO.getInstance().listWaves().forEach(i -> {
             if (i.getWaveAssignmentMethod() == WaveAssignment.BIB) {
-                String start = i.getWaveAssignmentStart(); 
-                String end = i.getWaveAssignmentEnd(); 
-                if (!(start.isEmpty() && end.isEmpty()) && (comp.compare(start, bib) <= 0 || start.isEmpty()) && (comp.compare(end, bib) >= 0 || end.isEmpty())) {
-                    if(!raceMap.containsKey(i.getRace())) {
-                        //logger.debug("Bib " + bibTextField.getText() + " matched wave " + i.getWaveName() + " results: "+ comp.compare(start, bibTextField.getText()) + " and " + comp.compare(end, bibTextField.getText()) );
-                        raceMap.put(i.getRace(), true); 
-                        waves.add(i); 
+                String start = i.getWaveAssignmentStart();
+                String end = i.getWaveAssignmentEnd();
+                if (!(start.isEmpty() && end.isEmpty()) && (comp.compare(start, bib) <= 0 || start.isEmpty())
+                        && (comp.compare(end, bib) >= 0 || end.isEmpty())) {
+                    if (!raceMap.containsKey(i.getRace())) {
+                        // logger.debug("Bib " + bibTextField.getText() + " matched wave " +
+                        // i.getWaveName() + " results: "+ comp.compare(start, bibTextField.getText()) +
+                        // " and " + comp.compare(end, bibTextField.getText()) );
+                        raceMap.put(i.getRace(), true);
+                        waves.add(i);
                     }
                 }
             }
         });
-        
-        return waves; 
-    }
-} 
 
+        return waves;
+    }
+}

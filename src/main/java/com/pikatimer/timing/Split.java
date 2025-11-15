@@ -16,12 +16,30 @@
  */
 package com.pikatimer.timing;
 
-import com.pikatimer.race.Race;
-import com.pikatimer.util.Pace;
-import com.pikatimer.util.Unit;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Objects;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pikatimer.race.Race;
+import com.pikatimer.util.Pace;
+import com.pikatimer.util.Unit;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -33,21 +51,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -135,8 +138,11 @@ public class Split {
     
     //@ManyToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name = "TIMING_LOC_ID",nullable=false)
-    @Column(name = "TIMING_LOC_ID",nullable=false)
+    @Column(name = "TIMING_LOC_ID",nullable=true)
     public Integer getTimingLocationID() {
+        if (splitLocation == null) {
+            return null;
+        }
         return splitLocation.getID();
     }
     public void setTimingLocationID(Integer id) {

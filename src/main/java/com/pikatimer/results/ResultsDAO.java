@@ -205,7 +205,8 @@ public class ResultsDAO {
                                         resultsMap.get(c.getBib()).remove(c.getRaceID());
                                     } else {
                                         logger.trace("Saving " + c.getBib());
-                                        s.merge(c);
+                                        Result merged = s.merge(c);
+                                        c.setID(merged.getID());
                                     }
                                     if (++count % 20 == 0) {
                                         // flush a batch of updates and release memory:
@@ -938,10 +939,16 @@ public class ResultsDAO {
     }
 
     public void saveRaceReport(RaceReport rr) {
+        if (rr.getReportType() == null) {
+            logger.warn("Uncomplete RaceReport: skip db saving - ID={} UUID={}", rr.getID(), rr.getUUID());
+            ;
+            return;
+        }
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(rr);
+        RaceReport merged = s.merge(rr);
         s.getTransaction().commit();
+        rr.setID(merged.getID());
     }
 
     public void removeRaceReport(RaceReport rr) {
@@ -954,8 +961,9 @@ public class ResultsDAO {
     public void saveReportDestination(ReportDestination p) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(p);
+        ReportDestination merged = s.merge(p);
         s.getTransaction().commit();
+        p.setID(merged.getID());
         // Platform.runLater(() -> {
         if (!reportDestinationList.contains(p))
             reportDestinationList.add(p);
@@ -1036,8 +1044,9 @@ public class ResultsDAO {
     public void saveRaceReportOutputTarget(RaceOutputTarget t) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.merge(t);
+        RaceOutputTarget merged = s.merge(t);
         s.getTransaction().commit();
+        t.setID(merged.getID());
     }
 
     public void removeRaceReportOutputTarget(RaceOutputTarget t) {
@@ -1354,13 +1363,13 @@ public class ResultsDAO {
 
                     // for each report, feed it the results list
                     if (rr == null) {
-                        r.raceReportsProperty().forEach(rr -> {
+                        r.getRaceReports().forEach(rr -> {
                             rr.processResultIfEnabled(results);
                         });
                     } else
                         rr.processResultNow(results);
                 } catch (Exception ex) {
-                logger.error("Unexpected exception", ex);
+                    logger.error("Unexpected exception", ex);
                 }
                 return null;
             }

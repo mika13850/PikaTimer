@@ -18,18 +18,20 @@ package com.pikatimer.event;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
+
 import org.hibernate.annotations.DynamicUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.Table;
 
 /**
  *
@@ -73,7 +75,6 @@ public class EventOptions {
     @MapKeyColumn(name="attribute", insertable=false,updatable=false)
     @Column(name="attribute_value")
     @CollectionTable(name="event_options_attributes", joinColumns=@JoinColumn(name="event_id"))
-    //@OrderColumn(name = "index_id")
     private Map<String, String> getAttributes() {
         logger.trace("EventOptions::getAttributes() called");
         attributes.keySet().forEach(k -> {

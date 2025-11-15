@@ -16,19 +16,37 @@
  */
 package com.pikatimer.timing;
 
-import com.pikatimer.participant.Participant;
-import com.pikatimer.participant.ParticipantDAO;
-import com.pikatimer.race.Race;
-import com.pikatimer.race.RaceDAO;
-import com.pikatimer.race.Wave;
-import com.pikatimer.util.HTTPServices;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javafx.application.Platform;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pikatimer.participant.Participant;
+import com.pikatimer.participant.ParticipantDAO;
+import com.pikatimer.race.Race;
+import com.pikatimer.race.RaceDAO;
+import com.pikatimer.race.Wave;
+import com.pikatimer.util.HTTPServices;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -41,22 +59,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -154,9 +156,8 @@ public class TimingLocation {
     }
 
     // We keep two lists, one observable for JavaFX, one regular for Hibernate
-    @OneToMany(mappedBy="timingLocation",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="timingLocation",fetch = FetchType.EAGER, cascade=jakarta.persistence.CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
-    @Cascade(CascadeType.DELETE)
     public List<TimingLocationInput> getInputs() {
         //return associatedSplits.sorted((Split o1, Split o2) -> o1.getPosition().compareTo(o2.getPosition()));
         return timingInputList;

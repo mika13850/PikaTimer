@@ -25,14 +25,16 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.15.Final</version>
+            <!-- <version>5.6.15.Final</version> -->
+            <version>7.1.7.Final</version>            
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-c3p0</artifactId>
-            <version>5.6.15.Final</version>
+            <!-- <version>5.6.15.Final</version> -->
+            <version>7.1.7.Final</version>            
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
         <dependency>
@@ -277,11 +279,11 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
-                <!-- <configuration>
+                <configuration>
                     <environmentVariables>
                         <LD_LIBRARY_PATH>${basedir}/lib</LD_LIBRARY_PATH>
                     </environmentVariables>
-                </configuration> -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

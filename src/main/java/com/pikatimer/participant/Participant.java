@@ -16,10 +16,8 @@
  */
 package com.pikatimer.participant;
 
-import com.pikatimer.event.Event;
-import com.pikatimer.race.RaceDAO;
-import com.pikatimer.race.Wave;
 import static java.lang.Boolean.FALSE;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +29,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pikatimer.event.Event;
+import com.pikatimer.race.RaceDAO;
+import com.pikatimer.race.Wave;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
@@ -48,25 +71,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.util.Callback;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -75,129 +79,140 @@ import org.slf4j.LoggerFactory;
 
 @Entity
 @DynamicUpdate
-@Table(name="PARTICIPANT")
+@Table(name = "PARTICIPANT")
 public class Participant {
     private static final Logger logger = LoggerFactory.getLogger(Participant.class);
 
-   
     private final StringProperty firstNameProperty = new SimpleStringProperty("");
-    private final StringProperty middleNameProperty= new SimpleStringProperty();
-    private final StringProperty lastNameProperty= new SimpleStringProperty("");
-    private final StringProperty fullNameProperty= new SimpleStringProperty();
-    private final StringProperty emailProperty= new SimpleStringProperty(); 
+    private final StringProperty middleNameProperty = new SimpleStringProperty();
+    private final StringProperty lastNameProperty = new SimpleStringProperty("");
+    private final StringProperty fullNameProperty = new SimpleStringProperty();
+    private final StringProperty emailProperty = new SimpleStringProperty();
     private final IntegerProperty IDProperty = new SimpleIntegerProperty();
     private final StringProperty uuidProperty = new SimpleStringProperty(java.util.UUID.randomUUID().toString());
-    private final StringProperty bibProperty= new SimpleStringProperty();
+    private final StringProperty bibProperty = new SimpleStringProperty();
     private final IntegerProperty ageProperty = new SimpleIntegerProperty();
-    private final StringProperty sexProperty= new SimpleStringProperty(); 
-    private final StringProperty cityProperty= new SimpleStringProperty();
-    private final StringProperty stateProperty= new SimpleStringProperty();
-    private final StringProperty countryProperty= new SimpleStringProperty();
+    private final StringProperty sexProperty = new SimpleStringProperty();
+    private final StringProperty cityProperty = new SimpleStringProperty();
+    private final StringProperty stateProperty = new SimpleStringProperty();
+    private final StringProperty countryProperty = new SimpleStringProperty();
     private final StringProperty zipProperty = new SimpleStringProperty();
-    private LocalDate birthday; 
+    private LocalDate birthday;
     private final ObjectProperty<LocalDate> birthdayProperty = new SimpleObjectProperty();
-    private final ObservableList<Wave> waves = FXCollections.observableArrayList(Wave.extractor());  
-    
-    
-    
+    private final ObservableList<Wave> waves = FXCollections.observableArrayList(Wave.extractor());
+
     private final IntegerProperty wavesChangedCounterProperty = new SimpleIntegerProperty(0);
     private final ObjectProperty<ObservableList<Wave>> wavesProperty = new SimpleObjectProperty(waves);
-    private Set<Integer> waveIDSet = new HashSet(); 
+    private Set<Integer> waveIDSet = new HashSet();
     private final BooleanProperty dnfProperty = new SimpleBooleanProperty(FALSE);
     private final BooleanProperty dqProperty = new SimpleBooleanProperty(FALSE);
     private final StringProperty noteProperty = new SimpleStringProperty();
-    private Status status = Status.GOOD; 
+    private Status status = Status.GOOD;
     private final ObjectProperty<Status> statusProperty = new SimpleObjectProperty(Status.GOOD);
-    
-    private final ObservableMap<Integer,StringProperty> customAttributeObservableMap = FXCollections.observableHashMap();
-    private Map<Integer,String> customAttributeMap = new HashMap();
-    
+
+    private final ObservableMap<Integer, StringProperty> customAttributeObservableMap = FXCollections
+            .observableHashMap();
+    private Map<Integer, String> customAttributeMap = new HashMap();
+
     private Integer regUserID;
     private Boolean regSyncNeeded = false;
-    private Map<Integer,Integer> regEventIDMap = new HashMap();
-    
+    private Map<Integer, Integer> regEventIDMap = new HashMap();
+
     public Participant() {
-        fullNameProperty.bind(new StringBinding(){
-            {super.bind(firstNameProperty,middleNameProperty, lastNameProperty);}
+        fullNameProperty.bind(new StringBinding() {
+            {
+                super.bind(firstNameProperty, middleNameProperty, lastNameProperty);
+            }
+
             @Override
             protected String computeValue() {
-                return (firstNameProperty.getValueSafe() + " " + middleNameProperty.getValueSafe() + " " + lastNameProperty.getValueSafe()).replaceAll("( )+", " ");
+                return (firstNameProperty.getValueSafe() + " " + middleNameProperty.getValueSafe() + " "
+                        + lastNameProperty.getValueSafe()).replaceAll("( )+", " ");
             }
         });
-        
-        //Convenience properties for the getDNF and getDQ status checks
-        dnfProperty.bind(new BooleanBinding(){
-            {super.bind(statusProperty);}
+
+        // Convenience properties for the getDNF and getDQ status checks
+        dnfProperty.bind(new BooleanBinding() {
+            {
+                super.bind(statusProperty);
+            }
+
             @Override
             protected boolean computeValue() {
-                if (statusProperty.getValue().equals(Status.DNF)) return true;
-                return false; 
+                if (statusProperty.getValue().equals(Status.DNF))
+                    return true;
+                return false;
             }
         });
-        dqProperty.bind(new BooleanBinding(){
-            {super.bind(statusProperty);}
+        dqProperty.bind(new BooleanBinding() {
+            {
+                super.bind(statusProperty);
+            }
+
             @Override
             protected boolean computeValue() {
-                if (statusProperty.getValue().equals(Status.DQ)) return true;
-                return false; 
+                if (statusProperty.getValue().equals(Status.DQ))
+                    return true;
+                return false;
             }
         });
-        
+
         waves.addListener(new ListChangeListener<Wave>() {
             @Override
             public void onChanged(Change<? extends Wave> c) {
-            
-                Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get()+1));
+
+                Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get() + 1));
             }
         });
-        
+
         status = Status.GOOD;
         statusProperty.set(status);
-        
+
     }
+
     public Participant(Map<String, String> attribMap) {
         this();
         setAttributes(attribMap);
-        
+
     }
+
     public Participant(String firstName, String lastName) {
         this();
         setFirstName(firstName);
         setLastName(lastName);
-        
-        
+
     }
-    
-    public static ObservableMap<String,String> getAvailableAttributes() {
-        ObservableMap<String,String> attribMap = FXCollections.observableMap(new LinkedHashMap() );
-        
+
+    public static ObservableMap<String, String> getAvailableAttributes() {
+        ObservableMap<String, String> attribMap = FXCollections.observableMap(new LinkedHashMap());
+
         attribMap.put("bib", "Bib");
         attribMap.put("first", "First Name");
         attribMap.put("middle", "Middle Name");
         attribMap.put("last", "Last Name");
         attribMap.put("age", "Age");
-        attribMap.put("birth","Birthday");
+        attribMap.put("birth", "Birthday");
         attribMap.put("sex-gender", "Sex");
         attribMap.put("city", "City");
         attribMap.put("state", "State");
-        attribMap.put("zip","Zip Code");
+        attribMap.put("zip", "Zip Code");
         attribMap.put("country", "Country");
-        attribMap.put("status","Status");
-        attribMap.put("note","Note");
+        attribMap.put("status", "Status");
+        attribMap.put("note", "Note");
         attribMap.put("email", "EMail");
         // TODO: routine to add custom attributes based on db lookup
-        return attribMap; 
+        return attribMap;
     }
-    
-    
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name="attribute_id")
-    @Column(name="attribute_value")
-    @CollectionTable(name="participant_attributes", joinColumns=@JoinColumn(name="participant_id"))
-    public Map<Integer,String> getCustomAttributes(){
+    @MapKeyColumn(name = "attribute_id")
+    @Column(name = "attribute_value")
+    @CollectionTable(name = "participant_attributes", joinColumns = @JoinColumn(name = "participant_id"))
+    public Map<Integer, String> getCustomAttributes() {
         return customAttributeMap;
     }
-    public void setCustomAttributes(Map<Integer,String> attribMap) {
+
+    public void setCustomAttributes(Map<Integer, String> attribMap) {
         customAttributeMap = attribMap;
         customAttributeMap.keySet().forEach(k -> {
             if (customAttributeObservableMap.containsKey(k)) {
@@ -207,16 +222,19 @@ public class Participant {
             }
         });
     }
-    public ObservableMap<Integer,StringProperty> customAttributesProperty(){
+
+    public ObservableMap<Integer, StringProperty> customAttributesProperty() {
         return customAttributeObservableMap;
     }
+
     public StringProperty getCustomAttribute(Integer cID) {
-        if (! customAttributeObservableMap.containsKey(cID)) {
+        if (!customAttributeObservableMap.containsKey(cID)) {
             customAttributeObservableMap.put(cID, new SimpleStringProperty());
         }
         return customAttributeObservableMap.get(cID);
     }
-    public void setCustomAttribute(Integer cID, String value){
+
+    public void setCustomAttribute(Integer cID, String value) {
         customAttributeMap.put(cID, value);
         if (customAttributeObservableMap.containsKey(cID)) {
             customAttributeObservableMap.get(cID).set(value);
@@ -224,451 +242,543 @@ public class Participant {
             customAttributeObservableMap.put(cID, new SimpleStringProperty(value));
         }
     }
-    
-    
+
     public void setAttributes(Map<String, String> attribMap) {
         // bulk set routine. Everything is a string so convert as needed
-        
+
         attribMap.entrySet().stream().forEach((Map.Entry<String, String> entry) -> {
             if (entry.getKey() != null) {
-                //logger.debug("processing " + entry.getKey() );
-             switch(entry.getKey()) {
-                 case "bib": this.setBib(entry.getValue()); break; 
-                 case "first": this.setFirstName(entry.getValue()); break;
-                 case "middle": this.setMiddleName(entry.getValue()); break;
-                 case "last": this.setLastName(entry.getValue()); break;
-                 
-                 case "birth": 
-                     this.setBirthday(entry.getValue()); 
-                     //set the age too if we were able to parse the birthdate
-                     break;
-                 case "age": 
-                     //Setting the birthdate will also set the age, so if the age is already set just skip it.
-                     try {
-                        if (this.birthday == null) this.setAge(Integer.parseUnsignedInt(entry.getValue())); 
-                     } catch (Exception e) {
-                         logger.debug("Unable to parse age " + entry.getValue() );
-                     }
-                     break; 
-                     
-                 // TODO: map to selected sex translator
-                 case "sex-gender": this.setSex(entry.getValue()); break; 
-                 
-                 
-                     
-                 case "city": this.setCity(entry.getValue()); break; 
-                 case "state": this.setState(entry.getValue()); break; 
-                 case "country": this.setCountry(entry.getValue()); break;
-                 case "zip": this.setZip(entry.getValue()); break;
-                 
-                 case "note": this.setNote(entry.getValue()); break;
-                 
-                 case "status": 
-                     try {
-                         this.setStatus(Status.valueOf(entry.getValue()));
-                     } catch (Exception e){
-                         
-                     }
-                         
-                 case "email": this.setEmail(entry.getValue()); break; 
-                     
-                 // TODO: Team value
-                 
-             }
+                // logger.debug("processing " + entry.getKey() );
+                switch (entry.getKey()) {
+                case "bib":
+                    this.setBib(entry.getValue());
+                    break;
+                case "first":
+                    this.setFirstName(entry.getValue());
+                    break;
+                case "middle":
+                    this.setMiddleName(entry.getValue());
+                    break;
+                case "last":
+                    this.setLastName(entry.getValue());
+                    break;
+
+                case "birth":
+                    this.setBirthday(entry.getValue());
+                    // set the age too if we were able to parse the birthdate
+                    break;
+                case "age":
+                    // Setting the birthdate will also set the age, so if the age is already set
+                    // just skip it.
+                    try {
+                        if (this.birthday == null)
+                            this.setAge(Integer.parseUnsignedInt(entry.getValue()));
+                    } catch (Exception e) {
+                        logger.debug("Unable to parse age " + entry.getValue());
+                    }
+                    break;
+
+                // TODO: map to selected sex translator
+                case "sex-gender":
+                    this.setSex(entry.getValue());
+                    break;
+
+                case "city":
+                    this.setCity(entry.getValue());
+                    break;
+                case "state":
+                    this.setState(entry.getValue());
+                    break;
+                case "country":
+                    this.setCountry(entry.getValue());
+                    break;
+                case "zip":
+                    this.setZip(entry.getValue());
+                    break;
+
+                case "note":
+                    this.setNote(entry.getValue());
+                    break;
+
+                case "status":
+                    try {
+                        this.setStatus(Status.valueOf(entry.getValue()));
+                    } catch (Exception e) {
+                        logger.error("Unexpected exception", e);
+                    }
+
+                case "email":
+                    this.setEmail(entry.getValue());
+                    break;
+
+                // TODO: Team value
+
+                }
             }
         });
     }
-    
-    public String getNamedAttribute(String attribute) {
-        
-        if (attribute != null) {
-                //logger.debug("processing " + entry.getKey() );
-            switch(attribute) {
-                case "bib": return this.bibProperty.getValueSafe();
-                case "first": return this.firstNameProperty.getValueSafe();
-                case "middle": return this.middleNameProperty.getValueSafe();
-                case "last": return this.lastNameProperty.getValueSafe();
 
-                // TODO: catch bad integers 
-                case "birth": if (this.birthday != null) return birthday.format(DateTimeFormatter.ISO_DATE); else return "";
-                    
-                case "age":  if (this.ageProperty.getValue() != null) return this.ageProperty.getValue().toString(); else return "";
-                     
+    public String getNamedAttribute(String attribute) {
+
+        if (attribute != null) {
+            // logger.debug("processing " + entry.getKey() );
+            switch (attribute) {
+            case "bib":
+                return this.bibProperty.getValueSafe();
+            case "first":
+                return this.firstNameProperty.getValueSafe();
+            case "middle":
+                return this.middleNameProperty.getValueSafe();
+            case "last":
+                return this.lastNameProperty.getValueSafe();
+
+            // TODO: catch bad integers
+            case "birth":
+                if (this.birthday != null)
+                    return birthday.format(DateTimeFormatter.ISO_DATE);
+                else
+                    return "";
+
+            case "age":
+                if (this.ageProperty.getValue() != null)
+                    return this.ageProperty.getValue().toString();
+                else
+                    return "";
 
                 // TODO: map to selected sex translator
-                case "sex-gender": return this.sexProperty.getValueSafe();
+            case "sex-gender":
+                return this.sexProperty.getValueSafe();
 
-                case "city": return this.cityProperty.getValueSafe();
-                case "state": return this.stateProperty.getValueSafe();
-                case "country": return this.countryProperty.getValueSafe();
-                case "zip": return this.zipProperty.getValueSafe();
+            case "city":
+                return this.cityProperty.getValueSafe();
+            case "state":
+                return this.stateProperty.getValueSafe();
+            case "country":
+                return this.countryProperty.getValueSafe();
+            case "zip":
+                return this.zipProperty.getValueSafe();
 
-                case "note": return this.noteProperty.getValueSafe();
+            case "note":
+                return this.noteProperty.getValueSafe();
 
-                case "status": if (status != null) return status.name(); else return Status.GOOD.name();
+            case "status":
+                if (status != null)
+                    return status.name();
+                else
+                    return Status.GOOD.name();
 
+            case "email":
+                return this.emailProperty.getValueSafe();
 
-                case "email": return this.emailProperty.getValueSafe();  
-                
-                
-                
-                // TODO: Team value
+            // TODO: Team value
             }
         }
         return "";
     }
-    
+
     @Id
-    @GenericGenerator(name="participant_id" , strategy="increment")
-    @GeneratedValue(generator="participant_id")
-    @Column(name="PARTICIPANT_ID")
+    @GenericGenerator(name = "participant_id", strategy = "increment")
+    @GeneratedValue(generator = "participant_id")
+    @Column(name = "PARTICIPANT_ID")
     public Integer getID() {
-        return IDProperty.getValue(); 
+        return IDProperty.getValue();
     }
+
     public void setID(Integer id) {
         IDProperty.setValue(id);
     }
+
     public IntegerProperty idProperty() {
-        return IDProperty; 
+        return IDProperty;
     }
-    
-    @Column(name="UUID")
+
+    @Column(name = "UUID")
     public String getUUID() {
-       // logger.debug("Participant UUID is " + uuidProperty.get());
-        return uuidProperty.getValue(); 
+        // logger.debug("Participant UUID is " + uuidProperty.get());
+        return uuidProperty.getValue();
     }
-    public void setUUID(String  uuid) {
+
+    public void setUUID(String uuid) {
         uuidProperty.setValue(uuid);
-        //logger.debug("Participant UUID is now " + uuidProperty.get());
+        // logger.debug("Participant UUID is now " + uuidProperty.get());
     }
+
     public StringProperty uuidProperty() {
-        return uuidProperty; 
+        return uuidProperty;
     }
-    
-    @Column(name="FIRST_NAME")
+
+    @Column(name = "FIRST_NAME")
     public String getFirstName() {
         return firstNameProperty.getValueSafe();
     }
+
     public void setFirstName(String fName) {
         firstNameProperty.setValue(fName);
     }
+
     public StringProperty firstNameProperty() {
-        return firstNameProperty; 
+        return firstNameProperty;
     }
- 
-    
-    @Column(name="LAST_NAME")
+
+    @Column(name = "LAST_NAME")
     public String getLastName() {
         return lastNameProperty.getValueSafe();
     }
+
     public void setLastName(String fName) {
         lastNameProperty.setValue(fName);
     }
+
     public StringProperty lastNameProperty() {
         return lastNameProperty;
     }
-    
-    @Column(name="MIDDLE_NAME")
+
+    @Column(name = "MIDDLE_NAME")
     public String getMiddleName() {
         return middleNameProperty.getValueSafe();
     }
+
     public void setMiddleName(String mName) {
         middleNameProperty.setValue(mName);
     }
+
     public StringProperty middleNameProperty() {
         return middleNameProperty;
     }
-    
-    public StringProperty fullNameProperty(){
+
+    public StringProperty fullNameProperty() {
         return fullNameProperty;
     }
-    
-    @Column(name="EMAIL")
+
+    @Column(name = "EMAIL")
     public String getEmail() {
         return emailProperty.getValueSafe();
     }
+
     public void setEmail(String fName) {
         emailProperty.setValue(fName);
     }
+
     public StringProperty emailProperty() {
-        return emailProperty; 
+        return emailProperty;
     }
-    
-    @Column(name="BIB_Number")
+
+    @Column(name = "BIB_Number")
     public String getBib() {
         return bibProperty.getValueSafe();
     }
+
     public void setBib(String b) {
         bibProperty.setValue(b);
     }
+
     public StringProperty bibProperty() {
         return bibProperty;
     }
-    
-    @Column(name="AGE")
-    public Integer getAge () {
+
+    @Column(name = "AGE")
+    public Integer getAge() {
         return ageProperty.getValue();
     }
-    public void setAge (Integer a) {
+
+    public void setAge(Integer a) {
         ageProperty.setValue(a);
     }
+
     public IntegerProperty ageProperty() {
-        return ageProperty; 
+        return ageProperty;
     }
-    
-    
-    @Column(name="SEX")
+
+    @Column(name = "SEX")
     public String getSex() {
         return sexProperty.getValueSafe();
     }
+
     public void setSex(String s) {
-        //Set to an upper case M or F for now
-        //TODO: Switch this to the allowable values for a SEX 
-        if (s == null) return;
-        if (s.startsWith("M") || s.startsWith("m")) sexProperty.setValue("M");
-        else if (s.startsWith("F") || s.startsWith("f")) sexProperty.setValue("F");
-        else sexProperty.setValue(s);
+        // Set to an upper case M or F for now
+        // TODO: Switch this to the allowable values for a SEX
+        if (s == null)
+            return;
+        if (s.startsWith("M") || s.startsWith("m"))
+            sexProperty.setValue("M");
+        else if (s.startsWith("F") || s.startsWith("f"))
+            sexProperty.setValue("F");
+        else
+            sexProperty.setValue(s);
     }
+
     public StringProperty sexProperty() {
         return sexProperty;
     }
-    
-    @Column(name="CITY")
+
+    @Column(name = "CITY")
     public String getCity() {
         return cityProperty.getValueSafe();
     }
+
     public void setCity(String c) {
         cityProperty.setValue(c);
     }
+
     public StringProperty cityProperty() {
-        return cityProperty; 
+        return cityProperty;
     }
-    
-   @Column(name="STATE")
+
+    @Column(name = "STATE")
     public String getState() {
         return stateProperty.getValueSafe();
     }
+
     public void setState(String s) {
         stateProperty.setValue(s);
     }
-    public StringProperty stateProperty(){
+
+    public StringProperty stateProperty() {
         return stateProperty;
     }
-    
-    @Column(name="ZIP")
+
+    @Column(name = "ZIP")
     public String getZip() {
         return zipProperty.getValueSafe();
     }
+
     public void setZip(String s) {
         zipProperty.setValue(s);
     }
-    public StringProperty zipProperty(){
+
+    public StringProperty zipProperty() {
         return zipProperty;
     }
-    
-    @Column(name="COUNTRY")
+
+    @Column(name = "COUNTRY")
     public String getCountry() {
         return countryProperty.getValueSafe();
     }
+
     public void setCountry(String s) {
         countryProperty.setValue(s);
     }
-    public StringProperty countryProperty(){
+
+    public StringProperty countryProperty() {
         return countryProperty;
     }
-    
-    @Column(name="BIRTHDAY",nullable=true)
+
+    @Column(name = "BIRTHDAY", nullable = true)
     public String getBirthday() {
         if (birthday != null) {
-            //return Date.from(birthdayProperty.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            // return
+            // Date.from(birthdayProperty.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             return birthday.toString();
         } else {
-            return null; 
+            return null;
         }
     }
+
     public void setBirthday(LocalDate d) {
         if (d != null) {
             birthday = d;
             birthdayProperty.setValue(d);
         }
-    }    
+    }
+
     public void setBirthday(String d) {
-        //logger.debug("Birthdate String: " + d);
+        // logger.debug("Birthdate String: " + d);
         if (d != null) {
-            //Try and parse the date
+            // Try and parse the date
             // First try the ISO_LOCAL_DATE (YYYY-MM-DD)
-            // Then try and catch localized date strings such as MM/DD/YYYY 
+            // Then try and catch localized date strings such as MM/DD/YYYY
             // finally a last ditch effort for things like MM.DD.YYYY
-            try{
-                birthday = LocalDate.parse(d,DateTimeFormatter.ISO_LOCAL_DATE);
-                //logger.debug("Parsed via ISO_LOCAL_DATE: " + d);
-            } catch (Exception e){
+            try {
+                birthday = LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE);
+                // logger.debug("Parsed via ISO_LOCAL_DATE: " + d);
+            } catch (Exception e) {
                 try {
-                    birthday = LocalDate.parse(d,DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
-                    //logger.debug("FormatStyle.SHORT: " + d);
-                    
-                } catch (Exception e2){ 
+                    birthday = LocalDate.parse(d, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+                    // logger.debug("FormatStyle.SHORT: " + d);
+
+                } catch (Exception e2) {
                     try {
-                        birthday = LocalDate.parse(d,DateTimeFormatter.ofPattern("M/d/yyyy"));
+                        birthday = LocalDate.parse(d, DateTimeFormatter.ofPattern("M/d/yyyy"));
                         // logger.debug("Parsed via M/d/yyyy: " + d);
                     } catch (Exception e3) {
-                        //logger.debug("Unble to parse date: " + d);
+                        // logger.debug("Unble to parse date: " + d);
                     }
                 }
             }
-           
+
             if (this.birthday != null) {
                 birthdayProperty.setValue(birthday);
                 this.setAge(Period.between(this.birthday, Event.getInstance().getLocalEventDate()).getYears());
-                //logger.debug("Parsed Date: " + d + " -> " + getAge());
+                // logger.debug("Parsed Date: " + d + " -> " + getAge());
             }
 
-            //Instant instant = Instant.ofEpochMilli(d.getTime());
-            //setBirthday(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate());
+            // Instant instant = Instant.ofEpochMilli(d.getTime());
+            // setBirthday(LocalDateTime.ofInstant(instant,
+            // ZoneId.systemDefault()).toLocalDate());
         }
     }
+
     public ObjectProperty<LocalDate> birthdayProperty() {
         return birthdayProperty;
     }
-    
-    
+
     @Transient
     public Boolean getDNF() {
         return dnfProperty.getValue();
     }
-    public BooleanProperty dnfProperty(){
+
+    public BooleanProperty dnfProperty() {
         return dnfProperty;
     }
-            
+
     @Transient
     public Boolean getDQ() {
         return dqProperty.getValue();
     }
-    public BooleanProperty dqProperty(){
+
+    public BooleanProperty dqProperty() {
         return dqProperty;
     }
-            
-            
-    @Column(name="note", nullable=true)
+
+    @Column(name = "note", nullable = true)
     public String getNote() {
         return noteProperty.getValueSafe();
     }
+
     public void setNote(String s) {
         noteProperty.setValue(s);
     }
-    public StringProperty noteProperty(){
+
+    public StringProperty noteProperty() {
         return noteProperty;
-    }        
-    
+    }
+
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status s) {
-        
-        if (s != null && (status == null || ! status.equals(s)) ){
-            
+
+        if (s != null && (status == null || !status.equals(s))) {
+
             status = s;
             statusProperty.set(status);
         }
     }
-    public ObjectProperty<Status> statusProperty(){
+
+    public ObjectProperty<Status> statusProperty() {
         return statusProperty;
     }
-            
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name="wave_id", nullable=false)
-    @CollectionTable(name="part2wave", joinColumns=@JoinColumn(name="participant_id"))
-//    @OrderColumn(name = "index_id")
+    @Column(name = "wave_id", nullable = false)
+    @CollectionTable(name = "part2wave", joinColumns = @JoinColumn(name = "participant_id"))
     public Set<Integer> getWaveIDs() {
-        return waveIDSet;  
+        return waveIDSet;
     }
+
     public void setWaveIDs(Set<Integer> w) {
-        waveIDSet = w; 
+        waveIDSet = w;
     }
-    
+
     public void setWaves(List<Wave> w) {
         logger.debug("SetWaves(List) called with " + w.size());
         waves.setAll(w);
         waveIDSet = new HashSet();
-        waves.stream().forEach(n -> {waveIDSet.add(n.getID());});
-        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get()+1));
+        waves.stream().forEach(n -> {
+            waveIDSet.add(n.getID());
+        });
+        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get() + 1));
     }
-    public void setWaves(Set<Wave> w){
+
+    public void setWaves(Set<Wave> w) {
         logger.debug("SetWaves(Set) called with " + w.size());
         waves.setAll(w);
         waveIDSet = new HashSet();
-        waves.stream().forEach(n -> {waveIDSet.add(n.getID());});
-        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get()+1));
+        waves.stream().forEach(n -> {
+            waveIDSet.add(n.getID());
+        });
+        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get() + 1));
 
     }
+
     public void setWaves(Wave w) {
         logger.debug("Participant.setWaves(Wave w)");
         waves.setAll(w);
-        
+
         waveIDSet = new HashSet();
-        waveIDSet.add(w.getID()); 
-        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get()+1));
+        waveIDSet.add(w.getID());
+        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get() + 1));
 
     }
+
     public void addWave(Wave w) {
-        //logger.debug("Participant.addWave(Wave w)");
-        if(w == null) logger.debug("Wave is NULL!!!");
-        else { 
-            //logger.debug("Participant.addWave(Wave w) " + w.getID());
-            waves.add(w); 
-            waveIDSet.add(w.getID()); 
+        // logger.debug("Participant.addWave(Wave w)");
+        if (w == null)
+            logger.debug("Wave is NULL!!!");
+        else {
+            // logger.debug("Participant.addWave(Wave w) " + w.getID());
+            waves.add(w);
+            waveIDSet.add(w.getID());
         }
-        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get()+1));
+        Platform.runLater(() -> wavesChangedCounterProperty.setValue(wavesChangedCounterProperty.get() + 1));
     }
+
     public ObservableList<Wave> wavesObservableList() {
-        if (waves.size() != waveIDSet.size()){
+        if (waves.size() != waveIDSet.size()) {
             waves.clear();
             waveIDSet.stream().forEach(id -> {
-                if (RaceDAO.getInstance().getWaveByID(id) == null) logger.debug("Null WAVE!!! " + id);
-                waves.add(RaceDAO.getInstance().getWaveByID(id)); 
+                if (RaceDAO.getInstance().getWaveByID(id) == null)
+                    logger.debug("Null WAVE!!! " + id);
+                waves.add(RaceDAO.getInstance().getWaveByID(id));
             });
         }
-        return waves; 
+        return waves;
     }
-    
-    public ObjectProperty<ObservableList<Wave>> wavesProperty(){
+
+    public ObjectProperty<ObservableList<Wave>> wavesProperty() {
         return wavesProperty;
     }
-    public IntegerProperty wavesChangedCounterProperty(){
+
+    public IntegerProperty wavesChangedCounterProperty() {
         return wavesChangedCounterProperty;
     }
-    
+
     public static Callback<Participant, Observable[]> extractor() {
-        return (Participant p) -> new Observable[]{p.firstNameProperty,p.middleNameProperty,p.lastNameProperty,p.bibProperty,p.ageProperty,p.sexProperty,p.cityProperty,p.stateProperty,p.countryProperty,p.wavesProperty,p.wavesChangedCounterProperty,p.statusProperty};
+        return (Participant p) -> new Observable[] { p.firstNameProperty, p.middleNameProperty, p.lastNameProperty,
+                p.bibProperty, p.ageProperty, p.sexProperty, p.cityProperty, p.stateProperty, p.countryProperty,
+                p.wavesProperty, p.wavesChangedCounterProperty, p.statusProperty };
     }
-    
-    @Column(name="reguserid", nullable=true)
-    public Integer  getRegUserID() {
+
+    @Column(name = "reguserid", nullable = true)
+    public Integer getRegUserID() {
         return regUserID;
     }
+
     public void setRegUserID(Integer userID) {
         regUserID = userID;
     }
-            
-    @Column(name="reg_sync_needed")
-    public Boolean  getRegSyncNeeded() {
+
+    @Column(name = "reg_sync_needed")
+    public Boolean getRegSyncNeeded() {
         return regSyncNeeded;
     }
+
     public void setRegSyncNeeded(Boolean syncNeeded) {
         regSyncNeeded = syncNeeded;
     }
-    
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name="regID")
-    @Column(name="raceID")
-    @CollectionTable(name="participant_regeventmap", joinColumns=@JoinColumn(name="partID"))
-    public Map<Integer,Integer> getRegID2RaceIDDMap(){
+    @MapKeyColumn(name = "regID")
+    @Column(name = "raceID")
+    @CollectionTable(name = "participant_regeventmap", joinColumns = @JoinColumn(name = "partID"))
+    public Map<Integer, Integer> getRegID2RaceIDDMap() {
         return regEventIDMap;
     }
-    
-    public void setRegID2RaceIDDMap(Map<Integer,Integer> eventMap) {
+
+    public void setRegID2RaceIDDMap(Map<Integer, Integer> eventMap) {
         regEventIDMap = eventMap;
     }
 
@@ -689,8 +799,8 @@ public class Participant {
             return false;
         }
         final Participant other = (Participant) obj;
-        if (!Objects.equals(this.uuidProperty.getValue(),other.uuidProperty.getValue())) {
-            return false; 
+        if (!Objects.equals(this.uuidProperty.getValue(), other.uuidProperty.getValue())) {
+            return false;
         }
 
         return true;
@@ -701,7 +811,7 @@ public class Participant {
         JSONObject json = new JSONObject();
         try {
             json.put("ID", this.IDProperty.getValue());
-            json.put("Bib",this.bibProperty.getValue());
+            json.put("Bib", this.bibProperty.getValue());
             json.put("FirstName", this.firstNameProperty.getValueSafe());
             json.put("MiddleName", this.middleNameProperty.getValueSafe());
             json.put("LastName", this.lastNameProperty.getValueSafe());
@@ -710,13 +820,11 @@ public class Participant {
             json.put("City", this.cityProperty.getValueSafe());
             json.put("State", this.stateProperty.getValueSafe());
             json.put("Country", this.countryProperty.getValueSafe());
-            
-        } catch (JSONException e){
-            
+
+        } catch (JSONException e) {
+            logger.error("Unexpected exception", e);
         }
-        return json; 
+        return json;
     }
 
-    
-    
 }

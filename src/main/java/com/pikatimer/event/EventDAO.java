@@ -16,16 +16,17 @@
  */
 package com.pikatimer.event;
 
-import com.pikatimer.util.HibernateUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.query.Query;
+import org.hibernate.type.StandardBasicTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.pikatimer.util.HibernateUtil;
 
 /**
  * There is only Event object, and it is a singleton. So no need for hibernate
@@ -33,13 +34,13 @@ import org.slf4j.LoggerFactory;
  * and such. We will use some hand tuned sql to get/set/retrieve the single line
  * from the db and use that to setup/create/rehydrate the Event object.
  */
-public class EventDAO {    
+public class EventDAO {
     private static final Logger logger = LoggerFactory.getLogger(EventDAO.class);
     private final Event event = Event.getInstance();
+
     /**
-     * SingletonHolder is loaded on the first execution of
-     * Singleton.getInstance() or the first access to SingletonHolder.INSTANCE,
-     * not before.
+     * SingletonHolder is loaded on the first execution of Singleton.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
     private static class SingletonHolder {
 
@@ -49,17 +50,15 @@ public class EventDAO {
     public static EventDAO getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    
-
 
     public void updateEvent() {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         // sql to set the name and date
-        Query query = s.createSQLQuery("UPDATE EVENT set EVENT_NAME = :name, EVENT_DATE = :date WHERE ID = :id");
+        Query query = s.createNativeQuery("UPDATE EVENT set EVENT_NAME = :name, EVENT_DATE = :date WHERE ID = :id");
         query.setParameter("id", 1);
         query.setParameter("name", event.getEventName());
-        //query.setParameter("date", event.getEventDate());
+        // query.setParameter("date", event.getEventDate());
         query.setParameter("date", event.getLocalEventDate().toString());
         query.executeUpdate();
         s.getTransaction().commit();
@@ -69,17 +68,17 @@ public class EventDAO {
 
     public void createEvent() {
         logger.info("Creating a new event");
-        
+
         event.setEventName("New Event");
         event.setEventDate(LocalDate.now());
 
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         // sql to set the name and date
-        Query query = s.createSQLQuery("INSERT into EVENT (ID, EVENT_NAME, EVENT_DATE) values (:id, :name, :date)");
+        Query query = s.createNativeQuery("INSERT into EVENT (ID, EVENT_NAME, EVENT_DATE) values (:id, :name, :date)");
         query.setParameter("id", 1);
         query.setParameter("name", event.getEventName());
-        //query.setParameter("date", event.getEventDate());
+        // query.setParameter("date", event.getEventDate());
         query.setParameter("date", event.getLocalEventDate().toString());
         query.executeUpdate();
         s.getTransaction().commit();
@@ -91,11 +90,9 @@ public class EventDAO {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
 
         s.beginTransaction();
-        Query query = s.createSQLQuery("SELECT * FROM EVENT")
-                .addScalar("ID", LongType.INSTANCE)
-                .addScalar("EVENT_NAME", StringType.INSTANCE)
-                .addScalar("EVENT_DATE", StringType.INSTANCE);
-        //.addScalar("EVENT_DATE", DateType.INSTANCE);
+        Query query = s.createNativeQuery("SELECT * FROM EVENT").addScalar("ID", StandardBasicTypes.LONG)
+                .addScalar("EVENT_NAME", StandardBasicTypes.STRING).addScalar("EVENT_DATE", StandardBasicTypes.STRING);
+        // .addScalar("EVENT_DATE", DateType.INSTANCE);
 
         List<Object[]> results = query.list();
         s.getTransaction().commit();
@@ -105,7 +102,7 @@ public class EventDAO {
             logger.debug("No event in DB, creating one...");
             createEvent();
         } else {
-            // woot, we have data. :-) 
+            // woot, we have data. :-)
             for (Object[] row : results) {
                 event.setEventName(row[1].toString());
                 event.setEventDate(row[2].toString());
@@ -121,12 +118,12 @@ public class EventDAO {
         List<EventOptions> list = new ArrayList<>();
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        //logger.debug("RacedAO.refreshRaceList() Starting the query");
+        // logger.debug("RacedAO.refreshRaceList() Starting the query");
 
         try {
             list = s.createQuery("from EventOptions").list();
         } catch (Exception e) {
-            logger.debug(e.getMessage());
+            logger.error("Error loading EvenOptions", e);
         }
         s.getTransaction().commit();
 
@@ -146,8 +143,9 @@ public class EventDAO {
     public void saveEventOptions(EventOptions e) {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.saveOrUpdate(e);
+        EventOptions merged = s.merge(e);
         s.getTransaction().commit();
+        e.setEventID(merged.getEventID());
     }
 
 }

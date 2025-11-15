@@ -16,13 +16,6 @@
  */
 package com.pikatimer.race;
 
-import com.pikatimer.results.RaceReport;
-import com.pikatimer.timing.Segment;
-import com.pikatimer.timing.Split;
-import com.pikatimer.timing.TimingDAO;
-import com.pikatimer.timing.TimingLocation;
-import com.pikatimer.util.DurationFormatter;
-import com.pikatimer.util.Unit;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -31,40 +24,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.pikatimer.results.RaceReport;
+import com.pikatimer.timing.Segment;
+import com.pikatimer.timing.Split;
+import com.pikatimer.timing.TimingDAO;
+import com.pikatimer.timing.TimingLocation;
+import com.pikatimer.util.DurationFormatter;
+import com.pikatimer.util.Unit;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @Entity
 @DynamicUpdate
@@ -378,20 +379,25 @@ public class Race {
         if (sexGroups != null && sexGroups.getRace() != this) sexGroups.setRace(this);
     }
     
-    @OneToMany(mappedBy="race",cascade={CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.EAGER)
+    //@OneToMany(mappedBy="race",cascade={CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="race",cascade={CascadeType.REMOVE},fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     public List<RaceReport> getRaceReports() {
         return raceReportsList;
     }
     public void setRaceReports(List<RaceReport> rr) {
         raceReportsList = rr;
-        if (rr == null) logger.debug("Race.setRaceReports(list) called with null list");
-        if (rr != null) raceReports.setAll(rr);
+        if (raceReportsList == null) logger.debug("Race.setRaceReports(list) called with null list");
+        if (raceReportsList != null) {
+            for (RaceReport raceReport : raceReportsList) {
+                raceReport.setRace(this);
+            }
+            raceReports.setAll(raceReportsList);
+        }
         logger.debug("Race.setRaceReports(list) " + raceName.getValueSafe() + "( " + IDProperty.getValue().toString() + ")" + " now has " + raceReports.size() + " Reports");
-
     }
     public ObservableList<RaceReport> raceReportsProperty() {
-        return raceReports; 
+         return raceReports; 
     }
     public void addRaceReport(RaceReport w) {
         raceReports.add(w);
@@ -413,9 +419,9 @@ public class Race {
     }
     public void setSegments(List<Segment> s) {
         segmentsList = s;
-        if (s == null) logger.debug("Race.setRaceReports(list) called with null list");
+        if (s == null) logger.debug("Race.setSegments(list) called with null list");
         if (s != null) raceSegments.setAll(s);
-        logger.trace("Race.setRaceReports(list) " + raceName.getValueSafe() + "( " + IDProperty.getValue().toString() + ")" + " now has " + raceReports.size() + " Reports");
+        logger.trace("Race.setSegments(list) " + raceName.getValueSafe() + "( " + IDProperty.getValue().toString() + ")" + " now has " + raceReports.size() + " Reports");
     }
     public ObservableList<Segment> raceSegmentsProperty() {
         return raceSegments.sorted((s1, s2)-> s1.compareTo(s2)); 
@@ -447,7 +453,7 @@ public class Race {
             crs.sort((s1, s2)-> s1.compareTo(s2));
             courseRecords.setAll(crs);
         }
-        logger.trace("Race.setRaceReports(list) " + raceName.getValueSafe() + "( " + IDProperty.getValue().toString() + ")" + " now has " + raceReports.size() + " Reports");
+        logger.trace("Race.setCourseRecords(list) " + raceName.getValueSafe() + "( " + IDProperty.getValue().toString() + ")" + " now has " + raceReports.size() + " Reports");
     }
     public ObservableList<CourseRecord> raceCourseRecordsProperty() {
         return courseRecords; 

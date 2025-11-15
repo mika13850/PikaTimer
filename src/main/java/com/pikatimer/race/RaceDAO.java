@@ -40,12 +40,13 @@ import org.slf4j.LoggerFactory;
  */
 public class RaceDAO {
     private static final Logger logger = LoggerFactory.getLogger(RaceDAO.class);
-    
-    private static final ObservableList<Race> raceList =FXCollections.observableArrayList( e -> new Observable[] {e.raceNameProperty()});
-    private static final ObservableList<Wave> waveList =FXCollections.observableArrayList(Wave.extractor());
-    private static final Map<Integer,Wave> waveMap = new HashMap();
-    private Map<Integer,Split> splitMap = new HashMap();
-    
+
+    private static final ObservableList<Race> raceList = FXCollections
+            .observableArrayList(e -> new Observable[] { e.raceNameProperty() });
+    private static final ObservableList<Wave> waveList = FXCollections.observableArrayList(Wave.extractor());
+    private static final Map<Integer, Wave> waveMap = new HashMap();
+    private Map<Integer, Split> splitMap = new HashMap();
+
     // This is mostly precautionary just in case we put the initial race
     // loading into a background thread for whatever reason
     final CountDownLatch racesLoadedLatch = new CountDownLatch(1);
@@ -53,35 +54,33 @@ public class RaceDAO {
     public Split getSplitByID(Integer splitID) {
         return splitMap.get(splitID);
     }
-    
+
     /**
-    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
-    * or the first access to SingletonHolder.INSTANCE, not before.
-    */
-    private static class SingletonHolder { 
-            private static final RaceDAO INSTANCE = new RaceDAO();
+     * SingletonHolder is loaded on the first execution of Singleton.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+        private static final RaceDAO INSTANCE = new RaceDAO();
     }
 
     public static RaceDAO getInstance() {
-        
-            return SingletonHolder.INSTANCE;
+
+        return SingletonHolder.INSTANCE;
     }
-    
+
     public void addRace(Race r) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.save(r);
+        s.persist(r);
         s.getTransaction().commit();
         raceList.add(r);
     }
-    
 
-    
-    public void addSplit (Split w) {
+    public void addSplit(Split w) {
         Race r = w.getRace();
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.save(w);
+        s.persist(w);
         s.getTransaction().commit();
         r.addSplit(w);
         logger.trace("Adding Split id: " + w.getID() + "to" + w.getRace().getRaceName());
@@ -89,252 +88,264 @@ public class RaceDAO {
         splitMap.put(w.getID(), w);
     }
 
-    
-    private void refreshRaceList() { 
+    private void refreshRaceList() {
         List<Race> list = new ArrayList<>();
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         logger.debug("RacedAO.refreshRaceList() Starting the query");
-        
-        try {  
-            list=s.createQuery("from Race order by ID").list();
+
+        try {
+            list = s.createQuery("from Race order by ID").list();
             logger.debug("Race List size: " + list.size());
-            if (list != null) list.forEach(r -> {
-                AgeGroups ag = r.getAgeGroups();
-                if (ag != null) ag.getCustomIncrementsList();
-            });
+            if (list != null)
+                list.forEach(r -> {
+                    AgeGroups ag = r.getAgeGroups();
+                    if (ag != null)
+                        ag.getCustomIncrementsList();
+                });
         } catch (Exception e) {
-            logger.debug(e.getMessage());
-        } 
-        s.getTransaction().commit(); 
-        
+            logger.error("Unexpected exception", e);
+        }
+        s.getTransaction().commit();
+
         logger.trace("RaceDAO::refreshRaceList() Returning the list");
-        if(!raceList.isEmpty())
+        if (!raceList.isEmpty())
             raceList.clear();
         raceList.addAll(list);
         splitMap = new HashMap();
-        raceList.forEach(r -> r.getSplits().forEach(sp -> splitMap.put(sp.getID(),sp)));
-        
+        raceList.forEach(r -> r.getSplits().forEach(sp -> splitMap.put(sp.getID(), sp)));
+
         racesLoadedLatch.countDown();
-    }     
-    
-    public ObservableList<Race> listRaces() { 
-        if(raceList.size() < 1)  refreshRaceList();
+    }
+
+    public ObservableList<Race> listRaces() {
+        if (raceList.size() < 1)
+            refreshRaceList();
         return raceList;
-    }      
-    
-    
+    }
+
     public void addWave(Wave w) {
-        if (w.getRace() != null) w.getRace().addWave(w);
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        if (w.getRace() != null)
+            w.getRace().addWave(w);
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.save(w);
+        s.persist(w);
         s.getTransaction().commit();
         logger.trace("Adding Wave id: " + w.getID() + "to" + w.getRace().getRaceName());
-        waveList.add(w); 
+        waveList.add(w);
         waveMap.put(w.getID(), w);
     }
-    
+
     public void removeWave(Wave w) {
-        
-        w.getRace().removeWave(w); 
-        //refreshWaveList();         
+
+        w.getRace().removeWave(w);
+        // refreshWaveList();
         logger.trace("removeWaves before: waveList.size()= " + waveList.size());
         logger.trace("Wave: " + w.idProperty());
-        waveList.forEach(e -> {logger.debug("Possible: " + e.idProperty() + " " + e.equals(w));});
+        waveList.forEach(e -> {
+            logger.debug("Possible: " + e.idProperty() + " " + e.equals(w));
+        });
         Boolean res = waveList.remove(w);
         Wave remove = waveMap.remove(w.getID());
         logger.trace("removeWaves after: waveList.size()= " + waveList.size() + " result: " + res);
 
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.delete(w);
+        s.remove(w);
         s.getTransaction().commit();
     }
-    
-    public void updateWave (Wave w) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.update(w);
-        s.getTransaction().commit();
-                //refreshWaveList(); 
 
-    } 
-    
+    public void updateWave(Wave w) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Wave merged = s.merge(w);
+        s.getTransaction().commit();
+        w.setID(merged.getID());
+        // refreshWaveList();
+    }
+
     public Wave getWaveByID(int id) {
         logger.trace("getWaveByID: racesLoadedLatch is now " + racesLoadedLatch.getCount());
         try {
             racesLoadedLatch.await();
         } catch (InterruptedException ex) {
-            logger.warn("Interrupted...",ex);
+            logger.warn("Interrupted...", ex);
         }
-        if (waveMap.isEmpty()) refreshWaveList(); 
-        return waveMap.get(id); 
+        if (waveMap.isEmpty())
+            refreshWaveList();
+        return waveMap.get(id);
     }
-    
-    public Race getRaceByID (int id){
+
+    public Race getRaceByID(int id) {
         ObjectProperty<Race> result = new SimpleObjectProperty();
         listRaces().forEach(r -> {
-            if (r.getID().intValue() == id) result.set(r);
+            if (r.getID().intValue() == id)
+                result.set(r);
         });
         return result.get();
     }
-    
-    
-    public void refreshWaveList() { 
-        
+
+    public void refreshWaveList() {
+
         if (waveMap.isEmpty()) {
             waveList.clear();
             waveMap.clear();
-            raceList.forEach( r -> {
-                waveList.addAll(r.getWaves()); 
+            raceList.forEach(r -> {
+                waveList.addAll(r.getWaves());
             });
             waveList.forEach(w -> {
-                    waveMap.put(w.getID(), w);
+                waveMap.put(w.getID(), w);
             });
         }
-    }     
-    
-    public ObservableList<Wave> listWaves() { 
-        if(waveList.isEmpty())  refreshWaveList();
+    }
+
+    public ObservableList<Wave> listWaves() {
+        if (waveList.isEmpty())
+            refreshWaveList();
         logger.trace("ListWaves for " + waveList.size());
-        //refreshWaveList(); 
-        
-        return waveList; 
-    } 
-    
+        // refreshWaveList();
+
+        return waveList;
+    }
+
     public void removeRace(Race r) {
         raceList.remove(r);
         waveList.removeAll(r.getWaves());
         r.getWaves().forEach(w -> waveMap.remove(w.getID()));
         r.getSplits().forEach(sp -> splitMap.remove(sp.getID()));
-        
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.delete(r);
-        s.getTransaction().commit(); 
-        
-    }      
-    
 
-    
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.remove(r);
+        s.getTransaction().commit();
+
+    }
+
     public void removeSplit(Split w) {
         splitMap.remove(w.getID());
-        Race r = w.getRace(); 
+        Race r = w.getRace();
         r.removeSplit(w);
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.delete(w);
+        s.remove(w);
         s.getTransaction().commit();
         updateSplitOrder(r);
     }
- 
+
     public void clearAll() {
         removeRaces(raceList);
-        addRace(new Race()); 
+        addRace(new Race());
     }
+
     public void removeRaces(ObservableList<Race> removeList) {
 
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         int count = 0;
         Iterator<Race> deleteMeIterator = removeList.iterator();
         while (deleteMeIterator.hasNext()) {
             Race p = deleteMeIterator.next();
-            s.delete(p); 
-            if ( ++count % 20 == 0 ) {
-                //flush a batch of updates and release memory:
+            s.remove(p);
+            if (++count % 20 == 0) {
+                // flush a batch of updates and release memory:
                 s.flush();
                 s.clear();
             }
 
         }
-        s.getTransaction().commit(); 
+        s.getTransaction().commit();
 
-        //Platform.runLater(() -> {
-                refreshRaceList();
-        //    });
-    }  
-    
+        // Platform.runLater(() -> {
+        refreshRaceList();
+        // });
+    }
+
     public void updateRace(Race tl) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.update(tl);
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Race merged = s.merge(tl);
         s.getTransaction().commit();
-     }
-    
-    public void updateAwardCategory(AwardCategory a){
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.saveOrUpdate(a);
-        s.getTransaction().commit();
+        tl.setID(merged.getID());
     }
-    
-    public void removeAwardCategory(AwardCategory a){
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.delete(a);
+
+    public void updateAwardCategory(AwardCategory a) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        AwardCategory merged = s.merge(a);
+        s.getTransaction().commit();
+        a.setID(merged.getID());
+    }
+
+    public void removeAwardCategory(AwardCategory a) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.remove(a);
         s.getTransaction().commit();
     }
 
-    
-    public void updateSplit (Split sp) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.update(sp);
+    public void updateSplit(Split sp) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Split merged = s.merge(sp);
         s.getTransaction().commit();
+        sp.setID(merged.getID());
         updateSplitOrder(sp.getRace());
-     }
-    
+    }
+
     public void updateSplitOrder(Race r) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        r.splitsProperty().sort((a,b) -> a.getSplitDistance().compareTo(b.getSplitDistance()));
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        r.splitsProperty().sort((a, b) -> a.getSplitDistance().compareTo(b.getSplitDistance()));
         r.splitsProperty().stream().forEach((item) -> {
             logger.trace(r.getRaceName() + " has " + item.getSplitName() + " at " + r.getSplits().indexOf(item));
-            item.splitPositionProperty().set(r.splitsProperty().indexOf(item)+1);
-            s.update(item);
+            item.splitPositionProperty().set(r.splitsProperty().indexOf(item) + 1);
+            Split merged = s.merge(item);
+            item.setID(merged.getID()); 
         });
         s.getTransaction().commit();
     }
-    
-    public void updateSegment(Segment seg){
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.saveOrUpdate(seg);
-        s.getTransaction().commit();
-    }
-    public void removeSegment (Segment seg) {
-        
-        Race r = seg.getRace(); 
-        r.removeRaceSegment(seg);
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+
+    public void updateSegment(Segment seg) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        s.delete(seg);
+        Segment merged = s.merge(seg);
+        s.getTransaction().commit();
+        seg.setID(merged.getID());
+    }
+
+    public void removeSegment(Segment seg) {
+
+        Race r = seg.getRace();
+        r.removeRaceSegment(seg);
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.remove(seg);
         s.getTransaction().commit();
         updateSplitOrder(r);
     }
-    
-    public void upsertCourseRecord(CourseRecord cr){
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction(); 
-        s.saveOrUpdate(cr);
+
+    public void upsertCourseRecord(CourseRecord cr) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        CourseRecord merged = s.merge(cr);
         s.getTransaction().commit();
+        cr.setID(merged.getID());
     }
+
     public void clearCourseRecords(Race race) {
-        Session s=HibernateUtil.getSessionFactory().getCurrentSession();
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         int count = 0;
         Iterator<CourseRecord> deleteMeIterator = race.getCourseRecords().iterator();
         while (deleteMeIterator.hasNext()) {
             CourseRecord p = deleteMeIterator.next();
-            s.delete(p); 
-            if ( ++count % 20 == 0 ) {
-                //flush a batch of updates and release memory:
+            s.remove(p);
+            if (++count % 20 == 0) {
+                // flush a batch of updates and release memory:
                 s.flush();
                 s.clear();
             }
         }
-        s.getTransaction().commit(); 
+        s.getTransaction().commit();
     }
 }

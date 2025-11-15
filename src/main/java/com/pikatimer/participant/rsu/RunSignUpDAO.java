@@ -537,8 +537,9 @@ public class RunSignUpDAO {
                 // Save config to DB
                 Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
-                s.merge(rsuConfig);
+                RSUConfig merged = s.merge(rsuConfig);
                 s.getTransaction().commit();
+                rsuConfig.setID(merged.getID());
 
                 return null;
             }
@@ -1382,9 +1383,10 @@ public class RunSignUpDAO {
                 // Save config to DB
                 Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
-                s.merge(rsuConf);
+                RSUConfig merged = s.merge(rsuConf);
                 s.getTransaction().commit();
-
+                rsuConf.setID(merged.getID());
+                
                 // fire up the dialog to sync from RSU
                 syncFromRSU();
             }
