@@ -44,14 +44,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  *
  * @author jcgarner
  */
-public class SFTPTransport implements FileTransport{
+public class SFTPTransport implements FileTransport {
     private static final Logger logger = LoggerFactory.getLogger(SFTPTransport.class);
-    
+
     String basePath;
     ReportDestination parent;
     Boolean stripAccents = false;
@@ -60,13 +59,13 @@ public class SFTPTransport implements FileTransport{
     JSch sshClient;
     Session sshSession;
     ChannelSftp sftpChannel;
-    
+
     private static final BlockingQueue<String> transferQueue = new ArrayBlockingQueue(100000);
 
-    private static final Map<String,String> transferMap = new ConcurrentHashMap();
-    
+    private static final Map<String, String> transferMap = new ConcurrentHashMap();
+
     StringProperty transferStatus = new SimpleStringProperty("Idle");
-    
+
     String hostname;
     String username;
     String password;
@@ -76,120 +75,129 @@ public class SFTPTransport implements FileTransport{
     Long lastTransferTimestamp = 0L;
 
     public SFTPTransport() {
-        
+
         Task transferTask = new Task<Void>() {
 
-                @Override 
-                public Void call() {
-                   
+            @Override
+            public Void call() {
 
-                    logger.debug("SFTPTransport: new result processing thread started");
-                    String filename = null;
-                    while(true) {
-                        try {
-                            logger.debug("SFTPTransport Thread: Waiting for the first file...");
-                            if (filename == null) filename = transferQueue.take();
-                            
-                            while(true) {
-                                logger.debug("SFTPTransport Thread: Waiting for a file...");
-                                //filename = transferQueue.poll(60, TimeUnit.SECONDS);
-                                if (sshClient == null || sshSession == null || !sshSession.isConnected()) Platform.runLater(() -> {transferStatus.set("Idle");});
-                                else {
-                                    sshSession.sendKeepAliveMsg();
-                                    
-                                    Platform.runLater(() -> {
-                                        transferStatus.set("Connected");
-                                    });
-                                }
-                                
-                                //filename = transferQueue.take(); // blocks until
-                                if (filename == null) filename = transferQueue.poll(15, TimeUnit.SECONDS);
-                                if (filename == null) {
-                                    // If we have been idle for more than 2 minutes, be nice and drop the connection
-                                    if (TimeUnit.NANOSECONDS.toSeconds((System.nanoTime()-lastTransferTimestamp))> 120 ) break;
-                                    else continue;
-                                }
+                logger.debug("SFTPTransport: new result processing thread started");
+                String filename = null;
+                while (true) {
+                    try {
+                        logger.debug("SFTPTransport Thread: Waiting for the first file...");
+                        if (filename == null)
+                            filename = transferQueue.take();
 
-                                logger.debug("SFTPTransport Thread: Preping for transfer of  " + filename);
-                                String contents = transferMap.get(filename);
-                                
-                                while (fatalError || sshSession == null || !sshSession.isConnected() || sftpChannel == null || !sftpChannel.isConnected()) {
-                                    if (!fatalError ) openConnection();
-                                    if (fatalError || !sftpChannel.isConnected()) {
-                                        logger.debug("SFTPTransport Thread: Still not connected, sleeping for 10 seconds...");
-                                        Thread.sleep(10000);
-                                    }
-                                    
-                                }
-                                logger.debug("SFTPTransport Thread: Transfering " + filename);
-
-
-
-
-                                InputStream data = IOUtils.toInputStream(contents, "UTF-8");
-                                //InputStream data = IOUtils.toInputStream(contents);
-                                String fn = filename;
-                                Platform.runLater(() -> { 
-                                    transferStatus.set("Transfering " + fn);
+                        while (true) {
+                            logger.debug("SFTPTransport Thread: Waiting for a file...");
+                            // filename = transferQueue.poll(60, TimeUnit.SECONDS);
+                            if (sshClient == null || sshSession == null || !sshSession.isConnected())
+                                Platform.runLater(() -> {
+                                    transferStatus.set("Idle");
                                 });
-                                long startTime = System.nanoTime();
-                                
-                                
-                                try {
-                                    SFTPTransferMonitor monitor = new SFTPTransferMonitor();
-                                    sftpChannel.put(data, filename, monitor);
-                                    monitor.await();
+                            else {
+                                sshSession.sendKeepAliveMsg();
 
-                                    long endTime = System.nanoTime();
-                                    lastTransferTimestamp = endTime;
-
-                                    data.close();
-                                    transferMap.remove(filename, contents); 
-                                    logger.debug("SFTPTransport Thread: transfer of " + filename + " done in " + DurationFormatter.durationToString(Duration.ofNanos(endTime-startTime), 3, false, RoundingMode.HALF_EVEN));
-                                    filename = null;
-                                } catch (SftpException ex) {
-                                    logger.debug("SftpException: " + ex.getLocalizedMessage());
-                                    throw new IOException(ex.getLocalizedMessage());
-                                } 
-                                
-                                
+                                Platform.runLater(() -> {
+                                    transferStatus.set("Connected");
+                                });
                             }
 
-                        } catch (InterruptedException ex) {
-                            logger.debug("SFTPTransport Thread: InterruptedException thrown");
-                            //if (filename!= null) transferQueue.put(filename);
-
-                            //Logger.getLogger(SFTPTransport.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            logger.debug("SFTPTransport Thread: IOException thrown");
-                            //if (filename!= null) transferQueue.put(filename);
-                            //Logger.getLogger(SFTPTransport.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            logger.debug("SFTPTransport Thread: Generic Exception tossed: " );
-                            ex.printStackTrace();
-                            
-                        } finally {
-                            if (sftpChannel != null && sftpChannel.isConnected()) sftpChannel.disconnect();
-                            if (sshSession != null && sshSession.isConnected()) {
-                                logger.debug("SFTPTransport Thread: calling sshSession.disconnect()"); // do nothing
-                                sshSession.disconnect();
-                                Platform.runLater(() -> {transferStatus.set("Disconnected");});
+                            // filename = transferQueue.take(); // blocks until
+                            if (filename == null)
+                                filename = transferQueue.poll(15, TimeUnit.SECONDS);
+                            if (filename == null) {
+                                // If we have been idle for more than 2 minutes, be nice and drop the connection
+                                if (TimeUnit.NANOSECONDS.toSeconds((System.nanoTime() - lastTransferTimestamp)) > 120)
+                                    break;
+                                else
+                                    continue;
                             }
+
+                            logger.debug("SFTPTransport Thread: Preping for transfer of  " + filename);
+                            String contents = transferMap.get(filename);
+
+                            while (fatalError || sshSession == null || !sshSession.isConnected() || sftpChannel == null
+                                    || !sftpChannel.isConnected()) {
+                                if (!fatalError)
+                                    openConnection();
+                                if (fatalError || !sftpChannel.isConnected()) {
+                                    logger.debug(
+                                            "SFTPTransport Thread: Still not connected, sleeping for 10 seconds...");
+                                    Thread.sleep(10000);
+                                }
+
+                            }
+                            logger.debug("SFTPTransport Thread: Transfering " + filename);
+
+                            InputStream data = IOUtils.toInputStream(contents, "UTF-8");
+                            // InputStream data = IOUtils.toInputStream(contents);
+                            String fn = filename;
+                            Platform.runLater(() -> {
+                                transferStatus.set("Transfering " + fn);
+                            });
+                            long startTime = System.nanoTime();
+
+                            try {
+                                SFTPTransferMonitor monitor = new SFTPTransferMonitor();
+                                sftpChannel.put(data, filename, monitor);
+                                monitor.await();
+
+                                long endTime = System.nanoTime();
+                                lastTransferTimestamp = endTime;
+
+                                data.close();
+                                transferMap.remove(filename, contents);
+                                logger.debug("SFTPTransport Thread: transfer of " + filename + " done in "
+                                        + DurationFormatter.durationToString(Duration.ofNanos(endTime - startTime), 3,
+                                                false, RoundingMode.HALF_EVEN));
+                                filename = null;
+                            } catch (SftpException ex) {
+                                logger.error("Unexpected exception", e);
+                                throw new IOException(ex.getLocalizedMessage());
+                            }
+
+                        }
+
+                    } catch (InterruptedException ex) {
+                        logger.error("SFTPTransport Thread: InterruptedException thrown", ex);
+                        // if (filename!= null) transferQueue.put(filename);
+
+                        // Logger.getLogger(SFTPTransport.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        logger.error("SFTPTransport Thread: IOException thrown", ex);
+                        // if (filename!= null) transferQueue.put(filename);
+                        // Logger.getLogger(SFTPTransport.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        logger.error("SFTPTransport Thread: Generic Exception tossed", ex);
+
+                    } finally {
+                        if (sftpChannel != null && sftpChannel.isConnected())
+                            sftpChannel.disconnect();
+                        if (sshSession != null && sshSession.isConnected()) {
+                            logger.debug("SFTPTransport Thread: calling sshSession.disconnect()"); // do nothing
+                            sshSession.disconnect();
+                            Platform.runLater(() -> {
+                                transferStatus.set("Disconnected");
+                            });
                         }
                     }
-                    
                 }
-            };
-            transferThread = new Thread(transferTask);
-            transferThread.setName("Thread-SFTP-Transfer");
-            transferThread.setDaemon(true);
-            transferThread.start();
-        
+
+            }
+        };
+        transferThread = new Thread(transferTask);
+        transferThread.setName("Thread-SFTP-Transfer");
+        transferThread.setDaemon(true);
+        transferThread.start();
+
     }
-    
-    private void openConnection(){
-            
-        if (needConfigRefresh) refreshConfig();
+
+    private void openConnection() {
+
+        if (needConfigRefresh)
+            refreshConfig();
         logger.debug("SFTP Not connected, connecting...");
         Platform.runLater(() -> {
             transferStatus.set("Connecting SFTP...");
@@ -200,49 +208,57 @@ public class SFTPTransport implements FileTransport{
 
         // only for public key authentication
         try {
-            if(hostname.contains(":")){
+            if (hostname.contains(":")) {
                 logger.debug("Explicit Port Specified...");
                 String[] h = hostname.split(":");
                 int port = Integer.parseInt(h[1]);
-                sshSession = sshClient.getSession(username, h[0],port);
+                sshSession = sshClient.getSession(username, h[0], port);
             } else {
                 sshSession = sshClient.getSession(username, hostname);
             }
-            
+
             sshSession.setTimeout(10000); // 10 seconds
 
             // we only support password authentication for now
             sshSession.setPassword(password);
 
-            Platform.runLater(() -> {transferStatus.set("Loging in...");});
+            Platform.runLater(() -> {
+                transferStatus.set("Loging in...");
+            });
             sshSession.setConfig("StrictHostKeyChecking", "no");
             sshSession.connect();
 
-            Platform.runLater(() -> {transferStatus.set("Connected");});
+            Platform.runLater(() -> {
+                transferStatus.set("Connected");
+            });
 
             sftpChannel = (ChannelSftp) sshSession.openChannel("sftp");
             sftpChannel.connect();
             try {
                 sftpChannel.cd(basePath);
-                fatalError=false;
+                fatalError = false;
             } catch (SftpException ex) {
-                logger.warn("Unable to cd to target directory!",ex);
+                logger.error("Unable to cd to target directory!", ex);
                 try {
                     sftpChannel.mkdir(basePath);
                     sftpChannel.cd(basePath);
-                    fatalError=false;
+                    fatalError = false;
                 } catch (SftpException ex1) {
-                    Platform.runLater(() -> {transferStatus.set("Error: Unabe to make target directory");});
-                    fatalError=true;
-                    logger.warn("Unable to make target directory!",ex1);
+                    Platform.runLater(() -> {
+                        transferStatus.set("Error: Unabe to make target directory");
+                    });
+                    fatalError = true;
+                    logger.error("Unable to make target directory!", ex1);
                 }
             }
 
         } catch (Exception ex) {
-            Platform.runLater(() -> {transferStatus.set("Error: " + ex.getLocalizedMessage());});
+            Platform.runLater(() -> {
+                transferStatus.set("Error: " + ex.getLocalizedMessage());
+            });
             logger.debug(ex.getLocalizedMessage());
-            fatalError=true;
-            logger.warn("sftp error!",ex);
+            fatalError = true;
+            logger.error("sftp error!", ex);
         }
 
     }
@@ -251,160 +267,170 @@ public class SFTPTransport implements FileTransport{
     public StringProperty statusProperty() {
         return transferStatus;
     }
-     @Override
+
+    @Override
     public boolean isOK() {
-        if (password.isEmpty() || username.isEmpty() || hostname.isEmpty() || basePath.isEmpty()) return false;
+        if (password.isEmpty() || username.isEmpty() || hostname.isEmpty() || basePath.isEmpty())
+            return false;
         return true;
     }
 
     @Override
     public void save(String filename, String contents) {
         logger.debug("SFTPTransport.save() called for " + filename);
-        if (stripAccents) contents = StringUtils.stripAccents(contents);
-        transferMap.put(filename,contents);
-        if (! transferQueue.contains(filename)) transferQueue.add(filename);
+        if (stripAccents)
+            contents = StringUtils.stripAccents(contents);
+        transferMap.put(filename, contents);
+        if (!transferQueue.contains(filename))
+            transferQueue.add(filename);
     }
 
     @Override
     public void setOutputPortal(ReportDestination op) {
-        parent=op;
+        parent = op;
     }
 
     @Override
     public void refreshConfig() {
-        
+
         // Get the hostname, username, password, basePath
-        password=parent.getPassword();
-        username=parent.getUsername();
-        hostname=parent.getServer();
-        basePath=parent.getBasePath();
+        password = parent.getPassword();
+        username = parent.getUsername();
+        hostname = parent.getServer();
+        basePath = parent.getBasePath();
         if (sshSession != null && sshSession.isConnected()) {
             logger.debug("SFTPTransport::refreshConfig: calling ftpClient.disconnect()"); // do nothing
             sshSession.disconnect();
         }
-        
-        stripAccents = parent.getStripAccents();
-        
 
-                    
-        fatalError=false;
+        stripAccents = parent.getStripAccents();
+
+        fatalError = false;
         needConfigRefresh = false;
-    
-    }    
+
+    }
 
     @Override
     public void test(ReportDestination parent, StringProperty output) {
         Task transferTask = new Task<Void>() {
 
-                @Override 
-                public Void call() {
-                    
-                    password=parent.getPassword();
-                    username=parent.getUsername();
-                    hostname=parent.getServer();
-                    basePath=parent.getBasePath();
+            @Override
+            public Void call() {
 
-                    Platform.runLater(() -> output.set(output.getValueSafe() + "Connecting to " + hostname +"..." ));
-                    sshClient = new JSch();
+                password = parent.getPassword();
+                username = parent.getUsername();
+                hostname = parent.getServer();
+                basePath = parent.getBasePath();
 
-                    // only for public key authentication
-                    try {
-                        if(hostname.contains(":")){
-                            logger.debug("Explicit Port Specified...");
-                            String[] h = hostname.split(":");
-                            int port = Integer.parseInt(h[1]);
-                            sshSession = sshClient.getSession(username, h[0],port);
-                        } else {
-                            sshSession = sshClient.getSession(username, hostname);
-                        }
-                        sshSession.setTimeout(10000); // 10 seconds
+                Platform.runLater(() -> output.set(output.getValueSafe() + "Connecting to " + hostname + "..."));
+                sshClient = new JSch();
 
-                        // we only support password authentication for now
-                        sshSession.setPassword(password);
-
-                        Platform.runLater(() -> {transferStatus.set("Loging in...");});
-                        sshSession.setConfig("StrictHostKeyChecking", "no");
-                        sshSession.connect();
-
-                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nConnected" ));
-                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nOpening SFTP Channel..." ));
-
-                        sftpChannel = (ChannelSftp) sshSession.openChannel("sftp");
-                        sftpChannel.connect();
-                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nOpened" ));
-                        try {
-                            Platform.runLater(() -> output.set(output.getValueSafe() + "\nChanging Directories..." ));
-                            sftpChannel.cd(basePath);
-                            Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nSuccess!" ));
-                            sftpChannel.disconnect();
-
-                        } catch (SftpException ex) {
-                            Platform.runLater(() -> output.set(output.getValueSafe() + "\nDirectory does not exist!" ));
-                            try {
-                                Platform.runLater(() -> output.set(output.getValueSafe() + "\nAttempting to make the target directory..." ));
-
-                                sftpChannel.mkdir(basePath);
-                                
-                                Platform.runLater(() -> output.set(output.getValueSafe() + "\nCreated target directory" ));
-                                Platform.runLater(() -> output.set(output.getValueSafe() + "\nChanging Directories..." ));
-
-                                sftpChannel.cd(basePath);
-                                Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nSuccess!" ));
-                            } catch (SftpException ex1) {
-                                Platform.runLater(() -> output.set(output.getValueSafe() + "\nError: " + ex.getLocalizedMessage()+"\n\nTest Failed!"));
-                            }
-                            sftpChannel.disconnect();
-                        }
-
-                    } catch (Exception ex) {
-                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nError: " + ex.getLocalizedMessage()+"\n\nTest Failed!"));
-                        logger.trace("Test Failed!",ex);
+                // only for public key authentication
+                try {
+                    if (hostname.contains(":")) {
+                        logger.debug("Explicit Port Specified...");
+                        String[] h = hostname.split(":");
+                        int port = Integer.parseInt(h[1]);
+                        sshSession = sshClient.getSession(username, h[0], port);
+                    } else {
+                        sshSession = sshClient.getSession(username, hostname);
                     }
-                    sshSession.disconnect();
-                    return null;
+                    sshSession.setTimeout(10000); // 10 seconds
+
+                    // we only support password authentication for now
+                    sshSession.setPassword(password);
+
+                    Platform.runLater(() -> {
+                        transferStatus.set("Loging in...");
+                    });
+                    sshSession.setConfig("StrictHostKeyChecking", "no");
+                    sshSession.connect();
+
+                    Platform.runLater(() -> output.set(output.getValueSafe() + "\nConnected"));
+                    Platform.runLater(() -> output.set(output.getValueSafe() + "\nOpening SFTP Channel..."));
+
+                    sftpChannel = (ChannelSftp) sshSession.openChannel("sftp");
+                    sftpChannel.connect();
+                    Platform.runLater(() -> output.set(output.getValueSafe() + "\nOpened"));
+                    try {
+                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nChanging Directories..."));
+                        sftpChannel.cd(basePath);
+                        Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nSuccess!"));
+                        sftpChannel.disconnect();
+
+                    } catch (SftpException ex) {
+                        logger.error("Unexpected exception", ex);
+                        Platform.runLater(() -> output.set(output.getValueSafe() + "\nDirectory does not exist!"));
+                        try {
+                            Platform.runLater(() -> output
+                                    .set(output.getValueSafe() + "\nAttempting to make the target directory..."));
+
+                            sftpChannel.mkdir(basePath);
+
+                            Platform.runLater(() -> output.set(output.getValueSafe() + "\nCreated target directory"));
+                            Platform.runLater(() -> output.set(output.getValueSafe() + "\nChanging Directories..."));
+
+                            sftpChannel.cd(basePath);
+                            Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nSuccess!"));
+                        } catch (SftpException ex1) {
+                            logger.error("Unexpected exception", ex1);
+                            Platform.runLater(() -> output.set(output.getValueSafe() + "\nError: "
+                                    + ex.getLocalizedMessage() + "\n\nTest Failed!"));
+                        }
+                        sftpChannel.disconnect();
+                    }
+
+                } catch (Exception ex) {
+                    Platform.runLater(() -> output
+                            .set(output.getValueSafe() + "\nError: " + ex.getLocalizedMessage() + "\n\nTest Failed!"));
+                    logger.error("Test Failed!", ex);
                 }
-        
+                sshSession.disconnect();
+                return null;
+            }
+
         };
         transferThread = new Thread(transferTask);
         transferThread.setName("Thread-SFTP-Transfer-Test");
         transferThread.setDaemon(true);
         transferThread.start();
-    
+
     }
-    
+
     class SFTPTransferMonitor implements SftpProgressMonitor {
         CountDownLatch latch = new CountDownLatch(1);
         long transferedBytes = 0L;
 
-        public SFTPTransferMonitor() {;}
-
-        public void init(int op, String src, String dest, long max) 
-        {
-            logger.debug("SFTP Transfer Starting: "+op+" "+src+" -> "+dest+" total: "+max);
+        public SFTPTransferMonitor() {
+            ;
         }
 
-        public boolean count(long bytes){
+        public void init(int op, String src, String dest, long max) {
+            logger.debug("SFTP Transfer Starting: " + op + " " + src + " -> " + dest + " total: " + max);
+        }
+
+        public boolean count(long bytes) {
             transferedBytes = bytes;
-            return(true);
+            return (true);
         }
 
-        public void end()
-        {
+        public void end() {
             latch.countDown();
             logger.debug("\nSFTP Transfer: DONE!");
         }
-        
-        public void await() throws IOException{
+
+        public void await() throws IOException {
             long counter = 0L;
             try {
                 while (latch.getCount() > 0) {
                     latch.await(30, TimeUnit.SECONDS);
-                    if (counter == transferedBytes) // timeout 
+                    if (counter == transferedBytes) // timeout
                         throw new IOException("SFTP Transfer Timeout");
-                    else counter = transferedBytes;
+                    else
+                        counter = transferedBytes;
                 }
             } catch (InterruptedException ex) {
-                logger.debug("Interrupted",ex);
+                logger.error("Interrupted", ex);
             }
         }
     }

@@ -51,109 +51,106 @@ import org.slf4j.LoggerFactory;
  *
  * @author John Garner <segfaultcoredump@gmail.com>
  */
-public abstract class TailingReader implements TimingReader{
+public abstract class TailingReader implements TimingReader {
     private static final Logger logger = LoggerFactory.getLogger(TailingReader.class);
-    
+
     protected TimingListener timingListener;
-    protected File sourceFile; 
-    protected final StringProperty fileName; 
-    protected Pane displayPane; 
+    protected File sourceFile;
+    protected final StringProperty fileName;
+    protected Pane displayPane;
     private Button inputButton;
-    protected TextField inputTextField; 
-    protected Label statusLabel; 
-    private HBox displayHBox; 
-    protected VBox displayVBox; 
+    protected TextField inputTextField;
+    protected Label statusLabel;
+    private HBox displayHBox;
+    protected VBox displayVBox;
     protected Tailer tailer;
-    private Thread tailingThread; 
+    private Thread tailingThread;
     private Thread readingThread;
     protected final BooleanProperty readingStatus;
     ProgressIndicator watchProgressIndicator;
     ToggleSwitch autoImportToggleSwitch;
     private Semaphore reading = new Semaphore(1);
 
-    
-    public TailingReader(){
+    public TailingReader() {
         fileName = new SimpleStringProperty();
         readingStatus = new SimpleBooleanProperty();
-        
+
     }
-
-
 
     public void selectInput() {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select File");
-        
+
         if (sourceFile != null && sourceFile.exists()) {
-            fileChooser.setInitialDirectory(sourceFile.getParentFile()); 
+            fileChooser.setInitialDirectory(sourceFile.getParentFile());
             fileChooser.setInitialFileName(sourceFile.getName());
         } else {
-            fileChooser.setInitialDirectory(PikaPreferences.getInstance().getCWD()); 
+            fileChooser.setInitialDirectory(PikaPreferences.getInstance().getCWD());
         }
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("All files", "*")
-            );
-        
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("All files", "*"));
+
         sourceFile = fileChooser.showOpenDialog(inputButton.getScene().getWindow());
         if (sourceFile != null) {
             // if we are auto-importing, stop that
             readingStatus.set(false);
-            
+
             fileName.setValue(sourceFile.getAbsolutePath());
-            // save the filename 
+            // save the filename
             timingListener.setAttribute("TailingReader:filename", sourceFile.getAbsolutePath());
-            
+
             // set the text field to the filename
             inputTextField.textProperty().setValue(fileName.getValueSafe());
             // read the file
-            if (!sourceFile.canRead()){
+            if (!sourceFile.canRead()) {
                 statusLabel.setText("Unable to open file: " + fileName.getValueSafe());
-            } else readOnce();
-        }                
+            } else
+                readOnce();
+        }
     }
-
-    
 
     @Override
     public void startReading() {
         logger.debug("TailingReader:StartReading() called");
-        if (tailingThread != null && tailingThread.isAlive()) return;
-        if (readingThread != null && readingThread.isAlive()) return;
+        if (tailingThread != null && tailingThread.isAlive())
+            return;
+        if (readingThread != null && readingThread.isAlive())
+            return;
         Task readingTask = new Task<Void>() {
-                @Override public Void call() {
-                    try {
-                        // make sure the file exists
+            @Override
+            public Void call() {
+                try {
+                    // make sure the file exists
 
-                        
-                        while (readingStatus.getValue() && (sourceFile == null || !sourceFile.exists() || !sourceFile.canRead() || !sourceFile.isFile())){
-                            Thread.sleep(1000);
-                            logger.debug("Waiting for " + sourceFile.getPath());
-                            Platform.runLater(() ->{
-                                statusLabel.setText("Waiting for " + sourceFile.getPath());
-                            });
-                        }   
-                        if (readingStatus.getValue() ) {
-                            Platform.runLater(() -> statusLabel.setText("Reading file: " + sourceFile.getPath()));
-
-                            MyHandler listener = new MyHandler();
-                            tailer = new Tailer(sourceFile, listener, 1000, Boolean.FALSE, Boolean.TRUE);
-                            tailingThread = new Thread(tailer);
-                            tailingThread.setDaemon(true); // optional
-                            tailingThread.start();
-                            readingStatus.setValue(Boolean.TRUE);
-                        }
-                    } catch (InterruptedException ex) {
-                        logger.debug("Interrupted",ex);
+                    while (readingStatus.getValue() && (sourceFile == null || !sourceFile.exists()
+                            || !sourceFile.canRead() || !sourceFile.isFile())) {
+                        Thread.sleep(1000);
+                        logger.debug("Waiting for " + sourceFile.getPath());
+                        Platform.runLater(() -> {
+                            statusLabel.setText("Waiting for " + sourceFile.getPath());
+                        });
                     }
-                    return null;
+                    if (readingStatus.getValue()) {
+                        Platform.runLater(() -> statusLabel.setText("Reading file: " + sourceFile.getPath()));
+
+                        MyHandler listener = new MyHandler();
+                        tailer = new Tailer(sourceFile, listener, 1000, Boolean.FALSE, Boolean.TRUE);
+                        tailingThread = new Thread(tailer);
+                        tailingThread.setDaemon(true); // optional
+                        tailingThread.start();
+                        readingStatus.setValue(Boolean.TRUE);
+                    }
+                } catch (InterruptedException ex) {
+                    logger.debug("Interrupted", ex);
                 }
+                return null;
+            }
         };
         readingThread = new Thread(readingTask);
         readingThread.setDaemon(true); // optional
         readingThread.start();
     }
-    
+
     @Override
     public void stopReading() {
         if (tailer != null) {
@@ -162,10 +159,9 @@ public abstract class TailingReader implements TimingReader{
         readingStatus.setValue(Boolean.FALSE);
     }
 
-
     @Override
     public void showControls(Pane p) {
-        
+
         if (displayPane == null) {
             // initialize our display
             displayHBox = new HBox();
@@ -173,85 +169,90 @@ public abstract class TailingReader implements TimingReader{
             watchProgressIndicator = new ProgressIndicator();
             autoImportToggleSwitch = new ToggleSwitch("Auto-Import File");
             autoImportToggleSwitch.selectedProperty().set(false);
-            autoImportToggleSwitch.setPadding(new Insets(3, 0, 0, 0)); // this is a hack to get around a ToggleSwitch bug
-            //autoImportToggleSwitch.setMaxWidth(75);
+            autoImportToggleSwitch.setPadding(new Insets(3, 0, 0, 0)); // this is a hack to get around a ToggleSwitch
+                                                                       // bug
+            // autoImportToggleSwitch.setMaxWidth(75);
             statusLabel = new Label("");
             inputButton = new Button("Select File...");
             inputTextField = new TextField();
-            displayVBox.setSpacing(5); 
-            //displayVBox.setPadding(new Insets(5, 5, 5, 5));
-            
-            
-            inputTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
-                if (!newPropertyValue && !fileName.getValueSafe().equals(inputTextField.textProperty().getValueSafe())) {
-                    // if we are auto-importing, stop that
-                    stopReading();
-                    
-                    sourceFile = new File(inputTextField.textProperty().getValueSafe()).getAbsoluteFile();
-                    fileName.setValue(sourceFile.getAbsolutePath());
+            displayVBox.setSpacing(5);
+            // displayVBox.setPadding(new Insets(5, 5, 5, 5));
 
-                    
-                    // save the filename 
-                    timingListener.setAttribute("TailingReader:filename", inputTextField.textProperty().getValueSafe());
+            inputTextField.focusedProperty().addListener(
+                    (ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+                        if (!newPropertyValue
+                                && !fileName.getValueSafe().equals(inputTextField.textProperty().getValueSafe())) {
+                            // if we are auto-importing, stop that
+                            stopReading();
 
-                    // read the file
-                    if (!sourceFile.canRead()){
-                        statusLabel.setText("Unable to open file: " + fileName.getValueSafe());
-                    } else readOnce();
-                        
-                } else {
-                    logger.debug("No change in file name");
-                }
-            });
-            
+                            sourceFile = new File(inputTextField.textProperty().getValueSafe()).getAbsoluteFile();
+                            fileName.setValue(sourceFile.getAbsolutePath());
+
+                            // save the filename
+                            timingListener.setAttribute("TailingReader:filename",
+                                    inputTextField.textProperty().getValueSafe());
+
+                            // read the file
+                            if (!sourceFile.canRead()) {
+                                statusLabel.setText("Unable to open file: " + fileName.getValueSafe());
+                            } else
+                                readOnce();
+
+                        } else {
+                            logger.debug("No change in file name");
+                        }
+                    });
+
             displayHBox.setSpacing(5);
             displayHBox.setAlignment(Pos.CENTER_LEFT);
-            displayHBox.getChildren().addAll(inputTextField, inputButton, autoImportToggleSwitch, watchProgressIndicator); 
-            displayVBox.getChildren().addAll(displayHBox, statusLabel); 
-            
+            displayHBox.getChildren().addAll(inputTextField, inputButton, autoImportToggleSwitch,
+                    watchProgressIndicator);
+            displayVBox.getChildren().addAll(displayHBox, statusLabel);
+
             // Set the action for the inputButton
             inputButton.setOnAction((event) -> {
                 // Button was clicked, do something...
                 selectInput();
             });
-            
+
             watchProgressIndicator.visibleProperty().bind(autoImportToggleSwitch.selectedProperty());
             watchProgressIndicator.setProgress(-1.0);
             // get the current status of the reader
-            //watchProgressIndicator.setPrefHeight(30.0);
+            // watchProgressIndicator.setPrefHeight(30.0);
             watchProgressIndicator.setMaxHeight(30.0);
-            autoImportToggleSwitch.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                if(newValue) {
-                    logger.debug("TailingReader: autoImportToggleSwitch event: calling startReading()");
-                    startReading();
-                } else {
-                    logger.debug("TailingReader: autoImportToggleSwitch event: calling stopReading()");
-                    stopReading();
-                }
-            });
+            autoImportToggleSwitch.selectedProperty().addListener(
+                    (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                        if (newValue) {
+                            logger.debug("TailingReader: autoImportToggleSwitch event: calling startReading()");
+                            startReading();
+                        } else {
+                            logger.debug("TailingReader: autoImportToggleSwitch event: calling stopReading()");
+                            stopReading();
+                        }
+                    });
             autoImportToggleSwitch.selectedProperty().bindBidirectional(readingStatus);
-            
+
             inputTextField.textProperty().setValue(fileName.getValueSafe());
             // set the action for the inputTextField
-            
+
         }
-        
+
         // If we were previously visible, clear the old one
-        if (displayPane != null) displayPane.getChildren().clear();
-        
-        // Now show ourselves.... 
-        displayPane = p; 
+        if (displayPane != null)
+            displayPane.getChildren().clear();
+
+        // Now show ourselves....
+        displayPane = p;
         displayPane.getChildren().clear();
-        displayPane.getChildren().add(displayVBox); 
-        
-        
+        displayPane.getChildren().add(displayVBox);
+
     }
 
     @Override
     public BooleanProperty getReadingStatus() {
-        return readingStatus; 
+        return readingStatus;
     }
-    
+
     private class MyHandler extends TailerListenerAdapter {
         @Override
         public void handle(String line) {
@@ -259,16 +260,15 @@ public abstract class TailingReader implements TimingReader{
             process(line);
         }
     }
-    
-    
+
     public abstract void process(String s);
-        
+
     @Override
     public void readOnce() {
         // get the event date, just in case we need it
         logger.debug("TailingReader.readOnce called.");
         stopReading();
-        
+
         if (sourceFile == null || !sourceFile.exists() || !sourceFile.canRead() || !sourceFile.isFile()) {
             statusLabel.setText("Unable to open file: " + fileName.getValueSafe());
             return;
@@ -277,7 +277,8 @@ public abstract class TailingReader implements TimingReader{
         // Run this in a tailingThread....
         Task task;
         task = new Task<Void>() {
-            @Override public Void call() {
+            @Override
+            public Void call() {
                 try {
                     reading.acquire();
                     try (Stream<String> s = Files.lines(sourceFile.toPath())) {
@@ -286,44 +287,41 @@ public abstract class TailingReader implements TimingReader{
                             process(line);
                         });
                         s.close();
-                    } catch (Exception ex){
-                        ex.printStackTrace();
+                    } catch (Exception ex) {
+                        logger.error("Unexpected exception", e);
                     }
-                    
-                } catch (Exception ex){
-                    ex.printStackTrace();
+
+                } catch (Exception ex) {
+                    logger.error("Unexpected exception", e);
                 }
                 reading.release();
                 return null;
             }
         };
         new Thread(task).start();
-        
+
     }
-    
-    
 
     @Override
     public void setTimingListener(TimingListener t) {
-        timingListener = t; 
-        
+        timingListener = t;
+
         // get any existing attributes
         String filename = timingListener.getAttribute("TailingReader:filename");
         if (filename != null) {
             logger.debug("TailingReader: Found existing file setting: " + filename);
             sourceFile = new File(filename).getAbsoluteFile();
             fileName.setValue(filename);
-            
+
         } else {
-            logger.debug("TailingReader: Did not find existing file setting." );
+            logger.debug("TailingReader: Did not find existing file setting.");
         }
-        
-        
+
     }
-    
-//    @Override
-//    public Boolean chipIsBib() {
-//        return Boolean.FALSE; 
-//    }
+
+    // @Override
+    // public Boolean chipIsBib() {
+    // return Boolean.FALSE;
+    // }
 
 }

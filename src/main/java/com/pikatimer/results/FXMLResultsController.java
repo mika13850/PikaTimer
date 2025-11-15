@@ -829,7 +829,7 @@ public class FXMLResultsController  {
                     reportDetails.getChildren().add(tlLoader.load());
                     logger.debug("Showing RaceReport of type " + rr.getReportType().toString());
                 } catch (IOException ex) {
-                    logger.debug("Loader Exception for race reports!",ex);
+                    logger.error("Loader Exception for race reports!",ex);
 
                 }
                 ((FXMLResultOutputController)tlLoader.getController()).setRaceReport(rr);
@@ -897,7 +897,7 @@ public class FXMLResultsController  {
                         Thread.sleep(1000);
                         updateMessage((delay-counter) + "s");
                     } catch (Exception ex) {
-                        logger.debug("AutoUpdateReportsThread Exception: " + ex.getMessage());
+                        logger.error("AutoUpdateReportsThread Exception", ex);
                     }
 
                 }
@@ -1218,7 +1218,7 @@ public class FXMLResultsController  {
 
 
             } catch (IOException ex) {
-                logger.debug("Loader Exception for race reports!",ex);
+                logger.error("Loader Exception for race reports!",ex);
 
             }
             ((FXMLResultOutputController)tlLoader.getController()).setRaceReport(newRR);
@@ -1241,7 +1241,7 @@ public class FXMLResultsController  {
             stage.setScene(new Scene(setupHeadersRoot));  
             stage.showAndWait();
         } catch (IOException ex) {
-            logger.debug("Loader Error in FXMLSetupHeaders.fxml");
+            logger.error("Loader Error in FXMLSetupHeaders.fxml", ex);
         }
     }
     private class DurationTableCell extends TableCell<Result, Duration> {

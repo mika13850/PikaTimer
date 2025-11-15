@@ -236,7 +236,7 @@ public class FXMLCourseRecordsController {
 
             }
         } catch (Exception ex) {
-            logger.debug("Something bad happened... ", ex);
+            logger.error("Something bad happened... ", ex);
             //ex.printStackTrace();
         }
         
@@ -317,7 +317,7 @@ public class FXMLCourseRecordsController {
             try {
                 FileUtils.writeStringToFile(file, '\ufeff' + crCSV.toString(), StandardCharsets.UTF_8);
             } catch (Exception ex) {
-                logger.warn("Error writing to file {}",file.getAbsolutePath(),ex);
+                logger.error("Error writing to file {}",file.getAbsolutePath(),ex);
             }
         
     }

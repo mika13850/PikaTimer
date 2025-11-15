@@ -508,7 +508,7 @@ public class FXMLRaceDetailsController {
                 ((FXMLCourseRecordsController)fxmlLoader.getController()).setRace(selectedRace);
                 stage.showAndWait();
             } catch (IOException ex) {
-                logger.warn("Error in FXML",ex);
+                logger.error("Error in FXML",ex);
             }
             
         
@@ -1175,7 +1175,7 @@ public class FXMLRaceDetailsController {
                 if (dist.compareTo(BigDecimal.ZERO) > 0 && dist.compareTo(s.getRace().getRaceDistance()) < 0)
                     distOK.setValue(true);
             } catch (Exception e){
-                
+                logger.error("Unexpected exception", e);               
             }
         });
         

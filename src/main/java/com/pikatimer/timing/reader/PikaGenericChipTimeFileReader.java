@@ -157,6 +157,7 @@ public class PikaGenericChipTimeFileReader extends TailingReader{
                     return;
                 } 
             } catch (Exception e) {
+                logger.error("Unexpected exception", e);
                 String status = "Unable to parse the date in \"" + date +"\" : " + e.getMessage();
                 logger.debug(status);
                 Platform.runLater(() -> {

@@ -270,7 +270,7 @@ public class ImportWizardView3Controller {
                         
                     }
                 } catch (Exception ex) {
-                    logger.debug("Something bad happened... ", ex);
+                    logger.error("Something bad happened... ", ex);
                 }
                 updateMessage("Saving...");
                 

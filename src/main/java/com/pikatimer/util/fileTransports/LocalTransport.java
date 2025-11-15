@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalTransport implements FileTransport {
     private static final Logger logger = LoggerFactory.getLogger(LocalTransport.class);
-    
+
     Boolean goodToGo = false;
     Boolean stripAccents = false;
     String basePath;
@@ -52,58 +52,66 @@ public class LocalTransport implements FileTransport {
     @Override
     public void save(String filename, String contents) {
         logger.debug("LocalTransport.save called for " + filename);
-        
-        //String Accented chars if needed
-        if (stripAccents) contents = StringUtils.stripAccents(contents);
-        
-        //Fix the newlines
-        contents = contents.replaceAll("\\R", System.lineSeparator()); 
-        
-        
-        if (goodToGo && ! basePath.isEmpty()) {
-            
+
+        // String Accented chars if needed
+        if (stripAccents)
+            contents = StringUtils.stripAccents(contents);
+
+        // Fix the newlines
+        contents = contents.replaceAll("\\R", System.lineSeparator());
+
+        if (goodToGo && !basePath.isEmpty()) {
+
             try {
-                Platform.runLater(() -> {transferStatus.set("Saving: " + filename);});
-                FileUtils.writeStringToFile(new File(FilenameUtils.concat(basePath, filename)), '\ufeff' + contents, StandardCharsets.UTF_8);
-                Platform.runLater(() -> {transferStatus.set("Idle");});
+                Platform.runLater(() -> {
+                    transferStatus.set("Saving: " + filename);
+                });
+                FileUtils.writeStringToFile(new File(FilenameUtils.concat(basePath, filename)), '\ufeff' + contents,
+                        StandardCharsets.UTF_8);
+                Platform.runLater(() -> {
+                    transferStatus.set("Idle");
+                });
             } catch (IOException ex) {
-                Platform.runLater(() -> {transferStatus.set("ERROR! " + filename);});
-                logger.warn("Error in saving to {}",filename,ex);
+                logger.error("Unexpected exception", ex);
+                Platform.runLater(() -> {
+                    transferStatus.set("ERROR! " + filename);
+                });
+                logger.warn("Error in saving to {}", filename, ex);
             }
         }
     }
 
     @Override
     public void setOutputPortal(ReportDestination op) {
-        parent = op; 
+        parent = op;
         refreshConfig();
     }
 
     @Override
     public void refreshConfig() {
-        if(parent != null && parent.getBasePath() != null && ! parent.getBasePath().isEmpty()) {
+        if (parent != null && parent.getBasePath() != null && !parent.getBasePath().isEmpty()) {
             basePath = FilenameUtils.normalizeNoEndSeparator(parent.getBasePath());
-            
+
             File baseDir = new File(basePath);
-            
+
             stripAccents = parent.getStripAccents();
 
             // does it exist?
             if (!baseDir.exists()) {
-              baseDir.mkdirs();
+                baseDir.mkdirs();
             }
-            
-            // it should now... 
+
+            // it should now...
             if (baseDir.exists()) {
                 goodToGo = true;
             } else {
                 goodToGo = false;
             }
-            
+
         } else {
-            basePath = null; 
+            basePath = null;
         }
-        
+
     }
 
     @Override
@@ -113,45 +121,45 @@ public class LocalTransport implements FileTransport {
 
     @Override
     public void test(ReportDestination parent, StringProperty output) {
-        
-        
+
         basePath = FilenameUtils.normalizeNoEndSeparator(parent.getBasePath());
-            
+
         File baseDir = new File(basePath);
 
         stripAccents = parent.getStripAccents();
 
-        
-
-        
         if (baseDir.exists() && baseDir.isDirectory()) {
-            Platform.runLater(() -> output.set(output.getValueSafe() + "Target Directory exists." ));
+            Platform.runLater(() -> output.set(output.getValueSafe() + "Target Directory exists."));
         } else {
             // try and create it
-            Platform.runLater(() -> output.set(output.getValueSafe() + "Target Directory does not exist\nAttempting to create it..." ));
+            Platform.runLater(() -> output
+                    .set(output.getValueSafe() + "Target Directory does not exist\nAttempting to create it..."));
             baseDir.mkdirs();
 
             if (baseDir.exists() && baseDir.isDirectory()) {
-                Platform.runLater(() -> output.set(output.getValueSafe() + "\nSuccessfuly created target directory." ));
+                Platform.runLater(() -> output.set(output.getValueSafe() + "\nSuccessfuly created target directory."));
             } else {
-                Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nFailure! Unable to create target directory." ));
+                Platform.runLater(
+                        () -> output.set(output.getValueSafe() + "\n\nFailure! Unable to create target directory."));
                 return;
             }
 
         }
-        
+
         UUID tmpFileName = UUID.randomUUID();
-        File tmpFile = new File(baseDir,tmpFileName.toString());
+        File tmpFile = new File(baseDir, tmpFileName.toString());
         try {
             tmpFile.createNewFile();
             tmpFile.delete();
-            Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nSuccess! the target directory is writable." ));
+            Platform.runLater(
+                    () -> output.set(output.getValueSafe() + "\n\nSuccess! the target directory is writable."));
 
         } catch (IOException ex) {
-            Platform.runLater(() -> output.set(output.getValueSafe() + "\n\nFailure! Unable to write to the target directory." ));
+            logger.error("Unexpected exception", ex);
+            Platform.runLater(
+                    () -> output.set(output.getValueSafe() + "\n\nFailure! Unable to write to the target directory."));
 
-        } 
+        }
     }
-    
-    
+
 }

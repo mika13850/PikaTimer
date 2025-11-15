@@ -72,114 +72,151 @@ import org.slf4j.LoggerFactory;
  */
 public class FXMLAwardCategoryController {
     private static final Logger logger = LoggerFactory.getLogger(FXMLAwardCategoryController.class);
-    
-    @FXML TextField awardTitleTextField;
-    
-    @FXML ComboBox<AwardCategoryType> awardTypeComboBox;
-    
-    @FXML ToggleSwitch chipToggleSwitch;
-    @FXML ToggleSwitch pullToggleSwitch;
-    
-    @FXML ToggleSwitch visibleAwardsToggleSwitch;
-    @FXML ToggleSwitch visibleOverallToggleSwitch;
-    
-    
-    @FXML ComboBox<AwardDepthType> depthTypeComboBox;
-    @FXML TextField depthTextField;
-    @FXML VBox depthVBox;
-    
-    @FXML TableView<AwardDepth> depthTableView;
-    @FXML TableColumn<AwardDepth,Integer> depthStartTableColumn;
-    @FXML TableColumn<AwardDepth,String> depthEndTableColumn;
-    @FXML TableColumn<AwardDepth,Integer> depthTableColumn;
-    
-    
-    @FXML Button depthDeleteButton;
-    @FXML Button depthAddButton;
-    
-    @FXML HBox mastersHBox;
-    @FXML TextField mastersAgeTextField;
-    
+
+    @FXML
+    TextField awardTitleTextField;
+
+    @FXML
+    ComboBox<AwardCategoryType> awardTypeComboBox;
+
+    @FXML
+    ToggleSwitch chipToggleSwitch;
+    @FXML
+    ToggleSwitch pullToggleSwitch;
+
+    @FXML
+    ToggleSwitch visibleAwardsToggleSwitch;
+    @FXML
+    ToggleSwitch visibleOverallToggleSwitch;
+
+    @FXML
+    ComboBox<AwardDepthType> depthTypeComboBox;
+    @FXML
+    TextField depthTextField;
+    @FXML
+    VBox depthVBox;
+
+    @FXML
+    TableView<AwardDepth> depthTableView;
+    @FXML
+    TableColumn<AwardDepth, Integer> depthStartTableColumn;
+    @FXML
+    TableColumn<AwardDepth, String> depthEndTableColumn;
+    @FXML
+    TableColumn<AwardDepth, Integer> depthTableColumn;
+
+    @FXML
+    Button depthDeleteButton;
+    @FXML
+    Button depthAddButton;
+
+    @FXML
+    HBox mastersHBox;
+    @FXML
+    TextField mastersAgeTextField;
+
     AwardCategory awardCategory;
-    
+
     // Custom Award Stuff
-    @FXML GridPane customGridPane;
-    
-    // Timing location 
-    @FXML ComboBox<AwardTimingPoint> timingPointComboBox;
-    
+    @FXML
+    GridPane customGridPane;
+
+    // Timing location
+    @FXML
+    ComboBox<AwardTimingPoint> timingPointComboBox;
+
     // Filters
-    @FXML ToggleSwitch filterToggleSwitch;
-    @FXML VBox filterVBox;
-    @FXML TableView<AwardFilter> filterTableView;
-    ObservableList<Pair<String,String>> customAttributesList = FXCollections.observableArrayList();
+    @FXML
+    ToggleSwitch filterToggleSwitch;
+    @FXML
+    VBox filterVBox;
+    @FXML
+    TableView<AwardFilter> filterTableView;
+    ObservableList<Pair<String, String>> customAttributesList = FXCollections.observableArrayList();
     ObservableList<String> customAttributesDisplayList = FXCollections.observableArrayList();
-    @FXML TableColumn<AwardFilter,String> filterAttributeTableColumn;
-    @FXML TableColumn<AwardFilter,String> filterTypeTableColumn;
-    @FXML TableColumn<AwardFilter,String> filterReferenceValueTableColumn;
-    @FXML Button filterAddButton;
-    @FXML Button filterDeleteButton;
-    @FXML Button filterEditButton;
-    
+    @FXML
+    TableColumn<AwardFilter, String> filterAttributeTableColumn;
+    @FXML
+    TableColumn<AwardFilter, String> filterTypeTableColumn;
+    @FXML
+    TableColumn<AwardFilter, String> filterReferenceValueTableColumn;
+    @FXML
+    Button filterAddButton;
+    @FXML
+    Button filterDeleteButton;
+    @FXML
+    Button filterEditButton;
+
     // Groupings
-    @FXML ToggleSwitch subdivideToggleSwitch;
-    @FXML VBox subdivideVBox;
-    @FXML ListView<CustomAttribute> subdivideListView;
-    ObservableList<CustomAttribute> availableCustomAttributesList = FXCollections.observableArrayList(CustomAttribute.extractor());
-    ObservableList<CustomAttribute> subdivideCustomAttributesList = FXCollections.observableArrayList(CustomAttribute.extractor());
-    @FXML Button subdivideAddButton;
-    @FXML Button subdivideDeleteButton;
-    
-    @FXML ToggleSwitch skewToggleSwitch;
-    @FXML HBox skewControlHBox;
-    @FXML ComboBox<String> skewOpComboBox;
-    @FXML ComboBox<String> skewAttributeComboBox;
+    @FXML
+    ToggleSwitch subdivideToggleSwitch;
+    @FXML
+    VBox subdivideVBox;
+    @FXML
+    ListView<CustomAttribute> subdivideListView;
+    ObservableList<CustomAttribute> availableCustomAttributesList = FXCollections
+            .observableArrayList(CustomAttribute.extractor());
+    ObservableList<CustomAttribute> subdivideCustomAttributesList = FXCollections
+            .observableArrayList(CustomAttribute.extractor());
+    @FXML
+    Button subdivideAddButton;
+    @FXML
+    Button subdivideDeleteButton;
+
+    @FXML
+    ToggleSwitch skewToggleSwitch;
+    @FXML
+    HBox skewControlHBox;
+    @FXML
+    ComboBox<String> skewOpComboBox;
+    @FXML
+    ComboBox<String> skewAttributeComboBox;
     ObservableList<String> skewableAttributes = FXCollections.observableArrayList();
-    Map<String,Integer> skewableAttributesMap = new HashMap();
-    
-    
-    ObservableList<AwardTimingPoint> availableTimingPointsList = FXCollections.observableArrayList(AwardTimingPoint.extractor());
-    
+    Map<String, Integer> skewableAttributesMap = new HashMap();
+
+    ObservableList<AwardTimingPoint> availableTimingPointsList = FXCollections
+            .observableArrayList(AwardTimingPoint.extractor());
+
     private final RaceDAO raceDAO = RaceDAO.getInstance();
-    
+
     public void initialize() {
         // TODO
         logger.debug("FXMLAwardCategoryController initialized");
         awardTypeComboBox.setItems(FXCollections.observableArrayList(AwardCategoryType.values()));
         depthTypeComboBox.setItems(FXCollections.observableArrayList(AwardDepthType.values()));
-    }    
-    
-    public void setAwardCategory(AwardCategory a){
+    }
+
+    public void setAwardCategory(AwardCategory a) {
         awardCategory = a;
-        
+
         // Populate the existing values
         awardTitleTextField.textProperty().set(awardCategory.getName());
         chipToggleSwitch.setSelected(awardCategory.getChip());
         pullToggleSwitch.setSelected(awardCategory.getPull());
-        
+
         visibleAwardsToggleSwitch.setSelected(awardCategory.getVisible());
         visibleOverallToggleSwitch.setSelected(awardCategory.getVisibleOverall());
-        
+
         depthTypeComboBox.getSelectionModel().select(awardCategory.getDepthType());
-        
+
         depthTextField.setTextFormatter(Formatters.integerFormatter());
         depthTextField.setText(awardCategory.getDepth().toString());
-        
-        TextFormatter<String> AGMformatter = new TextFormatter<>( change -> {
+
+        TextFormatter<String> AGMformatter = new TextFormatter<>(change -> {
             change.setText(change.getText().replaceAll("[^0-9]", ""));
-            return change; 
+            return change;
         });
-        mastersAgeTextField.setTooltip(new Tooltip("Sets the starting age for the Masters categories."));  
+        mastersAgeTextField.setTooltip(new Tooltip("Sets the starting age for the Masters categories."));
         mastersAgeTextField.setTextFormatter(AGMformatter);
-        
+
         mastersAgeTextField.setText(awardCategory.getMastersAge().toString());
-        
-//        @FXML TableColumn<AwardDepth,Integer> depthStartTableColumn;
-//        @FXML TableColumn<AwardDepth,String> depthEndTableColumn;
-//        @FXML TableColumn<AwardDepth,Integer> depthTableColumn;
+
+        // @FXML TableColumn<AwardDepth,Integer> depthStartTableColumn;
+        // @FXML TableColumn<AwardDepth,String> depthEndTableColumn;
+        // @FXML TableColumn<AwardDepth,Integer> depthTableColumn;
         depthEndTableColumn.editableProperty().set(false);
         depthEndTableColumn.setCellValueFactory(value -> value.getValue().endCountProperty());
-        
+
         depthStartTableColumn.setCellValueFactory(value -> value.getValue().startCountProperty().asObject());
         depthStartTableColumn.setCellFactory(col -> new IntegerEditingCell());
         depthStartTableColumn.setOnEditCommit(e -> {
@@ -187,28 +224,93 @@ public class FXMLAwardCategoryController {
                 e.getRowValue().startCountProperty().setValue(e.getNewValue());
                 awardCategory.recalcCustomDepths();
             } catch (Exception ex) {
+                logger.error("Unexpected exception", e);
                 logger.debug("depthStartTableColumn.setOnEditCommit Oops....");
                 e.getRowValue().startCountProperty().setValue(e.getOldValue());
             }
-            
+
             raceDAO.updateAwardCategory(awardCategory);
         });
-        
+
         depthTableColumn.setCellValueFactory(value -> value.getValue().depthProperty().asObject());
         depthTableColumn.setCellFactory(col -> new IntegerEditingCell());
         depthTableColumn.setOnEditCommit(e -> {
             try {
                 e.getRowValue().depthProperty().setValue(e.getNewValue());
             } catch (Exception ex) {
+                logger.error("Unexpected exception", e);
                 logger.debug("depthStartTableColumn.setOnEditCommit Oops....");
                 e.getRowValue().depthProperty().setValue(e.getOldValue());
             }
             raceDAO.updateAwardCategory(awardCategory);
         });
-        
+
         // Hide the custom box if we are not custom
         awardTypeComboBox.getSelectionModel().select(awardCategory.getType());
         switch (awardCategory.getType()) {
+        case CUSTOM:
+            customGridPane.setVisible(true);
+            customGridPane.setManaged(true);
+            mastersHBox.setVisible(false);
+            mastersHBox.setManaged(false);
+            break;
+        case MASTERS:
+            customGridPane.setVisible(false);
+            customGridPane.setManaged(false);
+            mastersHBox.setVisible(true);
+            mastersHBox.setManaged(true);
+            break;
+        default:
+            customGridPane.setVisible(false);
+            customGridPane.setManaged(false);
+            mastersHBox.setVisible(false);
+            mastersHBox.setManaged(false);
+            break;
+        }
+
+        // Hide the depth VBox if we are using a fixed award depth
+        if (awardCategory.getDepthType().equals(AwardDepthType.FIXED)) {
+            depthVBox.setVisible(false);
+            depthVBox.setManaged(false);
+            depthTextField.setVisible(true);
+            depthTextField.setManaged(true);
+        } else {
+            depthVBox.setVisible(true);
+            depthVBox.setManaged(true);
+            depthTextField.setVisible(false);
+            depthTextField.setManaged(false);
+        }
+
+        depthTableView.setItems(awardCategory.customDepthProperty());
+
+        // Now set the controls up so that they update when things change
+        awardTitleTextField.textProperty().addListener((obs, prevVal, newVal) -> {
+            if (newVal != null && !newVal.isEmpty()) {
+                awardCategory.setName(newVal);
+                raceDAO.updateAwardCategory(awardCategory);
+            }
+        });
+
+        chipToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setChip(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
+        });
+        pullToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setPull(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
+        });
+
+        visibleAwardsToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setVisible(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
+        });
+        visibleOverallToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setVisibleOverall(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
+        });
+
+        awardTypeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, prevVal, newVal) -> {
+            switch (newVal) {
             case CUSTOM:
                 customGridPane.setVisible(true);
                 customGridPane.setManaged(true);
@@ -227,84 +329,20 @@ public class FXMLAwardCategoryController {
                 mastersHBox.setVisible(false);
                 mastersHBox.setManaged(false);
                 break;
-        }
-        
-        // Hide the depth VBox if we are using a fixed award depth
-        if (awardCategory.getDepthType().equals(AwardDepthType.FIXED)){
-            depthVBox.setVisible(false);
-            depthVBox.setManaged(false);
-            depthTextField.setVisible(true);
-            depthTextField.setManaged(true);        
-        } else {
-            depthVBox.setVisible(true);
-            depthVBox.setManaged(true);
-            depthTextField.setVisible(false);
-            depthTextField.setManaged(false);
-        }
-        
-        depthTableView.setItems(awardCategory.customDepthProperty());
-
-        
-        // Now set the controls up so that they update when things change
-        awardTitleTextField.textProperty().addListener((obs, prevVal, newVal) -> {
-            if (newVal != null && !newVal.isEmpty()){
-                awardCategory.setName(newVal);
-                raceDAO.updateAwardCategory(awardCategory);
-            }
-        });
-        
-        chipToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setChip(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
-        });
-        pullToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setPull(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
-        });
-        
-        visibleAwardsToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setVisible(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
-        });
-        visibleOverallToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setVisibleOverall(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
-        });
-        
-        awardTypeComboBox.getSelectionModel().selectedItemProperty().addListener((obs,  prevVal,  newVal) -> {
-            switch (newVal) {
-                case CUSTOM:
-                    customGridPane.setVisible(true);
-                    customGridPane.setManaged(true);
-                    mastersHBox.setVisible(false);
-                    mastersHBox.setManaged(false);
-                    break;
-                case MASTERS:
-                    customGridPane.setVisible(false);
-                    customGridPane.setManaged(false);
-                    mastersHBox.setVisible(true);
-                    mastersHBox.setManaged(true);
-                    break;
-                default:
-                    customGridPane.setVisible(false);
-                    customGridPane.setManaged(false);
-                    mastersHBox.setVisible(false);
-                    mastersHBox.setManaged(false);
-                    break;
             }
             awardCategory.setType(newVal);
             raceDAO.updateAwardCategory(awardCategory);
         });
-        
-        depthTypeComboBox.getSelectionModel().selectedItemProperty().addListener((obs,  prevVal,  newVal) -> {
+
+        depthTypeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, prevVal, newVal) -> {
             awardCategory.setDepthType(newVal);
-            if (AwardDepthType.FIXED.equals(awardCategory.getDepthType())){
+            if (AwardDepthType.FIXED.equals(awardCategory.getDepthType())) {
                 depthVBox.setVisible(false);
                 depthVBox.setManaged(false);
                 depthTextField.setVisible(true);
-                depthTextField.setManaged(true);        
+                depthTextField.setManaged(true);
             } else {
-                 if(awardCategory.customDepthProperty().isEmpty()){
+                if (awardCategory.customDepthProperty().isEmpty()) {
                     AwardDepth ad = new AwardDepth();
                     ad.setDepth(3);
                     ad.setStartCount(1);
@@ -315,10 +353,10 @@ public class FXMLAwardCategoryController {
                 depthTextField.setVisible(false);
                 depthTextField.setManaged(false);
             }
-            
+
             raceDAO.updateAwardCategory(awardCategory);
         });
-        
+
         depthDeleteButton.setOnAction(action -> {
             depthDelete();
         });
@@ -327,11 +365,12 @@ public class FXMLAwardCategoryController {
         });
         //
         depthTextField.textProperty().addListener((obs, prevVal, newVal) -> {
-            if (newVal != null && !newVal.isEmpty() ){
+            if (newVal != null && !newVal.isEmpty()) {
                 try {
                     awardCategory.setDepth(Integer.parseUnsignedInt(newVal));
                     raceDAO.updateAwardCategory(awardCategory);
                 } catch (Exception e) {
+                    logger.error("Unexpected exception", e);
                     Platform.runLater(() -> {
                         depthTextField.textProperty().set(prevVal);
                     });
@@ -339,107 +378,108 @@ public class FXMLAwardCategoryController {
             }
         });
         mastersAgeTextField.textProperty().addListener((obs, prevVal, newVal) -> {
-            if (newVal != null && !newVal.isEmpty() ){
+            if (newVal != null && !newVal.isEmpty()) {
                 try {
                     awardCategory.setMastersAge(Integer.parseUnsignedInt(newVal));
                     raceDAO.updateAwardCategory(awardCategory);
                 } catch (Exception e) {
+                    logger.error("Unexpected exception", e);
                     Platform.runLater(() -> {
                         mastersAgeTextField.textProperty().set(prevVal);
                     });
                 }
             }
         });
-        
+
         filterVBox.visibleProperty().bind(filterToggleSwitch.selectedProperty());
         filterVBox.managedProperty().bind(filterToggleSwitch.selectedProperty());
-        
+
         filterToggleSwitch.setSelected(awardCategory.getFiltered());
-        filterToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setFiltered(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
+        filterToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setFiltered(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
         });
-        
+
         filterDeleteButton.setOnAction(action -> {
             filterDelete();
         });
         filterDeleteButton.disableProperty().bind(filterTableView.getSelectionModel().selectedItemProperty().isNull());
-        
+
         filterAddButton.setOnAction(action -> {
             filterAdd();
         });
-        
-        filterEditButton.setOnAction(action -> {filterEdit();});
+
+        filterEditButton.setOnAction(action -> {
+            filterEdit();
+        });
         filterEditButton.disableProperty().bind(filterTableView.getSelectionModel().selectedItemProperty().isNull());
-        
+
         filterTableView.setRowFactory(t -> {
             final TableRow<AwardFilter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                   filterEdit();
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    filterEdit();
                 }
             });
-            return row; 
+            return row;
         });
-        
+
         rebuildAttributeLists();
         ParticipantDAO.getInstance().getCustomAttributes().addListener((ListChangeListener) listener -> {
             logger.debug("Custom Attributes changed...");
             rebuildAttributeLists();
         });
-        
+
         filterAttributeTableColumn.setCellValueFactory(value -> {
             String key = value.getValue().attributeProperty().getValue();
-            for(Pair<String,String> k: customAttributesList) {
+            for (Pair<String, String> k : customAttributesList) {
                 if (k.getKey().equals(key)) {
                     value.getValue().attributeDisplayProperty().setValue(k.getValue());
                 }
             }
             return value.getValue().attributeDisplayProperty();
         });
-//        filterAttributeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(customAttributesDisplayList));
-//        filterAttributeTableColumn.setOnEditCommit(e -> {
-//            String value = e.getNewValue();
-//            String key = e.getOldValue();
-//            for(Pair<String,String> k: customAttributesList) {
-//                if (k.getValue().equals(value)) key = k.getKey() ;
-//            };
-//            e.getRowValue().attributeProperty().setValue(key);
-//            raceDAO.updateAwardCategory(awardCategory);
-//        });
-        
+        // filterAttributeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(customAttributesDisplayList));
+        // filterAttributeTableColumn.setOnEditCommit(e -> {
+        // String value = e.getNewValue();
+        // String key = e.getOldValue();
+        // for(Pair<String,String> k: customAttributesList) {
+        // if (k.getValue().equals(value)) key = k.getKey() ;
+        // };
+        // e.getRowValue().attributeProperty().setValue(key);
+        // raceDAO.updateAwardCategory(awardCategory);
+        // });
+
         filterTypeTableColumn.setCellValueFactory(value -> value.getValue().comparisonTypeProperty());
-//        filterTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("=",">","<",">=","<=","!=","=~"));
-//        filterTypeTableColumn.setOnEditCommit(e -> {
-//            e.getRowValue().comparisonTypeProperty().setValue(e.getNewValue());
-//            raceDAO.updateAwardCategory(awardCategory);
-//        });
+        // filterTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("=",">","<",">=","<=","!=","=~"));
+        // filterTypeTableColumn.setOnEditCommit(e -> {
+        // e.getRowValue().comparisonTypeProperty().setValue(e.getNewValue());
+        // raceDAO.updateAwardCategory(awardCategory);
+        // });
 
         filterReferenceValueTableColumn.setCellValueFactory(value -> value.getValue().referenceValueProperty());
-//        filterReferenceValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-//        filterReferenceValueTableColumn.setOnEditCommit(e -> {
-//            e.getRowValue().referenceValueProperty().setValue(e.getNewValue());
-//            raceDAO.updateAwardCategory(awardCategory);
-//        });
-        
-        
+        // filterReferenceValueTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        // filterReferenceValueTableColumn.setOnEditCommit(e -> {
+        // e.getRowValue().referenceValueProperty().setValue(e.getNewValue());
+        // raceDAO.updateAwardCategory(awardCategory);
+        // });
 
         filterTableView.setItems(awardCategory.filtersProperty());
         filterTableView.setPlaceholder(new Label("No filters defined yet..."));
-        
+
         subdivideToggleSwitch.setSelected(awardCategory.getSubdivided());
-        subdivideToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setSubdivided(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
+        subdivideToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setSubdivided(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
         });
-        
+
         // build the subdivideCustomAttributesList
-        awardCategory.subDivideProperty().forEach(s -> {});
-        
+        awardCategory.subDivideProperty().forEach(s -> {
+        });
+
         subdivideListView.setItems(subdivideCustomAttributesList);
         subdivideListView.setCellFactory(ComboBoxListCell.forListView(availableCustomAttributesList));
-        
-        
+
         awardCategory.subDivideProperty().forEach(s -> {
             availableCustomAttributesList.stream().filter((k) -> (k.key.getValue().equals(s))).forEachOrdered((k) -> {
                 subdivideCustomAttributesList.add(k);
@@ -450,28 +490,30 @@ public class FXMLAwardCategoryController {
         subdivideDeleteButton.setOnAction(action -> {
             subDelete();
         });
-        subdivideDeleteButton.disableProperty().bind(subdivideListView.getSelectionModel().selectedItemProperty().isNull());
+        subdivideDeleteButton.disableProperty()
+                .bind(subdivideListView.getSelectionModel().selectedItemProperty().isNull());
         subdivideAddButton.setOnAction(action -> {
             subAdd();
         });
-        
+
         subdivideListView.setOnEditCommit((ListView.EditEvent<CustomAttribute> t) -> {
             logger.debug("setOnEditCommit " + t.getIndex());
-            
-            if(t.getIndex() >= 0 && t.getIndex() < t.getSource().getItems().size()) {
-                CustomAttribute ca = t.getSource().getItems().get(t.getIndex()); 
+
+            if (t.getIndex() >= 0 && t.getIndex() < t.getSource().getItems().size()) {
+                CustomAttribute ca = t.getSource().getItems().get(t.getIndex());
                 if (t.getNewValue().key.toString().isEmpty()) {
-                    //we never saved this so just remove it
+                    // we never saved this so just remove it
                     subdivideCustomAttributesList.remove(ca);
                 } else {
                     // rebuild the backing list
-                    
+
                     subdivideCustomAttributesList.remove(ca);
                     subdivideCustomAttributesList.add(t.getIndex(), t.getNewValue());
                     awardCategory.subDivideProperty().clear();
                     awardCategory.updateSubdivideList();
-                    subdivideCustomAttributesList.forEach( cca -> {
-                        if (cca.key.isEmpty().get()) return;
+                    subdivideCustomAttributesList.forEach(cca -> {
+                        if (cca.key.isEmpty().get())
+                            return;
                         logger.debug("Current splitBy attribute: " + cca.key.getValueSafe());
                         awardCategory.subDivideProperty().add(cca.key.getValueSafe());
                     });
@@ -484,35 +526,35 @@ public class FXMLAwardCategoryController {
         });
 
         timingPointComboBox.setItems(availableTimingPointsList);
-        
+
         rebuildTimingPointList();
-        
-        
+
         // rebuild the list when we add or remove splits or segments
-        awardCategory.getRaceAward().getRace().splitsProperty().addListener((ListChangeListener) listener -> {rebuildTimingPointList();});
+        awardCategory.getRaceAward().getRace().splitsProperty().addListener((ListChangeListener) listener -> {
+            rebuildTimingPointList();
+        });
         awardCategory.getRaceAward().getRace().unsortedSegmentsProperty().addListener((ListChangeListener) listener -> {
             logger.debug("awardCategory: segments changed...");
             rebuildTimingPointList();
         });
-        
-        timingPointComboBox.getSelectionModel().selectedItemProperty().addListener((obs,  prevVal,  newVal) -> {
+
+        timingPointComboBox.getSelectionModel().selectedItemProperty().addListener((obs, prevVal, newVal) -> {
             if (newVal != null && !newVal.id.getValue().equals(awardCategory.getTimingPointID())) {
                 awardCategory.setTimingPointID(newVal.id.get());
                 awardCategory.setTimingPointType(newVal.type.get());
                 raceDAO.updateAwardCategory(awardCategory);
             }
         });
-        
-        
+
         skewToggleSwitch.setSelected(awardCategory.getSkewed());
-        skewToggleSwitch.selectedProperty().addListener((obs,  prevVal,  newVal) -> {
-             awardCategory.setSkewed(newVal);
-             raceDAO.updateAwardCategory(awardCategory);
+        skewToggleSwitch.selectedProperty().addListener((obs, prevVal, newVal) -> {
+            awardCategory.setSkewed(newVal);
+            raceDAO.updateAwardCategory(awardCategory);
         });
-        
-        skewOpComboBox.setItems(FXCollections.observableArrayList("+","-"));
+
+        skewOpComboBox.setItems(FXCollections.observableArrayList("+", "-"));
         skewOpComboBox.getSelectionModel().select(awardCategory.getSkewType());
-        skewOpComboBox.getSelectionModel().selectedItemProperty().addListener((obs,  prevVal,  newVal) -> {
+        skewOpComboBox.getSelectionModel().selectedItemProperty().addListener((obs, prevVal, newVal) -> {
             if (newVal != null && !newVal.equals(prevVal)) {
                 awardCategory.setSkewType(newVal);
                 raceDAO.updateAwardCategory(awardCategory);
@@ -520,9 +562,10 @@ public class FXMLAwardCategoryController {
         });
         skewAttributeComboBox.setItems(skewableAttributes);
         skewableAttributesMap.keySet().forEach(key -> {
-            if (skewableAttributesMap.get(key).equals(awardCategory.getSkewAttribute())) skewAttributeComboBox.getSelectionModel().select(key);
+            if (skewableAttributesMap.get(key).equals(awardCategory.getSkewAttribute()))
+                skewAttributeComboBox.getSelectionModel().select(key);
         });
-        skewAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((obs,  prevVal,  newVal) -> {
+        skewAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, prevVal, newVal) -> {
             if (newVal != null && !newVal.equals(skewableAttributesMap.get(newVal))) {
                 awardCategory.setSkewAttribute(skewableAttributesMap.get(newVal));
                 raceDAO.updateAwardCategory(awardCategory);
@@ -533,252 +576,266 @@ public class FXMLAwardCategoryController {
         skewControlHBox.visibleProperty().bind(skewToggleSwitch.selectedProperty());
         skewControlHBox.managedProperty().bind(skewToggleSwitch.selectedProperty());
     }
-    
-    public void subAdd(){
-        CustomAttribute ca = new CustomAttribute("","Select...");
+
+    public void subAdd() {
+        CustomAttribute ca = new CustomAttribute("", "Select...");
         subdivideCustomAttributesList.add(ca);
-        //subdivideListView.getSelectionModel().select(subdivideCustomAttributesList.indexOf(ca));
-        //subdivideListView.edit(subdivideCustomAttributesList.indexOf(ca));
+        // subdivideListView.getSelectionModel().select(subdivideCustomAttributesList.indexOf(ca));
+        // subdivideListView.edit(subdivideCustomAttributesList.indexOf(ca));
     }
-    
-    public void subDelete(){
+
+    public void subDelete() {
         CustomAttribute ca = subdivideListView.getSelectionModel().getSelectedItem();
         subdivideCustomAttributesList.remove(ca);
-        if (ca.key.isEmpty().get()) return;
+        if (ca.key.isEmpty().get())
+            return;
         awardCategory.subDivideProperty().remove(ca.key.getValue());
         awardCategory.updateSubdivideList();
         raceDAO.updateAwardCategory(awardCategory);
     }
-    
-    public void upPriority(ActionEvent fxevent){
-        if (awardCategory.getPriority()> 0) {
+
+    public void upPriority(ActionEvent fxevent) {
+        if (awardCategory.getPriority() > 0) {
             awardCategory.getRaceAward().awardCategoriesProperty().remove(awardCategory);
-            awardCategory.getRaceAward().awardCategoriesProperty().add(awardCategory.getPriority()-1, awardCategory);
+            awardCategory.getRaceAward().awardCategoriesProperty().add(awardCategory.getPriority() - 1, awardCategory);
             awardCategory.getRaceAward().recalcPriorities();
             awardCategory.getRaceAward().awardCategoriesProperty().forEach(a -> raceDAO.updateAwardCategory(a));
         }
     }
-    public void lowerPriority(ActionEvent fxevent){
+
+    public void lowerPriority(ActionEvent fxevent) {
         awardCategory.getRaceAward().awardCategoriesProperty().remove(awardCategory);
-        awardCategory.getRaceAward().awardCategoriesProperty().add(awardCategory.getPriority()+1, awardCategory);
+        awardCategory.getRaceAward().awardCategoriesProperty().add(awardCategory.getPriority() + 1, awardCategory);
         awardCategory.getRaceAward().recalcPriorities();
         awardCategory.getRaceAward().awardCategoriesProperty().forEach(a -> raceDAO.updateAwardCategory(a));
 
     }
-    
-    public void filterAdd(){
-        AwardFilter newAF = new AwardFilter("","=","");
+
+    public void filterAdd() {
+        AwardFilter newAF = new AwardFilter("", "=", "");
         awardCategory.addFilter(newAF);
         raceDAO.updateAwardCategory(awardCategory);
         filterTableView.getSelectionModel().select(newAF);
         filterEdit();
     }
-    
-    public void filterEdit(){
+
+    public void filterEdit() {
         AwardFilter af = filterTableView.getSelectionModel().getSelectedItem();
-        
+
         Dialog<ButtonType> dialog = new Dialog();
         // We have a start, End, and (optionally) Name
         // The end is automatically computed
         // The Name is only displayed if the customAGNamesToggleSwitch is set
-        
+
         GridPane dialogGrid = new GridPane();
         dialogGrid.setVgap(5);
         dialogGrid.setHgap(5);
         dialogGrid.setPadding(new Insets(5));
         int row = 0;
-        
+
         // Attribute
         Label attributeLabel = new Label("Attribute");
         ComboBox<String> attributeComboBox = new ComboBox(customAttributesDisplayList);
         String key = af.attributeProperty().getValue();
         Boolean notFound = true;
-        for(Pair<String,String> k: customAttributesList) {
+        for (Pair<String, String> k : customAttributesList) {
             if (k.getKey().equals(key)) {
                 attributeComboBox.getSelectionModel().select(k.getValue());
                 notFound = false;
             }
         }
-        if (notFound) attributeComboBox.getSelectionModel().select(key);
+        if (notFound)
+            attributeComboBox.getSelectionModel().select(key);
 
         dialogGrid.add(attributeLabel, 0, row);
         dialogGrid.add(attributeComboBox, 1, row);
         GridPane.setHalignment(attributeLabel, HPos.LEFT);
         GridPane.setHalignment(attributeComboBox, HPos.LEFT);
-        
+
         row++;
-        
+
         // Type
         Label comparisonOperatorLabel = new Label("Comparison Operator");
-        ComboBox<String> operatorComboBox = new ComboBox(FXCollections.observableArrayList("=",">","<",">=","<=","!=","=~"));
+        ComboBox<String> operatorComboBox = new ComboBox(
+                FXCollections.observableArrayList("=", ">", "<", ">=", "<=", "!=", "=~"));
         operatorComboBox.getSelectionModel().select(af.comparisonTypeProperty().getValue());
 
         dialogGrid.add(comparisonOperatorLabel, 0, row);
         dialogGrid.add(operatorComboBox, 1, row);
         GridPane.setHalignment(comparisonOperatorLabel, HPos.LEFT);
         GridPane.setHalignment(operatorComboBox, HPos.LEFT);
-        
+
         row++;
-        
+
         // Value
         Label valueLabel = new Label("Value");
         TextField valueTextField = new TextField(af.getReferenceValue());
-        
+
         dialogGrid.add(valueLabel, 0, row);
         dialogGrid.add(valueTextField, 1, row);
         GridPane.setHalignment(valueLabel, HPos.LEFT);
         GridPane.setHalignment(valueTextField, HPos.LEFT);
-        
-        
-        
-        
+
         dialog.getDialogPane().setContent(dialogGrid);
-        
+
         // Set the button types.
         ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
         // Validators
-        dialog.getDialogPane().lookupButton(saveButtonType).disableProperty().bind(valueTextField.textProperty().isEmpty());
-        
+        dialog.getDialogPane().lookupButton(saveButtonType).disableProperty()
+                .bind(valueTextField.textProperty().isEmpty());
 
         Optional<ButtonType> result = dialog.showAndWait();
-        
-        if (result.get() == saveButtonType ) {
-            
+
+        if (result.get() == saveButtonType) {
+
             // Set Attribute, Type and Value
             String value = attributeComboBox.getSelectionModel().getSelectedItem();
             af.attributeDisplayProperty().setValue(value);
-            for(Pair<String,String> k: customAttributesList) {
-                if (k.getValue().equals(value)) af.attributeProperty().setValue(k.getKey());
+            for (Pair<String, String> k : customAttributesList) {
+                if (k.getValue().equals(value))
+                    af.attributeProperty().setValue(k.getKey());
             }
-                        
+
             af.comparisonTypeProperty().setValue(operatorComboBox.getSelectionModel().getSelectedItem());
             af.setReferenceValue(valueTextField.textProperty().getValue());
-            
+
             // Save it
             raceDAO.updateAwardCategory(awardCategory);
         }
-        
+
     }
-    
-    public void filterDelete(){
+
+    public void filterDelete() {
         awardCategory.deleteFilter(filterTableView.getSelectionModel().getSelectedItem());
         raceDAO.updateAwardCategory(awardCategory);
     }
-    
-    public void removeAward(ActionEvent fxevent){
+
+    public void removeAward(ActionEvent fxevent) {
         awardCategory.getRaceAward().removeAwardCategory(awardCategory);
         raceDAO.removeAwardCategory(awardCategory);
     }
-    
-    public void depthAdd(){
+
+    public void depthAdd() {
         AwardDepth ad = new AwardDepth();
         int size = awardCategory.getCustomDepthList().size();
-        if (size>1) {
-            Integer p1 = awardCategory.getCustomDepthList().get(size-2).getStartCount();
-            Integer p2 = awardCategory.getCustomDepthList().get(size-1).getStartCount();
-            if (p1 == 1) p1=0;
-            ad.setStartCount(p2 + p2-p1);
-            ad.setDepth(awardCategory.getCustomDepthList().get(size-1).getDepth());
+        if (size > 1) {
+            Integer p1 = awardCategory.getCustomDepthList().get(size - 2).getStartCount();
+            Integer p2 = awardCategory.getCustomDepthList().get(size - 1).getStartCount();
+            if (p1 == 1)
+                p1 = 0;
+            ad.setStartCount(p2 + p2 - p1);
+            ad.setDepth(awardCategory.getCustomDepthList().get(size - 1).getDepth());
         } else if (size == 1) {
-            Integer p1 = awardCategory.getCustomDepthList().get(size-1).getStartCount();
-            if (p1 == 1) p1=0;
+            Integer p1 = awardCategory.getCustomDepthList().get(size - 1).getStartCount();
+            if (p1 == 1)
+                p1 = 0;
             ad.setStartCount(p1 + 10);
-            ad.setDepth(awardCategory.getCustomDepthList().get(size-1).getDepth());
+            ad.setDepth(awardCategory.getCustomDepthList().get(size - 1).getDepth());
         } else {
             ad.setDepth(3);
             ad.setStartCount(1);
         }
-        
+
         awardCategory.addCustomDepth(ad);
         raceDAO.updateAwardCategory(awardCategory);
     }
-    public void depthDelete(){
+
+    public void depthDelete() {
         awardCategory.removeCustomDepth(depthTableView.getSelectionModel().getSelectedItem());
         raceDAO.updateAwardCategory(awardCategory);
     }
-    
-    private void rebuildTimingPointList(){
+
+    private void rebuildTimingPointList() {
         availableTimingPointsList.clear();
-        
+
         // Finish line
-        AwardTimingPoint finish = new AwardTimingPoint("Finish","FINISH",0);
+        AwardTimingPoint finish = new AwardTimingPoint("Finish", "FINISH", 0);
         availableTimingPointsList.setAll(finish);
         Race r = awardCategory.getRaceAward().getRace();
         // Splits
         r.getSplits().forEach(s -> {
-            logger.debug("AwardCategoryController: rebuildTimingPointList: split " + s.getSplitName() + " -> " + s.getPosition());
-            if (s.getPosition() == 1 ) return; // Skip the start
-            if (s.getPosition() == r.getSplits().size()) return;  // Skip the finish
-            availableTimingPointsList.add(new AwardTimingPoint(s.splitNameProperty(),"SPLIT",s.getID()));
+            logger.debug("AwardCategoryController: rebuildTimingPointList: split " + s.getSplitName() + " -> "
+                    + s.getPosition());
+            if (s.getPosition() == 1)
+                return; // Skip the start
+            if (s.getPosition() == r.getSplits().size())
+                return; // Skip the finish
+            availableTimingPointsList.add(new AwardTimingPoint(s.splitNameProperty(), "SPLIT", s.getID()));
         });
         // Segments
-        r.getSegments().forEach(s ->{
-            logger.debug("AwardCategoryController: rebuildTimingPointList: Segment " + s.getSegmentName()+ " -> " + s.getID());
-            availableTimingPointsList.add(new AwardTimingPoint(s.segmentNameProperty(),"SEGMENT",s.getID()));
+        r.getSegments().forEach(s -> {
+            logger.debug("AwardCategoryController: rebuildTimingPointList: Segment " + s.getSegmentName() + " -> "
+                    + s.getID());
+            availableTimingPointsList.add(new AwardTimingPoint(s.segmentNameProperty(), "SEGMENT", s.getID()));
         });
-        
-        AwardTimingPoint tmpTp = new AwardTimingPoint("",awardCategory.getTimingPointType(),awardCategory.getTimingPointID());
+
+        AwardTimingPoint tmpTp = new AwardTimingPoint("", awardCategory.getTimingPointType(),
+                awardCategory.getTimingPointID());
         availableTimingPointsList.forEach(tp -> {
-            if (tp.equals(tmpTp)) timingPointComboBox.getSelectionModel().select(tp);
+            if (tp.equals(tmpTp))
+                timingPointComboBox.getSelectionModel().select(tp);
         });
     }
-    
-    private void rebuildAttributeLists(){
+
+    private void rebuildAttributeLists() {
         availableCustomAttributesList.clear();
-        availableCustomAttributesList.add(new CustomAttribute("AG","Age Group"));
-        
+        availableCustomAttributesList.add(new CustomAttribute("AG", "Age Group"));
+
         customAttributesList.clear();
         customAttributesDisplayList.clear();
-        customAttributesList.add(new Pair("AG","Age Group"));
+        customAttributesList.add(new Pair("AG", "Age Group"));
         customAttributesDisplayList.add("Age Group");
-        
+
         skewableAttributes.clear();
         skewableAttributesMap.clear();
-        
+
         Participant.getAvailableAttributes().keySet().stream().sorted().forEach(k -> {
-            customAttributesList.add(new Pair(k,Participant.getAvailableAttributes().get(k)));
+            customAttributesList.add(new Pair(k, Participant.getAvailableAttributes().get(k)));
             customAttributesDisplayList.add(Participant.getAvailableAttributes().get(k));
-            availableCustomAttributesList.add(new CustomAttribute(k,Participant.getAvailableAttributes().get(k)));
+            availableCustomAttributesList.add(new CustomAttribute(k, Participant.getAvailableAttributes().get(k)));
         });
         ParticipantDAO.getInstance().getCustomAttributes().forEach(ca -> {
-            customAttributesList.add(new Pair(ca.getID().toString(),ca.getName()));
-            availableCustomAttributesList.add(new CustomAttribute(ca.getID().toString(),ca.nameProperty()));
+            customAttributesList.add(new Pair(ca.getID().toString(), ca.getName()));
+            availableCustomAttributesList.add(new CustomAttribute(ca.getID().toString(), ca.nameProperty()));
             customAttributesDisplayList.add(ca.getName());
             if (ca.getAttributeType().equals(TIME)) {
                 skewableAttributes.add(ca.getName());
                 skewableAttributesMap.put(ca.getName(), ca.getID());
-            };
+            }
+            ;
         });
-        
+
         skewableAttributesMap.keySet().forEach(key -> {
-            if (skewableAttributesMap.get(key).equals(awardCategory.getSkewAttribute())) skewAttributeComboBox.getSelectionModel().select(key);
+            if (skewableAttributesMap.get(key).equals(awardCategory.getSkewAttribute()))
+                skewAttributeComboBox.getSelectionModel().select(key);
         });
     }
 
-    private static class AwardTimingPoint{
+    private static class AwardTimingPoint {
         StringProperty name = new SimpleStringProperty("");
         StringProperty type = new SimpleStringProperty("FINISH");
         IntegerProperty id = new SimpleIntegerProperty(0);
-        
+
         public AwardTimingPoint() {
-            
+
         }
-        public AwardTimingPoint(String n, String t, Integer i){
+
+        public AwardTimingPoint(String n, String t, Integer i) {
             name.setValue(n);
             type.setValue(t);
             id.setValue(i);
         }
-    
-        public AwardTimingPoint(StringProperty n, String t, Integer i){
+
+        public AwardTimingPoint(StringProperty n, String t, Integer i) {
             name = n;
             type.setValue(t);
             id.setValue(i);
         }
-        
+
         @Override
-        public String toString(){
+        public String toString() {
             return name.getValueSafe();
         }
 
@@ -810,30 +867,32 @@ public class FXMLAwardCategoryController {
             }
             return true;
         }
-        
+
         public static Callback<AwardTimingPoint, Observable[]> extractor() {
-            return (AwardTimingPoint ca) -> new Observable[]{ca.name};
+            return (AwardTimingPoint ca) -> new Observable[] { ca.name };
         }
-    
+
     }
-    
+
     private static class CustomAttribute {
         StringProperty name = new SimpleStringProperty("");
         StringProperty key = new SimpleStringProperty("");
-        
+
         public CustomAttribute() {
         }
-        public CustomAttribute(String k, String v){
+
+        public CustomAttribute(String k, String v) {
             name.setValue(v);
             key.setValue(k);
         }
-        public CustomAttribute(String k, StringProperty v){
+
+        public CustomAttribute(String k, StringProperty v) {
             name = v;
             key.setValue(k);
         }
-        
+
         @Override
-        public String toString(){
+        public String toString() {
             return name.getValueSafe();
         }
 
@@ -861,12 +920,11 @@ public class FXMLAwardCategoryController {
             }
             return true;
         }
-        
-        
+
         public static Callback<CustomAttribute, Observable[]> extractor() {
-            return (CustomAttribute ca) -> new Observable[]{ca.name};
+            return (CustomAttribute ca) -> new Observable[] { ca.name };
         }
-        
+
     }
-    
+
 }

@@ -531,7 +531,7 @@ public class FXMLAwardDetailsController {
                     raceAwardVBox.getChildren().add(raceAwardNodeUIMap.get(ac.getUUID()));
                     logger.debug("Showing Award of type " + ac.getType().toString());
                 } catch (IOException ex) {
-                    logger.debug("Loader Exception for race reports!",ex);
+                    logger.error("Loader Exception for race reports!",ex);
                     //ex.printStackTrace();
                     
                 }
